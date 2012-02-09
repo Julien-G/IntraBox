@@ -1,0 +1,53 @@
+  		<div class="info [% info_color %]">
+			<h1>Information</h1>
+			<p>[% message %] </p>		
+			
+		</div> 
+
+		<form method="POST" action="[% request.uri_base %]/deposit/upload" enctype="multipart/form-data">
+		<fieldset>
+			<legend>Formulaire d'envoi de fichier</legend>
+			<p class="acenter" style="background-color: #f0f0f0; padding: 2px; width: 70%; margin-left: auto; margin-right: auto; text-align: center;">
+
+				<input id="file1" name="file1" type="file" value="Cliquez-ici">
+				<input id="file2" name="file2" type="file" value="Cliquez-ici">
+				<input id="file3" name="file3" type="file" value="Cliquez-ici">
+				<input id="file4" name="file4" type="file" value="Cliquez-ici">
+			</p>
+			<p class="acenter">
+				<label for="expiration_days">Expiration du fichier:</label>
+
+				<select id="expiration_days" name="expiration_days">
+					<option value="10" selected>10 jours</option>
+					<option value="10">15 jours</option>
+					<option value="10">20 jours</option>
+					<option value="10">30 jours</option>
+				</select>
+			</p>
+
+			<p>
+				<input id="downloads_report" name="downloads_report" type="checkbox">
+				<label for="downloads_report">Recevoir un récapitulatif des téléchargements</label>
+			</p>
+			<p>
+				<input id="acknowlegdement" name="acknowlegdement" type="checkbox">
+				<label for="acknowlegdement">Recevoir un accusé de réception à chaque téléchargement</label>
+			</p>
+
+			<p>
+				<input id="password_protection" name="password_protection" type="checkbox">
+				<label for="password_protection">Protéger par mot de passe:</label>
+				<input id="password" name="password" type="password">
+			</p>
+			<p>
+				<input id="comment_option" name="comment_option" type="checkbox">
+				<label for="comment_option">Insérer un commentaire:</label><br>
+
+				<textarea style="width: 80%; display: block; margin: 0 auto;" id="comment" name="comment" type="comment"></textarea>
+			</p>
+			<p class="acenter">
+				<button class="submit_upload" type="submit">Uploader!</button>
+			</p>
+			
+		</fielset>
+		</form>

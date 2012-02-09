@@ -1,0 +1,39 @@
+[% IF !isAdmin %]
+  		<div class="info info-rouge">
+			<h1>Accès refusé</h1>
+			<p>Cette section est réservée aux administrateurs. <a href="[% request.uri_base %]/">Cliquez-ici</a> pour retourner à l'application.</p>
+		</div>
+[% END %]
+[% IF isAdmin %]
+ 		<div class="info info-vert">
+			<h1>Information</h1>
+			<p>Voici la liste des téléchargements en cours</p>
+		</div>
+
+		<table>
+			<tr>
+				<th>Nom</th>
+				<th>Taille</th>
+				<th>Commencé</th>
+				<th>Téléchargé</th>
+			</tr>
+			<tr>
+				<td>bbzfiueihebe.zip</td>
+				<td class="acenter">532.65 MO</td>
+				<td class="acenter">07/12/2011 20:43:18</td>
+				<td class="acenter">6</td>
+			</tr>
+			<tr>
+				<td>bbzfiueihebe.zip</td>
+				<td class="acenter">532.65 MO</td>
+				<td class="acenter">07/12/2011 20:43:18</td>
+				<td class="acenter">6</td>
+			</tr>
+			<tr>
+				<td>bbzfiueihebe.zip</td>
+				<td class="acenter">532.65 MO</td>
+				<td class="acenter">07/12/2011 20:43:18</td>
+				<td class="acenter">6</td>
+			</tr>
+		</table>
+[% END %]
