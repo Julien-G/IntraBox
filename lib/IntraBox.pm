@@ -69,7 +69,7 @@ use subroutine3;
 
 sub getSessionVars {
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
-	my $login = "jgirault";
+	my $login = "lfoucher";
 	my $usr;
 
 	#if there is no session, log the user
