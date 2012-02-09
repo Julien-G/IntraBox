@@ -36,7 +36,7 @@ plugins:
         schema_class: DB::intrabox
         dsn: dbi:mysql:intrabox
         user: root
-        pass: cabernet
+        pass: 
         options:
           RaiseError: 1
           PrintError: 1
