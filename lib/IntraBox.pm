@@ -1,5 +1,5 @@
 package IntraBox;
-## PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
 use warnings;
 
@@ -7,67 +7,73 @@ use warnings;
 use lib '.';
 our $VERSION = '0.1';
 
-# Chargement des plugins utiles à Dancer
+# Load plugins for Dancer
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 
-# Chargement des plugins fonctionnels
+# Load fonctional plugins
 use Digest::SHA1;
 use Class::Date qw(:errors date localdate gmdate now -DateParse);
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Chargement des subroutines
+# Load subroutines
 use subroutine;
 use subroutine2;
 use subroutine3;
-## fin PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
-# Quelques outils utilitaires
+# Some useful tools
 #------------------------------------------------------------
 
-# gestion des tas de messages 'info' et 'erreur' (il suffit de faire
-# appel à 'push-info' ou à 'push_erreur' pour accumuler des messages qui
-# seront automatiquement transmis au moteur de template)
+# The code below allows to put some 'info' or 'alert' or 'error'
+# (we only need to call 'IntraBox::push_info' or 'IntraBox::push_alert'
+# or 'IntraBox::push_error' to automatically transmit the message
+# to the template toolkit
 {
-  # stockage des deux tableaux de messages
+  # arrays of messages
   my @infoMsgs;
   my @alertMsgs;
   my @errorMsgs;
 
-  # fonctions pour accumuler des messages
+  # push the message into the array
   sub push_info {push @infoMsgs, @_;}
   sub push_alert {push @alertMsgs, @_;}
   sub push_error {push @errorMsgs, @_;}
 
-  # fonctions pour récupérer tous les messages accumulés
+  # get the message from the array
   sub all_info {return @infoMsgs};
   sub all_alert {return @alertMsgs};
   sub all_error {return @errorMsgs};
 
-  # fonctions pour vider ces tableaux
+  # empty the array
   sub reset_info {@infoMsgs = ();}
   sub reset_alert {@alertMsgs = ();}
   sub reset_error {@errorMsgs = ();}
 
   hook before_template => sub {
     my $tokens = shift;
-    # transmission des messages aux vues
+    # transmit messages to views
     $tokens->{infoMsgs} = [all_info];
     $tokens->{alertMsgs} = [all_alert];
     $tokens->{errorMsgs} = [all_error];
   };
 
   hook after => sub {
-    # vidage des messages après la route
+    # empty arrays
     reset_info;
     reset_alert;
     reset_error;
   };
 }
 
-sub getSessionVars {
+#------------------------------------------------------------
+# Session
+#------------------------------------------------------------
+# The subroutine getSession sets all sessions vars
+# and returns them;
+sub getSession {
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
 	my $login = "jgirault";
 	my $usr;
@@ -104,23 +110,29 @@ sub getSessionVars {
 	return session;	
 }
 
+#------------------------------------------------------------
+# DEPRECATED
+#my $sess;
+#hook 'before' => sub {
+#	$sess = getSession();
+#  	return 0;
+#};
+#------------------------------------------------------------
 
-my $sess;
-hook 'before' => sub {
-	$sess = getSessionVars();
-  	return 0;
-};
-
-
-
-# Chargement des controllers
+#------------------------------------------------------------
+# Controllers
+#------------------------------------------------------------
+# Load controllers
 use depositController;
 use fileController;
 use adminDownloadController;
 use adminAdminController;
 
+#------------------------------------------------------------
+# Routes
+#------------------------------------------------------------
 prefix undef;
-#--------- ROUTEES -------
+
 get '/' => sub {
 	redirect '/deposit/new';
 };
@@ -131,8 +143,5 @@ get '/admin' => sub {
 get '/admin/' => sub {
 	redirect '/admin/download';
 };
-
-#--- /Infos User ---
-
 
 true;

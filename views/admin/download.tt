@@ -5,35 +5,45 @@
 		</div>
 [% END %]
 [% IF sess.isAdmin %]
+	[% IF infoMsgs.size > 0 %]
  		<div class="info info-vert">
 			<h1>Information</h1>
-			<p>Voici la liste des téléchargements en cours.</p>
+		[% FOREACH msg IN infoMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
 		</div>
-
+	[% END %]
+	[% IF alertMsgs.size > 0 %]
+ 		<div class="info info-orange">
+			<h1>Avertissement</h1>
+		[% FOREACH msg IN alertMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
+		</div>
+	[% END %]
+	[% IF errorMsgs.size > 0 %]
+ 		<div class="info info-rouge">
+			<h1>Erreur</h1>
+		[% FOREACH msg IN errorMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
+		</div>
+	[% END %]
+	
 		<table>
 			<tr>
-				<th>Nom</th>
-				<th>Taille</th>
+				<th class="aleft" style="width: 40%">Nom du fichier</th>
+				<th>Dépôt de</th>
 				<th>Commencé</th>
-				<th>Téléchargé</th>
+				<th>Nombre de téléchargements</th>
 			</tr>
+			[% FOREACH download IN downloads %]
 			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
+				<td>[% download.file.name %]</td>
+				<td class="acenter">[% download.user.login %]</td>
+				<td class="acenter">[% download.start_date %]</td>
+				<td class="acenter">[% download.dls_count %]</td>
 			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
+			[% END %]
 		</table>
 [% END %]

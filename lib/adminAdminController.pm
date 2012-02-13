@@ -1,5 +1,5 @@
 package IntraBox::adminAdminController;
-## PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
 use warnings;
 
@@ -7,28 +7,33 @@ use warnings;
 use lib '.';
 our $VERSION = '0.1';
 
-# Chargement des plugins utiles à Dancer
+# Load plugins for Dancer
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 
-# Chargement des plugins fonctionnels
+# Load fonctional plugins
 use Digest::SHA1;
 use Class::Date qw(:errors date localdate gmdate now -DateParse);
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Chargement des subroutines
+# Load subroutines
 use subroutine;
 use subroutine2;
 use subroutine3;
-## fin PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
+#------------------------------------------------------------
+# Session
+#------------------------------------------------------------
+my $sess = IntraBox::getSession();
+
+#------------------------------------------------------------
+# Routes
+#------------------------------------------------------------
 prefix '/admin/admin';
 
-my $sess = IntraBox::getSessionVars();
-
 get '/' => sub {
-	IntraBox::push_info "Salut";
 	my @admins = schema->resultset('User')->search( { admin => true } )->all;
 	template 'admin/admin', { sess => $sess, admins => \@admins };
 };
@@ -45,18 +50,11 @@ post '/new' => sub {
 	  ->first();
 	if ( not defined $admin ) {
 		my $login = param('login');
-		IntraBox::push_alert "Il n'y a pas d'utilisateur correspondant au login <strong>$login</strong>";
-		$msgs =
-		  { alert =>
-"Il n'y a pas d'utilisateur correspondant au login <strong>$login</strong>"
-		  };
+		IntraBox::push_error "Il n'y a pas d'utilisateur correspondant au login <strong>$login</strong>";
 	}
 	else {
 		my $login = $admin->login;
 		IntraBox::push_info "Vous venez d'ajouter l'administrateur <strong>$login</strong>";
-		$msgs =
-		  { info =>
-			  "Vous venez d'ajouter l'administrateur <strong>$login</strong>" };
 		$admin->update( { admin => true } );
 	}
 
@@ -64,7 +62,6 @@ post '/new' => sub {
 	template 'admin/admin',
 	  {
 		sess => $sess,
-		msgs    => $msgs,
 		admins  => \@admins
 	  };
 };
@@ -78,16 +75,11 @@ get qr{/delete/(?<id>\d+)} => sub {
 	# recherche de l'admin à supprimer
 	my $admin = schema->resultset('User')->find($id);
 	if ( not defined $admin ) {
-		$msgs =
-		  { alert =>
-			  "Il n'y a pas d'utilisateur à l'ID <strong>$id</strong>" };
+		IntraBox::push_alert "Il n'y a pas d'utilisateur à l'ID <strong>$id</strong>";
 	}
 	else {
 		my $login = $admin->login;
-		$msgs =
-		  { warning =>
-			  "Vous venez de retirer l'administrateur <strong>$login</strong>"
-		  };
+		IntraBox::push_alert "Vous venez de retirer l'administrateur <strong>$login</strong>";
 		$admin->update( { admin => false } );
 	}
 
@@ -95,7 +87,6 @@ get qr{/delete/(?<id>\d+)} => sub {
 	template 'admin/admin',
 	  {
 		sess => $sess,
-		msgs    => $msgs,
 		admins  => \@admins
 	  };
 };
