@@ -1,5 +1,5 @@
 package IntraBox::fileController;
-## PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
 use warnings;
 
@@ -7,25 +7,31 @@ use warnings;
 use lib '.';
 our $VERSION = '0.1';
 
-# Chargement des plugins utiles à Dancer
+# Load plugins for Dancer
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 
-# Chargement des plugins fonctionnels
+# Load fonctional plugins
 use Digest::SHA1;
 use Class::Date qw(:errors date localdate gmdate now -DateParse);
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Chargement des subroutines
+# Load subroutines
 use subroutine;
 use subroutine2;
 use subroutine3;
-## fin PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
+#------------------------------------------------------------
+# Session
+#------------------------------------------------------------
+my $sess = IntraBox::getSession();
+
+#------------------------------------------------------------
+# Routes
+#------------------------------------------------------------
 prefix '/file';
-
-my $sess = IntraBox::getSessionVars();
 
 # DEPRECATED
 my $user ="jgirault";

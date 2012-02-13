@@ -1,5 +1,5 @@
 package IntraBox::adminDownloadController;
-## PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
 use warnings;
 
@@ -7,28 +7,56 @@ use warnings;
 use lib '.';
 our $VERSION = '0.1';
 
-# Chargement des plugins utiles à Dancer
+# Load plugins for Dancer
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 
-# Chargement des plugins fonctionnels
+# Load fonctional plugins
 use Digest::SHA1;
 use Class::Date qw(:errors date localdate gmdate now -DateParse);
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Chargement des subroutines
+# Load subroutines
 use subroutine;
 use subroutine2;
 use subroutine3;
-## fin PARTIE COMMUNE A TOUS LES CONTROLLEURS
+## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
+#------------------------------------------------------------
+# Session
+#------------------------------------------------------------
+my $sess = IntraBox::getSession();
+
+#------------------------------------------------------------
+# Routes
+#------------------------------------------------------------
 prefix '/admin/download';
 
-my $sess = IntraBox::getSessionVars();
-
 get '/' => sub {
-	template 'admin/download', { sess => $sess };
+	my @downloadsInProgress = schema->resultset('Download')->search( { end_date => undef } )->all;
+	my @downloads;
+	
+	for my $dl (@downloadsInProgress) {
+		my $file = $dl->file;
+		my $deposit = $file->id_deposit;
+		my $user = $deposit->id_user;
+		my @dls = $file->downloads;
+		my $dls_count = 0;
+		for my $each_dl (@dls) {
+			$dls_count++;
+		}
+		push (@downloads, { 
+			file => $file,
+			deposit => $deposit,
+			start_date => Class::Date->new( $dl->start_date ),
+			user => $user,
+			dl => $dl,
+			dls_count => $dls_count
+		});
+	}
+	IntraBox::push_info "Voici la liste des téléchargements en cours.";
+	template 'admin/download', { sess => $sess, downloads => \@downloads };
 };
 
 return 1;
