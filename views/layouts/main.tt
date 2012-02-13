@@ -4,6 +4,18 @@
 	<title>IntraBox</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=[% settings.charset %]" />
 	<link rel="stylesheet" type="text/css" media="screen" href="[% request.uri_base %]/css/style.css" />
+			<link rel="stylesheet" href="[% request.uri_base %]/css/ui-lightness/jquery-ui-1.8.17.custom.css" type="text/css" media="all" />
+	<script src="[% request.uri_base %]/javascripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="[% request.uri_base %]/javascripts/jquery-ui-1.8.17.custom.min.js" type="text/javascript"></script>
+	<script>
+	$(function() {
+		$( "#progressbar" ).progressbar({
+			value: 37
+		});
+		$( ".UIbutton" ).button();
+		$( ".UIradio" ).buttonset();
+	});
+	</script>
 </head>
 <body>
 [% IF sess.isAdmin %]
@@ -25,7 +37,7 @@
 		</menu>
 	</div>
 [% END %]
-<!-
+<!--
 <h1>Variables de session</h1>
 [% FOREACH key IN sess.keys %]
 [% key %] => [% sess.$key %]<br>
@@ -36,7 +48,9 @@
 
 		<h2>Système d'échange de fichiers</h2>
 		<div id="profile">Connecté sous:<br><em>[% sess.login %]</em> (<a href="">Se déconnecter</a>)<br>
-		Espace disque utilisé: [% sess.usedSpace %]mo/[% user_size_space_limit %]mo</div>
+		Espace disque utilisé: [% sess.usedSpace %]mo/[% user_size_space_limit %]mo
+		<div id="progressbar" style="position: static; margin: 0.1em auto 0; padding: 0;  bottom: 0.2em; width: 100%; height: 8px;"></div>
+		</div>
 	</div>
 	<div id="menubar">
 		<menu>

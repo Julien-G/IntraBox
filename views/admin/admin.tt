@@ -5,7 +5,7 @@
 		</div>
 [% END %]
 [% IF sess.isAdmin %]
-	[% IF infoMsgs %]
+	[% IF infoMsgs.size > 0 %]
  		<div class="info info-vert">
 			<h1>Information</h1>
 		[% FOREACH msg IN infoMsgs %]
@@ -13,22 +13,20 @@
 		[% END %]
 		</div>
 	[% END %]
-	[% IF msgs.info %]
- 		<div class="info info-vert">
-			<h1>Information</h1>
-			<p>[% msgs.info %]</p>
-		</div>
-	[% END %]
-	[% IF msgs.warning %]
+	[% IF alertMsgs.size > 0 %]
  		<div class="info info-orange">
 			<h1>Avertissement</h1>
-			<p>[% msgs.warning %]</p>
+		[% FOREACH msg IN alertMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
 		</div>
 	[% END %]
-	[% IF msgs.alert %]
+	[% IF errorMsgs.size > 0 %]
  		<div class="info info-rouge">
-			<h1>Alerte</h1>
-			<p>[% msgs.alert %]</p>
+			<h1>Erreur</h1>
+		[% FOREACH msg IN errorMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
 		</div>
 	[% END %]
 	
@@ -38,7 +36,7 @@
 			<p>
 				<label for="login">Login:</label>
 				<input id="login" name="login" type="login">
-				<button class="submit" type="submit">Ajouter comme administrateur</button>
+				<button class="UIbutton" type="submit">Ajouter comme administrateur</button>
 			</p>
 		</fieldset>
 		<table>
@@ -49,7 +47,7 @@
 			[% FOREACH admin IN admins %]
 			<tr>
 				<td>[% admin.login %]</td>
-				<td class="acenter"><a href="[% request.uri_base %]/admin/admin/delete/[% admin.id_user %]">Supprimer</a></td>
+				<td class="acenter"><a class="UIbutton" href="[% request.uri_base %]/admin/admin/delete/[% admin.id_user %]">Supprimer</a></td>
 			</tr>
 			[% END %]
 		</table>

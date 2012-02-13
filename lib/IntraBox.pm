@@ -74,6 +74,7 @@ use subroutine3;
 # The subroutine getSession sets all sessions vars
 # and returns them;
 sub getSession {
+
 #get the remote user login - must be $ENV{'REMOTE_USER'}
 my $login = "lfoucher";
 my $usr;
@@ -114,8 +115,8 @@ return session;
 # DEPRECATED
 #my $sess;
 #hook 'before' => sub {
-# $sess = getSession();
-# return 0;
+#	$sess = getSession();
+#  	return 0;
 #};
 #------------------------------------------------------------
 

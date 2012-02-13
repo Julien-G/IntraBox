@@ -16,13 +16,20 @@
 			</p>
 			<p class="acenter">
 				<label for="expiration_days">Expiration du fichier:</label>
-
+				<span class="UIradio">
+					<input type="radio" id="radio1" name="expiration_days" value="10" checked="checked" /><label for="radio1">10 jours</label>
+					<input type="radio" id="radio2" name="expiration_days" value="15" /><label for="radio2">15 jours</label>
+					<input type="radio" id="radio3" name="expiration_days" value="20" /><label for="radio3">20 jours</label>
+					<input type="radio" id="radio4" name="expiration_days" value="30" /><label for="radio4">30 jours</label>
+				</span>
+				<!-- DEPRECATED
 				<select id="expiration_days" name="expiration_days">
 					<option value="10" selected>10 jours</option>
 					<option value="10">15 jours</option>
 					<option value="10">20 jours</option>
 					<option value="10">30 jours</option>
 				</select>
+				-->
 			</p>
 
 			<p>

@@ -24,6 +24,8 @@ th {
 p, h1, h2, h3, h4, h5 { margin: 0; padding: 0 }
 a { color: #333333; }
 a:hover { text-decoration: none; }
+a.UIbutton, button.UIbutton { font-size: 0.8em; }
+span.UIradio { font-size: 0.8em; }
 
 .aleft { text-align: left; }
 .acenter { text-align: center; }
@@ -34,6 +36,7 @@ a:hover { text-decoration: none; }
 	background-color: #44413B;
 	color: #ffffff;
 	padding: 0.7em;
+	height: 4.5em;
 	position: relative;
 }
 
@@ -51,8 +54,9 @@ a:hover { text-decoration: none; }
 }
 #profile {
 	position: absolute;
-	padding: 0.7em;
+	padding: 0.5em 0.7em 0.5em;
 	top: 0.7em;
+	height: 4.3em;
 	right: 0.7em;
 	background-color: #5B5853;
 }
@@ -127,7 +131,9 @@ button.submit_upload {
 	font-size: 1.2em;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
 }
-
+button.submit_upload:hover {
+	cursor: pointer;
+}
 
 /* Définition des divs d'information */
 .info {
