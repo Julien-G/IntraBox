@@ -129,9 +129,12 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`usergroup` (
   `id_usergroup` INT(11) NOT NULL AUTO_INCREMENT ,
   `rule_type` VARCHAR(45) NOT NULL ,
   `rule` VARCHAR(45) NOT NULL ,
-  `quota` TINYINT(4) NOT NULL ,
-  `size_max` TINYINT(4) NOT NULL ,
+  `name` VARCHAR(45) NOT NULL ,
+  `quota` BIGINT(45) NOT NULL ,
+  `size_max` BIGINT(45) NOT NULL ,
   `expiration_max` TINYINT(4) NOT NULL ,
+  `description` TEXT(45) ,
+  `creation_date` DATETIME ,
   PRIMARY KEY (`id_usergroup`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;

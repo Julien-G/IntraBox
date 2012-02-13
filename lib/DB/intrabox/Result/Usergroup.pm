@@ -38,20 +38,37 @@ __PACKAGE__->table("usergroup");
   is_nullable: 0
   size: 45
 
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 45
+
 =head2 quota
 
-  data_type: 'tinyint'
+  data_type: 'bigint'
   is_nullable: 0
 
 =head2 size_max
 
-  data_type: 'tinyint'
+  data_type: 'bigint'
   is_nullable: 0
 
 =head2 expiration_max
 
   data_type: 'tinyint'
   is_nullable: 0
+
+=head2 description
+
+  data_type: 'tinytext'
+  is_nullable: 1
+
+=head2 creation_date
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 1
 
 =cut
 
@@ -62,18 +79,28 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 45 },
   "rule",
   { data_type => "varchar", is_nullable => 0, size => 45 },
+  "name",
+  { data_type => "varchar", is_nullable => 0, size => 45 },
   "quota",
-  { data_type => "tinyint", is_nullable => 0 },
+  { data_type => "bigint", is_nullable => 0 },
   "size_max",
-  { data_type => "tinyint", is_nullable => 0 },
+  { data_type => "bigint", is_nullable => 0 },
   "expiration_max",
   { data_type => "tinyint", is_nullable => 0 },
+  "description",
+  { data_type => "tinytext", is_nullable => 1 },
+  "creation_date",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 1,
+  },
 );
 __PACKAGE__->set_primary_key("id_usergroup");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-01-30 17:27:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9N5WnEorbQ/w1NE/KlZCyg
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-13 18:01:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TGpXf9PN5XLISgvB2uALpA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
