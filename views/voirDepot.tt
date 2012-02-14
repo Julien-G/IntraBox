@@ -1,0 +1,45 @@
+  	[% FOREACH deposit IN liste_deposit %]
+  	[% taille_total = 0 %]
+  	[% FOREACH file = deposit.files %][% taille_total = taille_total + file.size %][% END %]
+  	<div class="info info-vert">
+		<h1>Depot n°[% deposit.download_code %]</h1>
+		<ul>
+			<li>Statut : [% deposit.id_status.name %]</li>
+			<li>Date de création : [% deposit.created_date %]</li>						
+			<li>Date d'expiration : [% deposit.expiration_date %]</li>
+			<li>Taille total du dépôt : [% taille_total / 1024 %] Mo</li>
+			</br>
+			<li>Vous pouvez télécharger votre fichier ici : <a href="[% request.uri_base %]/file/download/[% deposit.download_code %]">[% request.uri_base %]/download/[% deposit.download_code %]</a>
+			</br>
+			[% IF deposit.opt_acknowledgement %]<li>Vous souhaitez recevoir un récapitulatif de téléchargement</li>[% END %]
+			[% IF deposit.opt_downloads_report %]<li>Vous souhaitez recevoir un rapport à chaque téléchargement</li>[% END %]
+			[% IF deposit.opt_password %]<li>Vous avez renseigner un mot de passe pour télécharger les fichiers</li>[% END %]
+			</br>
+			[% IF deposit.opt_comment %]<li>Vous avez laisser en commentaire : [% deposit.opt_comment %]</li>[% END %]
+	</div> 
+	
+
+			[% FOREACH file = deposit.files %]
+			<fieldset>
+				<table>				
+					<td><em>[% file.name %]</em><br/><br/>[% file.size / 1024 %] Mo</td>
+					<td>
+						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
+							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
+							<input type="hidden" id="name" name="name" value="[% file.name %]">
+							<p class="acenter">
+							<button class="submit" type="submit">Download</button></p>
+						</form>						
+					</td>
+				</table>
+			</fieldset>
+			<br/>
+			[% END %]
+
+		[% END %]
+			
+
+		
+				
+	
+		

@@ -13,7 +13,7 @@ use Dancer::Plugin::DBIC;
 
 # Load fonctional plugins
 use Digest::SHA1;
-use Class::Date qw(:errors date localdate gmdate now -DateParse);
+use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 

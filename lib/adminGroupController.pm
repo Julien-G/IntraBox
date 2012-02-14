@@ -13,7 +13,7 @@ use Dancer::Plugin::DBIC;
 
 # Load fonctional plugins
 use Digest::SHA1;
-use Class::Date qw(:errors date localdate gmdate now -DateParse);
+use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
@@ -68,7 +68,7 @@ post '/new' => sub {
 	else { $space_size_max = $space_size_max * 1073741824 }
 
 	my $current_date = Class::Date->new;
-	$current_date = now;
+	$current_date = DateTime->now;
 
 	# recherche du groupe à ajouter
 	my $usergroups = schema->resultset('Usergroup')->find(
@@ -164,7 +164,7 @@ post '/update' => sub {
 	else { $space_size_max = $space_size_max * 1073741824 }
 
 	my $current_date = Class::Date->new;
-	$current_date = now;
+	$current_date = DateTime->now;
 
 	# recherche du groupe à ajouter
 	my $usergroups = schema->resultset('Usergroup')->find(

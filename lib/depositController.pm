@@ -13,7 +13,7 @@ use Dancer::Plugin::DBIC;
 
 # Load fonctional plugins
 use Digest::SHA1;
-use Class::Date qw(:errors date localdate gmdate now -DateParse);
+use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
@@ -34,7 +34,7 @@ my $sess = IntraBox::getSession();
 prefix '/deposit';
 
 # DEPRECATED
-my $user ="jgirault";
+my $user ="abourgan";
 #Vérification si il est admin
 #Récupération du groupe dans lequel il est
 #Récupération de la taille maximale de son espace personnel et fichier
@@ -62,8 +62,6 @@ get '/new' => sub {
 	  	sess				  => $sess,
 		info_color            => $info_color,
 		message               => $message
-		#user_space_used       => ( $user_space_used / ( 1024 * 1024 ) ),
-		#user_size_space_limit => ( $user_size_space_limit / ( 1024 * 1024 ) )
 	  };
 };
 
@@ -75,14 +73,37 @@ get '/' => sub {
 	gestion_all_fichiers();
 };
 
-get '/voirDepot/:deposit' => sub {
+post '/' => sub {
+	my $choix_tri = param("choix_tri");
+	my $choix_show_expir = param("choix_show_expir");
+	gestion_all_fichiers("$choix_tri", "$choix_show_expir");
+};
+
+get '/:deposit' => sub {
 	my $param_file = param("deposit");
 	afficher_depot($param_file);
 };
 
+get '/supprimerDepot/:deposit' => sub {
+	my $param_file = param("deposit");
+	supprimer_depot($param_file);
+	redirect '/deposit/';
+};
+
+get '/modifierDepot/:deposit' => sub {
+	my $param_file = param("deposit");
+	afficher_modifier_depot($param_file);
+};
+
+post '/modifierDepot/:deposit' => sub {
+	my $param_file = param("deposit");
+	modifier_depot($param_file);
+	redirect '/';
+};
 
 
 #--------- /ROUTEES -------
+
 my $downloads_report;
 my $acknowlegdement;
 my $password;
@@ -98,9 +119,15 @@ my $id_status;
 my $status;
 my $id_status2;
 my $download_code;
-sub gestion_all_fichiers {
 
-	my $login_user = "jgirault";
+sub gestion_all_fichiers {
+	my $methode_tri      = $_[0];
+	my $choix_show_expir = $_[1]; 
+	
+	if (not defined $methode_tri) {$methode_tri = "created_date"}
+	if (not defined $choix_show_expir) {$choix_show_expir = "false"}
+
+	my $login_user = "abourgan";
 	my $id_user;
 
 	my @liste_user =
@@ -109,55 +136,104 @@ sub gestion_all_fichiers {
 	for my $user_liste (@liste_user) {
 		$id_user = $user_liste->id_user;
 	}
+	my $current_date = DateTime->now;
+	my @liste_deposit;
 
-	my @liste_deposit = schema->resultset('Deposit')->search(
-		{
+	if ( $choix_show_expir eq "true" ) {
+		@liste_deposit = schema->resultset('Deposit')->search(
 			-and => [
-				id_user   => "$id_user",
-				id_status => "1",
-			],
-		}
-	);
+					id_user         => "$id_user",
+					area_access_code       => ,
+				],
+			{ order_by => "$methode_tri" },
+		);
+
+	}
+	else {
+		@liste_deposit = schema->resultset('Deposit')->search(
+			{
+				-and => [
+					id_user         => "$id_user",
+					id_status       => "1",
+					expiration_date => { '>', $current_date },
+					area_access_code       => ,
+				],
+			},
+			{ order_by => "$methode_tri" },
+		);
+	}
 
 	for my $deposit_liste (@liste_deposit) {
 		$id_deposit = $deposit_liste->id_deposit;
-
 	}
-
-	template 'gestions_fichiers',
-	  {
-		liste_deposit => \@liste_deposit,
-	  };
-
+	template 'gestionFichiers', {
+		liste_deposit    => \@liste_deposit,
+		choix_show_expir => $choix_show_expir,
+	};
 }
 
 sub afficher_depot {
 	my $deposit = $_[0];
 
 	my @liste_deposit =
-	  schema->resultset('Deposit')
-	  ->search( { download_code => $deposit, } );
+	  schema->resultset('Deposit')->search( { download_code => $deposit, } );
+	template 'voirDepot', { liste_deposit => \@liste_deposit, };
+}
 
-#	for my $deposit_liste (@liste_deposit) {
-#		$id_deposit = $deposit_liste->id_deposit;
-#		$id_status  = $deposit_liste->id_status;
-#
-#		$id_status2 = $id_status->id_status;
-#		$status     = $id_status->name;
-#
-#		$expiration_date  = $deposit_liste->expiration_date;
-#		$acknowlegdement  = $deposit_liste->opt_acknowledgement;
-#		$downloads_report = $deposit_liste->opt_downloads_report;
-#		$created_date     = $deposit_liste->created_date;
-#		$comment          = $deposit_liste->opt_comment;
-#		$password         = $deposit_liste->opt_password;
-#	}
+sub supprimer_depot {
+	my $deposit       = $_[0];
+	my $liste_deposit =
+	  schema->resultset('Deposit')->find( { download_code => $deposit } );
+	$liste_deposit->id_status('2');
+	$liste_deposit->update;
+	gestion_all_fichiers();
+}
 
-	template 'voirDepot',
-	  {
-		liste_deposit => \@liste_deposit,
-	  };
+sub afficher_modifier_depot {
 
+	my $deposit = $_[0];
+
+	my $liste_deposit =
+	  schema->resultset('Deposit')->find( { download_code => $deposit } );
+	template 'modifierDepot', { liste_deposit => $liste_deposit, };
+
+}
+
+sub modifier_depot {
+	my $deposit = $_[0];
+
+	my $expiration_days;
+	my $downloads_report;
+
+	my $comment_option;
+	my $comment;
+
+	my $expiration_date;
+	my $expiration_days_date;
+	my $id_status;
+
+	#------- Phase de récupération de tous les paramètres -------
+	$expiration_days  = param("ext_expiration_days");
+	$downloads_report = param("downloads_report");
+	if ( $downloads_report eq "1" ) { $downloads_report = true }
+	else { $downloads_report = false }
+	$acknowlegdement = param("acknowlegdement");
+	if ( $acknowlegdement eq "1" ) { $acknowlegdement = true }
+	else { $acknowlegdement = false }
+
+	$comment_option = param("comment_option");
+	if ( $comment_option eq "1" ) { $comment_option = true }
+	else { $comment_option = false }
+	if ($comment_option) { $comment = param("comment"); }
+	my $exist_deposit =
+	  schema->resultset('Deposit')->find( { download_code => $deposit } );
+	$expiration_date = $exist_deposit->expiration_date;
+	$expiration_date->add( days => $expiration_days );
+	$exist_deposit->expiration_date("$expiration_date");
+	$exist_deposit->opt_acknowledgement("$acknowlegdement");
+	$exist_deposit->opt_downloads_report("$downloads_report");
+	$exist_deposit->opt_comment("$comment");
+	$exist_deposit->update;
 }
 
 
@@ -199,28 +275,33 @@ sub processUploadFiles {
 		my $id_status;
 
 		#------- Phase de récupération de tous les paramètres -------
+		my $IP_user;
+		my $user_agent;
+
+		#------- Phase de récupération de tous les paramètres -------
 		$expiration_days  = param("expiration_days");
 		$downloads_report = param("downloads_report");
-		if ( $downloads_report eq "on" ) { $downloads_report = true }
+		if ( $downloads_report eq "1" ) { $downloads_report = true }
 		else { $downloads_report = false }
 		$acknowlegdement = param("acknowlegdement");
-		if ( $acknowlegdement eq "on" ) { $acknowlegdement = true }
+		if ( $acknowlegdement eq "1" ) { $acknowlegdement = true }
 		else { $acknowlegdement = false }
 		$password_protection = param("password_protection");
-		if ( $password_protection eq "on" ) { $password_protection = true }
+		if ( $password_protection eq "1" ) { $password_protection = true }
 		else { $password_protection = false }
 		if ($password_protection) { $password = param("password"); }
 		$comment_option = param("comment_option");
-		if ( $comment_option eq "on" ) { $comment_option = true }
+		if ( $comment_option eq "1" ) { $comment_option = true }
 		else { $comment_option = false }
 		if ($comment_option) { $comment = param("comment"); }
-		$current_date         = Class::Date->new;
-		$current_date         = now;
-		$expiration_date      = Class::Date->new;
-		$expiration_days_date =
-		  Class::Date->new( [ 0000, 00, "$expiration_days", 00, 00, 00 ] );
-		$expiration_date = $current_date + $expiration_days_date;
 
+		$current_date    = DateTime->now;
+		$expiration_date = DateTime->now;
+		$expiration_date->add( days => $expiration_days );
+		
+		$IP_user = request -> remote_address;
+		$user_agent = request -> user_agent;
+		
 		#------- Phase d'upload de tous les fichiers -------
 		for ( $i = 1 ; $i <= $number_files ; $i++ ) {
 
@@ -337,8 +418,8 @@ sub processUploadFiles {
 						opt_acknowledgement  => $acknowlegdement,
 						opt_downloads_report => $downloads_report,
 						created_date         => $current_date,
-						created_ip           => "192.45.12.12",
-						created_useragent    => "Mozilla",
+						created_ip           => $IP_user,
+						created_useragent    => $user_agent,
 						opt_comment          => $comment,
 						opt_password         => $password,
 					}
