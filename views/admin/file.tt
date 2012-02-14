@@ -1,39 +1,32 @@
-[% IF !isAdmin %]
+[% IF !sess.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
 			<p>Cette section est réservée aux administrateurs. <a href="[% request.uri_base %]/">Cliquez-ici</a> pour retourner à l'application.</p>
 		</div>
 [% END %]
-[% IF isAdmin %]
+[% IF sess.isAdmin %]
  		<div class="info info-vert">
 			<h1>Information</h1>
-			<p>Voici la liste des téléchargements en cours</p>
+			<p>Voici la liste des dépôts non expirés</p>
 		</div>
 
 		<table>
 			<tr>
-				<th>Nom</th>
-				<th>Taille</th>
-				<th>Commencé</th>
+				<th>Propriétaire</th>
+				<th>Numéro du dépôt</th>
+				<th>Taille du dépôt</th>
+				<th>Date de création</th>
+				<th>Date d'expiration</th>
 				<th>Téléchargé</th>
 			</tr>
+			[% FOREACH deposit IN deposits %]
 			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
+				<td>[% deposit.id_user %]</td>
+				<td>[% deposit.id_deposit %]</td>
+				<td>[% deposit.created_date %]</td>
+				<td>[% deposit.expiration_date %]</td>
+				<td>[% deposit.download_code %]</td>
 			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
+			[% END %]
 		</table>
 [% END %]

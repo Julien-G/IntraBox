@@ -129,6 +129,8 @@ use fileController;
 use adminDownloadController;
 use adminAdminController;
 use adminGroupController;
+use adminSearchController;
+use adminFileController;
 
 #------------------------------------------------------------
 # Routes
