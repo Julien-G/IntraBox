@@ -35,67 +35,43 @@ my $sess = IntraBox::getSession();
 prefix '/admin/search';
 
 get '/' => sub {
-
 	template 'admin/search', { sess => $sess, };
 };
 
-post '/new' => sub {
-	my $name_user       = param("name_user");
-	my $type_search1    = param("type_search1");
-	my $option1			= param("option1");
-	my $group           = param("group");
-	my $type_search2    = param("type_search2");
-	my $date_deposit    = param("date_deposit");
-	my $type_search3    = param("type_search3");
-	my $date_expiration = param("date_expiration");
-	my $type_search4    = param("type_search4");
-	my $name_file       = param("name_file");
-	my $type_search5    = param("type_search5");
-	my $size            = param("size");
-	my $type_search6    = param("type_search6");
-#	my $params          = params;
+post '/' => sub {
+	my @deposits;
 
-#	if ( $option1.checked == 'checked'){
-#		my $string =~ s/\s+//g;
-#		$name_user = $string;
-#		if($type_search1 eq "AND"){}
-#		elsif($type_search1 eq "OR"){}
-#		else{}
-#	}
+	# If we do a search on the user login
+	if ( params->{opt_login} == "on" ) {
+		IntraBox::push_info("Recherche sur le login");
 
+		# try to find a user matching the login
+		my $usr =
+		  schema->resultset('User')->search( { login => params->{login} } )
+		  ->first;
+		if ( defined $usr ) {
 
+			# if type is OR, we add all the user deposits to the deposit list
+			if ( params->{type_login} == 'OR' ) {
+				push( @deposits, $usr->deposits );
+			}
+		}
+	}
 
-	  # recherche du groupe à ajouter
-	  #	my @searches =
-	  #	  $schema->resultset('User join Usergroup join Deposit join File')
-	  #	  ->search(
-	  #		{
-	  #			login => $name_user,
-	  #			rule  => $group,
-	  #			id_deposit	=> true,
-	  #			created_date    => $date_deposit,
-	  #			expiration_date => $date_expiration,
-	  #			name	=> true,
-	  #			expiration_max => $size,
-	  #		}
-	  #	  );
-
-#	  my $usr =schema->resultset('User')->search( { login => $name_user } )->first;
+# If we do a search on the deposit date
+#	if (params->{opt_deposit_date} == "on") {
+#		IntraBox::push_info("Recherche sur le groupe d'utilisateur");
 #
-#	if ( $usr->id_user ) {
-#
-#		my $deposits = $usr->deposits;
-#
-#		while ( my $deposit = $deposits->next() ) {
-#			$deposit->id_user->login;
-#			my @files = $deposit->files;
-#			for my $file (@files) {
-#
+#		# try to find a user matching the login
+#		my $usr = schema->resultset('User')->search({ login => params->{login} })->first;
+#		if (defined $usr) {
+#			# if type is OR, we add all the user deposits to the deposit list
+#			if (params{type_login}=='OR') {
+#				push (@deposits, $usr->deposits);
 #			}
 #		}
-#		
 #	}
-	my @deposits = schema->resultset('Deposit')->search({ })->all;
+#my @deposits = schema->resultset('Deposit')->search({ })->all;
 	template 'admin/search',
 	  {
 		sess     => $sess,

@@ -5,75 +5,65 @@
 		</div>
 [% END %]
 [% IF sess.isAdmin %]
+	[% IF infoMsgs.size > 0 %]
  		<div class="info info-vert">
 			<h1>Information</h1>
-			<p>Voici les champs de recherche.[% msgs %] </p>
+		[% FOREACH msg IN infoMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
 		</div>
+	[% END %]
+	[% IF alertMsgs.size > 0 %]
+ 		<div class="info info-orange">
+			<h1>Avertissement</h1>
+		[% FOREACH msg IN alertMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
+		</div>
+	[% END %]
+	[% IF errorMsgs.size > 0 %]
+ 		<div class="info info-rouge">
+			<h1>Erreur</h1>
+		[% FOREACH msg IN errorMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
+		</div>
+	[% END %]
 		
-	<form method="POST" action="[% request.uri_base %]/admin/search/new" enctype="multipart/form-data">
+	<form method="POST" action="[% request.uri_base %]/admin/search">
 		<fieldset>
 			<legend>Effectuer une recherche</legend>
 			
 			<p class="aleft">
-			<input name="option1" id="option1" type="checkbox" checked="checked">
-			<select id="type_search1" name="type_search1">
-				<option value="AND" selected>AND</option>
-				<option value="OR">OR</option>
-				<option value="XOR">XOR</option>
-			</select>
-			<label for="name_user">Nom du propriétaire du fichier :</label>
-			<input id="name_user" name="name_user" type="text">
+			<input name="opt_login" id="opt_login" type="checkbox" checked="checked">
+			<label for="login">Nom du propriétaire du fichier :</label>
+			<input id="login" name="login" type="text">
 			</p>	
 			<p class="aleft">
-			<input name="option2" type="checkbox" checked="checked">
-			<select id="type_search2" name="type_search2">
-				<option value="AND" selected>AND</option>
-				<option value="OR">OR</option>
-				<option value="XOR">XOR</option>
-			</select>
+			<input name="opt_group" type="checkbox" checked="checked">
 			<label for="group">Groupe d'utilisateur :</label>
 			<input id="group" name="group" type="text">
 			</p>
 			<p class="aleft">
-			<input name="option3" type="checkbox" checked="checked">
-			<select id="type_search3" name="type_search3">
-				<option value="AND" selected>AND</option>
-				<option value="OR">OR</option>
-				<option value="XOR">XOR</option>
-			</select>
-			<label for="date_deposit">Date de création du dépôt :</label>
-			<input id="date_deposit" name="date_deposit" type="text">
+			<input name="opt_deposit_date" type="checkbox" checked="checked">
+			<label for="deposit_date">Date de création du dépôt :</label>
+			<input id="deposit_date" name="deposit_date" type="text">
 			</p>
 			<p class="aleft">
-			<input name="option4" type="checkbox" checked="checked">
-			<select id="type_search4" name="type_search4">
-				<option value="AND" selected>AND</option>
-				<option value="OR">OR</option>
-				<option value="XOR">XOR</option>
-			</select>
-			<label for="date_expiration">Date d'expiration du dépôt:</label>
-			<input id="date_expiration" name="date_expiration" type="text">
+			<input name="opt_expiration_date" type="checkbox" checked="checked">
+			<label for="expiration_date">Date d'expiration du dépôt:</label>
+			<input id="expiration_date" name="expiration_date" type="text">
 			</p>
 			<p class="aleft">
-			<input name="option5" type="checkbox" checked="checked">
-			<select id="type_search5" name="type_search5">
-				<option value="AND" selected>AND</option>
-				<option value="OR">OR</option>
-				<option value="XOR">XOR</option>
-			</select>
-			<label for="size">Taille de la zone de dépôt :</label>
-			<input id="size" name="size" type="text">
+			<input name="opt_deposit_size" type="checkbox" checked="checked">
+			<label for="deposit_size">Taille de la zone de dépôt :</label>
+			<input id="deposit_size" name="size" type="text">
 
 			</p>
 			<p class="aleft">
-			<input name="option6" type="checkbox" checked="checked">
-			<select id="type_search6" name="type_search6">
-				<option value="AND" selected>AND</option>
-				<option value="OR">OR</option>
-				<option value="XOR">XOR</option>
-			</select>
-			<label for="name_file">Nom des fichiers :</label>
-			<input id="name_file" name="name_file" type="text">
+			<input name="opt_file_name" type="checkbox" checked="checked">
+			<label for="file_name">Nom des fichiers :</label>
+			<input id="file_name" name="file_name" type="text">
 			</p>
 			</br>
 			<p class="acenter">
