@@ -29,69 +29,89 @@
 		[% END %]
 		</div>
 	[% END %]
-		
+<script>
+$(function() {
+	$("input").focusin(function() {
+		var myCheckBox = "#opt_"+$(this).attr("id");
+		$(myCheckBox).attr('checked', 'checked');
+		return true;
+	});
+});
+</script>
 	<form method="POST" action="[% request.uri_base %]/admin/search">
 		<fieldset>
 			<legend>Effectuer une recherche</legend>
 			
 			<p class="aleft">
-			<input name="opt_login" id="opt_login" type="checkbox" checked="checked">
-			<label for="login">Nom du propriétaire du fichier :</label>
-			<input id="login" name="login" type="text">
+				<input name="opt_login" id="opt_login" type="checkbox"[% IF params.opt_login == 'on' AND params.login != '' %] checked="checked[% END %]">
+				<label for="login">Nom du propriétaire du fichier :</label>
+				<input id="login" name="login" type="text" value="[% IF params.opt_login == 'on' %][% params.login %][% END %]">
 			</p>	
 			<p class="aleft">
-			<input name="opt_group" type="checkbox" checked="checked">
-			<label for="group">Groupe d'utilisateur :</label>
-			<input id="group" name="group" type="text">
+				<input name="opt_group" id="opt_group" type="checkbox"[% IF params.opt_group == 'on' AND params.group != '' %] checked="checked[% END %]>
+				<label for="group">Groupe d'utilisateur LDAP :</label>
+				<input id="group" name="group" type="text" value="[% IF params.opt_group == 'on' %][% params.group %][% END %]">
 			</p>
 			<p class="aleft">
-			<input name="opt_deposit_date" type="checkbox" checked="checked">
-			<label for="deposit_date">Date de création du dépôt :</label>
-			<input id="deposit_date" name="deposit_date" type="text">
+				<input name="opt_deposit_date" id="opt_deposit_date" type="checkbox"[% IF params.opt_deposit_date == 'on' %] checked="checked[% END %]>
+				<label for="deposit_date">Date de création du dépôt :</label>
+				<span class="UIradio" style="font-size: 0.7em;">
+					<input type="radio" id="radio1" name="type_deposit_date" value="AFTER"[% IF params.type_deposit_date == 'AFTER' %] checked="checked"[% END %] /><label for="radio1">APRES</label>
+					<input type="radio" id="radio2" name="type_deposit_date" value="BEFORE"[% IF params.type_deposit_date == 'BEFORE' %] checked="checked"[% END %] /><label for="radio2">AVANT</label>
+				</span>
+				<input class="UIdate" id="deposit_date" name="deposit_date" type="text" value="[% params.deposit_date %]">
 			</p>
 			<p class="aleft">
-			<input name="opt_expiration_date" type="checkbox" checked="checked">
-			<label for="expiration_date">Date d'expiration du dépôt:</label>
-			<input id="expiration_date" name="expiration_date" type="text">
+				<input name="opt_expiration_date" id="opt_expiration_date" type="checkbox"[% IF params.opt_expiration_date == 'on' %] checked="checked[% END %]>
+				<label for="expiration_date">Date d'expiration du dépôt:</label>
+				<span class="UIradio" style="font-size: 0.7em;">
+					<input type="radio" id="radio3" name="type_expiration_date" value="AFTER"[% IF params.type_expiration_date == 'AFTER' %] checked="checked"[% END %] /><label for="radio3">APRES</label>
+					<input type="radio" id="radio4" name="type_expiration_date" value="BEFORE"[% IF params.type_expiration_date == 'BEFORE' %] checked="checked"[% END %] /><label for="radio4">AVANT</label>
+				</span>
+				<input class="UIdate" id="expiration_date" name="expiration_date" type="text" value="[% params.expiration_date %]">
 			</p>
-			<p class="aleft">
-			<input name="opt_deposit_size" type="checkbox" checked="checked">
-			<label for="deposit_size">Taille de la zone de dépôt :</label>
-			<input id="deposit_size" name="size" type="text">
-
-			</p>
-			<p class="aleft">
-			<input name="opt_file_name" type="checkbox" checked="checked">
-			<label for="file_name">Nom des fichiers :</label>
-			<input id="file_name" name="file_name" type="text">
-			</p>
-			</br>
 			<p class="acenter">
 				<button class="submit" type="submit">Envoyer</button>
 			</p>
 		</fieldset>
 </form>
-		</br>
-		</br>
-		<table>
+[% USE date %]
+[% USE Math %]
+[% USE String %]
+[% USE format %]
+[% USE arrondi = format('%02.2f') %]
+[% IF deposits.size > 0 %]
+		<table style="margin-top: 2em;">
 			<tr>
-				<th>Nom du propriétaire</th>
+				<th class="aleft">Nom du propriétaire</th>
 				<th>Groupe d'utilisateur</th>
 				<th>Date de création du dépôt</th>
 				<th>Date d'expiration du dépôt</th>
 				<th>Taille totale du dépôt</th>
 				<th>Nom des fichiers</th>
 			</tr>
-			[% FOREACH deposit IN deposits %]
-			<tr>
-				<td>[% deposit.login %]</td>
+		[% FOREACH deposit IN deposits %]
+			[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
+			[% expiration_date = String.new(deposit.expiration_date).replace('T', ' ')  %]
+			[% deposit_size = 0 %]
+			<tr class="acenter">
+				<td class="aleft">[% deposit.id_user.login %]</td>
 				<td></td>
-				<td>[% deposit.created_date %]</td>
-				<td>[% deposit.expiration_date %]</td>
-				<td>[% deposit.area_size %]</td>
-				<td>[% deposit.file.name %]</td>
+				<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>
+					[% FOREACH file IN deposit.files %]
+						[% deposit_size = deposit_size + file.size %]
+					[% END %]
+					[% arrondi(deposit_size / 1048576) %] mo
+				</td>
+				<td>
+					[% FOREACH file IN deposit.files %]
+						[% file.name %]
+					[% END %]
+				</td>
 			</tr>
-			<a href="[% request.uri_base %]/admin/search/delete/[% user_group.id_usergroup %]">Supprimer</a>
-			[% END %]
+		[% END %]
 		</table>
+	[% END %]
 [% END %]
