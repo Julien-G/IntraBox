@@ -91,13 +91,13 @@ __PACKAGE__->table("deposit");
 
 =head2 expiration_date
 
-  data_type: 'date'
+  data_type: 'datetime'
   datetime_undef_if_invalid: 1
   is_nullable: 0
 
 =head2 created_date
 
-  data_type: 'date'
+  data_type: 'datetime'
   datetime_undef_if_invalid: 1
   is_nullable: 0
 
@@ -141,9 +141,17 @@ __PACKAGE__->add_columns(
   "expiration_days",
   { data_type => "tinyint", is_nullable => 0 },
   "expiration_date",
-  { data_type => "date", datetime_undef_if_invalid => 1, is_nullable => 0 },
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 0,
+  },
   "created_date",
-  { data_type => "date", datetime_undef_if_invalid => 1, is_nullable => 0 },
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 0,
+  },
   "created_ip",
   { data_type => "varchar", is_nullable => 0, size => 19 },
   "created_useragent",
@@ -199,8 +207,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-13 18:01:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zRRQyzSY/bN1vEA1wIn7sA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-14 16:45:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DCqiBg9uyi+D5sh02aD5MA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

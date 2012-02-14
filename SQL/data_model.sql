@@ -51,8 +51,8 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`deposit` (
   `opt_password` VARCHAR(20) NULL DEFAULT NULL ,
   `id_status` INT(11) NOT NULL ,
   `expiration_days` TINYINT(4) NOT NULL ,
-  `expiration_date` DATE NOT NULL ,
-  `created_date` DATE NOT NULL ,
+  `expiration_date` DATETIME NOT NULL ,
+  `created_date` DATETIME NOT NULL ,
   `created_ip` VARCHAR(19) NOT NULL ,
   `created_useragent` VARCHAR(150) NOT NULL ,
   PRIMARY KEY (`id_deposit`, `id_user`, `id_status`) ,
@@ -106,8 +106,8 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`download` (
   `id_file` INT(11) NOT NULL ,
   `ip` VARCHAR(19) NOT NULL ,
   `useragent` VARCHAR(150) NOT NULL ,
-  `start_date` DATE NOT NULL ,
-  `end_date` DATE NULL DEFAULT NULL ,
+  `start_date` DATETIME NOT NULL ,
+  `end_date` DATETIME NULL DEFAULT NULL ,
   `finished` TINYINT(1) NOT NULL DEFAULT '0' ,
   PRIMARY KEY (`id_download`, `id_deposit`, `id_file`) ,
   INDEX `fk_downloads_files1` (`id_file` ASC, `id_deposit` ASC) ,
@@ -144,3 +144,8 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+INSERT INTO status VALUES (1, 'disponible');
+INSERT INTO status VALUES (2, 'expire');
