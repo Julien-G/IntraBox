@@ -1,0 +1,56 @@
+  	<div class="info info-vert">
+		<h1>Information</h1>
+		<p>Voici tous les dépôts effectués</p>
+		<form method="POST" action="[% request.uri_base %]/deposit/">
+		<p class="acenter">
+				<label for="methode_tri">Méthode de tri des résultats</label>
+
+				<select id="choix_tri" name="choix_tri">
+					<option value="download_code">Par code</option>
+					<option value="expiration_date">Par date d'expiration</option>
+					<option value="created_date">Par date de création</option>
+				</select>
+			</p>
+			<p><input type ="checkbox" id="choix_show_expir" name="choix_show_expir" value="true" [% IF choix_show_expir == "true" %]checked[%END%]><label for="choix_show_expir">Montrer les dépôts expirés</label>
+				<p class="acenter">
+				<button class="submit_upload" type="submit">Trier</button>
+			</p>
+			</form>
+	</div> 
+		<table>	
+					<tr>						
+						<td>N°</td>
+						<td>Nom du dépôt</td>
+						<td>Status</td>
+						<td>Date création</td>
+						<td>Date Expiration</td>
+						<td>Actions</td>
+							
+					</tr>
+			[% i = 1 %]			
+			[% FOREACH deposit = liste_deposit %]
+			
+					<tr>
+						<td>[% i %]</td>
+						<td>[% deposit.download_code %]</td>
+						<td>[% deposit.id_status.name %]</td>
+						<td>[% deposit.created_date %]</td>						
+						<td>[% deposit.expiration_date %]</td>
+						<td>[% IF deposit.id_status.name == 'disponible' %]<a href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]">S</a> <a href="[% request.uri_base %]/deposit/[% deposit.download_code %]">V</a> <a href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]">M</a>[% END %]</td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td>[% IF deposit.id_status.name == 'disponible' %]Fichiers présents :[% ELSE %]Fichiers qui étaient présents[% END %]</td>					
+						<td colspan="4">
+						<ul>[% FOREACH file = deposit.files %]
+						<li>[% file.name %]</li>
+						[% END %]</ul></td>
+					</tr>
+			[% i = i + 1 %][% END %]
+			
+		</table>
+		
+				
+	
+		

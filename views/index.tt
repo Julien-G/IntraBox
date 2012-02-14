@@ -33,21 +33,21 @@
 			</p>
 
 			<p>
-				<input id="downloads_report" name="downloads_report" type="checkbox">
+				<input id="downloads_report" name="downloads_report" type="checkbox" value="1">
 				<label for="downloads_report">Recevoir un récapitulatif des téléchargements</label>
 			</p>
 			<p>
-				<input id="acknowlegdement" name="acknowlegdement" type="checkbox">
+				<input id="acknowlegdement" name="acknowlegdement" type="checkbox" value="1">
 				<label for="acknowlegdement">Recevoir un accusé de réception à chaque téléchargement</label>
 			</p>
 
 			<p>
-				<input id="password_protection" name="password_protection" type="checkbox">
+				<input id="password_protection" name="password_protection" type="checkbox" value="1">
 				<label for="password_protection">Protéger par mot de passe:</label>
 				<input id="password" name="password" type="password">
 			</p>
 			<p>
-				<input id="comment_option" name="comment_option" type="checkbox">
+				<input id="comment_option" name="comment_option" type="checkbox" value="1">
 				<label for="comment_option">Insérer un commentaire:</label><br>
 
 				<textarea style="width: 80%; display: block; margin: 0 auto;" id="comment" name="comment" type="comment"></textarea>

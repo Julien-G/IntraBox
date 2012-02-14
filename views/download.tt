@@ -1,0 +1,29 @@
+  		<div class="info info-rouge">
+			<h1>Information</h1>
+			<p>[% message %] </p>
+		</div> 
+		
+		
+			[% IF access %]
+			
+			[% FOREACH file_liste IN liste_file %]
+			<fieldset>
+				<table>				
+					<td>[% file_liste.name %]<br/><br/>[% file_liste.size / 1024 %] Mo<br/>[% file_liste.name_on_disk %]</td>
+					<td>
+						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
+							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file_liste.name_on_disk %]">								
+							<input type="hidden" id="name" name="name" value="[% file_liste.name %]">
+							<p class="acenter">
+							<button class="submit" type="submit">Download</button></p>
+						</form>						
+					</td>
+				</table>
+			</fieldset>
+			<br/>
+			[% END %]
+			
+			[% END %]
+				
+	
+		

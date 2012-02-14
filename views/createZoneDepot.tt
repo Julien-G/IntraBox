@@ -1,0 +1,45 @@
+<div class="info [% info_color %]">
+			<h1>Information</h1>
+			<p>[% email %] </p>		
+			
+		</div> 
+
+
+
+		<form method="POST" action="[% request.uri_base %]/createZoneDepot" >
+		<fieldset>
+			<legend>Formulaire de création d'une zone de dépôt</legend>
+			<p>Indiquez l'email de la personne à qui est adressé la zone de dépôt : 
+				<input id="email_exterior" name="email_exterior" type="text">
+			</p>
+			<p>Indiquez la taille de la zone de dépôt : 
+				<input id="area_size" name="area_size" type="text"> Mo
+			</p>
+			<p class="acenter">
+				<label for="expiration_days">Expiration de la zone:</label>
+
+				<select id="expiration_days" name="expiration_days">
+					<option value="10">10 jours</option>
+					<option value="15">15 jours</option>
+					<option value="20">20 jours</option>
+					<option value="30">30 jours</option>
+				</select>
+			</p>
+
+			<p>
+				<input id="password_protection" name="password_protection" type="checkbox" value="1">
+				<label for="password_protection">Protéger par mot de passe:</label>
+				<input id="password" name="password" type="password">
+			</p>
+			<p>
+				<input id="comment_option" name="comment_option" type="checkbox" value="1">
+				<label for="comment_option">Insérer un commentaire:</label><br>
+
+				<textarea style="width: 80%; display: block; margin: 0 auto;" id="comment" name="comment" type="comment"></textarea>
+			</p>
+			<p class="acenter">
+				<button class="submit_upload" type="submit">Uploader!</button>
+			</p>
+			
+		</fielset>
+		</form>
