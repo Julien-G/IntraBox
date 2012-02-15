@@ -21,18 +21,13 @@ use DBIx::Class::FromValidators;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
-# Session
-#------------------------------------------------------------
-my $sess = IntraBox::getSession();
-
-#------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 prefix '/admin/admin';
 
 get '/' => sub {
 	my @admins = schema->resultset('User')->search( { admin => true } )->all;
-	template 'admin/admin', { sess => $sess, admins => \@admins };
+	template 'admin/admin', { admins => \@admins };
 };
 
 post '/new' => sub {
@@ -58,7 +53,6 @@ post '/new' => sub {
 	my @admins = schema->resultset('User')->search( { admin => true } )->all;
 	template 'admin/admin',
 	  {
-		sess => $sess,
 		admins  => \@admins
 	  };
 };
@@ -83,7 +77,6 @@ get qr{/delete/(?<id>\d+)} => sub {
 	my @admins = schema->resultset('User')->search( { admin => true } )->all;
 	template 'admin/admin',
 	  {
-		sess => $sess,
 		admins  => \@admins
 	  };
 };

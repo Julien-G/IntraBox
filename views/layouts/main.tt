@@ -14,11 +14,14 @@
 		});
 		$( ".UIbutton" ).button();
 		$( ".UIradio" ).buttonset();
+		$( ".UIdate" ).datepicker();
 	});
 	</script>
 </head>
 <body>
-[% IF sess.isAdmin %]
+[% USE format %]
+[% USE arrondi = format('%02.2f') %]
+[% IF session.isAdmin %]
 	<style>
 	body { margin: 0 auto 0 10em; }
 	</style>
@@ -37,18 +40,18 @@
 		</menu>
 	</div>
 [% END %]
-<!--
+<!-
 <h1>Variables de session</h1>
-[% FOREACH key IN sess.keys %]
-[% key %] => [% sess.$key %]<br>
+[% FOREACH key IN session.keys %]
+[% key %] => [% session.$key %]<br>
 [% END %]
 -->
 	<div id="topbar">
 		<h1><a href="[% request.uri_base %]/">IntraBox</a></h1>
 
 		<h2>Système d'échange de fichiers</h2>
-		<div id="profile">Connecté sous:<br><em>[% sess.login %]</em> (<a href="">Se déconnecter</a>)<br>
-		Espace disque utilisé: [% sess.usedSpace %]mo/[% sess.quota / 1024 * 1024 %]mo
+		<div id="profile">Connecté sous:<br><em>[% session.login %]</em> (<a href="">Se déconnecter</a>)<br>
+		Espace disque utilisé: [% arrondi(session.usedSpace / 1048576) %]mo/[% arrondi(session.quota / 1048576) %]mo
 		<div id="progressbar" style="position: static; margin: 0.1em auto 0; padding: 0;  bottom: 0.2em; width: 100%; height: 8px;"></div>
 		</div>
 	</div>
@@ -59,7 +62,7 @@
 			<li><a href="[% request.uri_base %]/deposit">Gérer ses fichiers</a></li>
 			<li><a href="[% request.uri_base %]/area">Gérer ses zones de dépôt</a></li>
 			<li class="aide"><a href="[% request.uri_base %]/help">Aide</a></li>
-			[% IF sess.isAdmin %]
+			[% IF session.isAdmin %]
 			<li class="admin"><a href="[% request.uri_base %]/admin">Administration</a></li>
 			[% END %]
 		</menu>

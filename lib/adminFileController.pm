@@ -21,11 +21,6 @@ use DBIx::Class::FromValidators;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
-# Session
-#------------------------------------------------------------
-my $sess = IntraBox::getSession();
-
-#------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 
@@ -41,7 +36,6 @@ get '/' => sub {
 	
 
 	template 'admin/file', { 
-		sess => $sess,
 		valid_files => \@valid_files
 		 };
 };

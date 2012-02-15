@@ -27,54 +27,51 @@ use Unicode::String qw(utf8 latin1 utf16);
 #------------------------------------------------------------
 # Some useful tools
 #------------------------------------------------------------
-
 # The code below allows to put some 'info' or 'alert' or 'error'
 # (we only need to call 'IntraBox::push_info' or 'IntraBox::push_alert'
 # or 'IntraBox::push_error' to automatically transmit the message
 # to the template toolkit
 {
+  # arrays of messages
+  my @infoMsgs;
+  my @alertMsgs;
+  my @errorMsgs;
 
-	# arrays of messages
-	my @infoMsgs;
-	my @alertMsgs;
-	my @errorMsgs;
+  # push the message into the array
+  sub push_info {push @infoMsgs, @_;}
+  sub push_alert {push @alertMsgs, @_;}
+  sub push_error {push @errorMsgs, @_;}
 
-	# push the message into the array
-	sub push_info  { push @infoMsgs,  @_; }
-	sub push_alert { push @alertMsgs, @_; }
-	sub push_error { push @errorMsgs, @_; }
+  # get the message from the array
+  sub all_info {return @infoMsgs};
+  sub all_alert {return @alertMsgs};
+  sub all_error {return @errorMsgs};
 
-	# get the message from the array
-	sub all_info  { return @infoMsgs }
-	sub all_alert { return @alertMsgs }
-	sub all_error { return @errorMsgs }
+  # empty the array
+  sub reset_info {@infoMsgs = ();}
+  sub reset_alert {@alertMsgs = ();}
+  sub reset_error {@errorMsgs = ();}
 
-	# empty the array
-	sub reset_info  { @infoMsgs  = (); }
-	sub reset_alert { @alertMsgs = (); }
-	sub reset_error { @errorMsgs = (); }
+  hook before_template => sub {
+    my $tokens = shift;
+    # transmit messages to views
+    $tokens->{infoMsgs} = [all_info];
+    $tokens->{alertMsgs} = [all_alert];
+    $tokens->{errorMsgs} = [all_error];
+    $tokens->{session} = getSession();
+  };
 
-	hook before_template => sub {
-		my $tokens = shift;
-
-		# transmit messages to views
-		$tokens->{infoMsgs}  = [all_info];
-		$tokens->{alertMsgs} = [all_alert];
-		$tokens->{errorMsgs} = [all_error];
-	};
-
-	hook after => sub {
-
-		# empty arrays
-		reset_info;
-		reset_alert;
-		reset_error;
-	};
+  hook after => sub {
+    # empty arrays
+    reset_info;
+    reset_alert;
+    reset_error;
+  };
 }
 
 #------------------------------------------------------------
 # Session
-#------------------------------------------------------------
+#------------------------------------------------------------=
 # The subroutine getSession sets all sessions vars
 # and returns them;
 sub getSession {
@@ -166,15 +163,6 @@ sub getSession {
 	session usedSpace => $usedSpace;
 	return session;
 }
-
-#------------------------------------------------------------
-# DEPRECATED
-#my $sess;
-#hook 'before' => sub {
-#	$sess = getSession();
-#  	return 0;
-#};
-#------------------------------------------------------------
 
 #------------------------------------------------------------
 # Controllers

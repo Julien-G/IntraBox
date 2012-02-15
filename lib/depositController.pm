@@ -31,7 +31,7 @@ my $sess = IntraBox::getSession();
 prefix '/deposit';
 
 # DEPRECATED
-my $user ="abourgan";
+my $user = $sess->{login};
 #Vérification si il est admin
 #Récupération du groupe dans lequel il est
 #Récupération de la taille maximale de son espace personnel et fichier
@@ -56,7 +56,6 @@ get '/new' => sub {
 	my $message    = "Vous pouvez uploader vos fichiers en renseignant tous les champs nécessaires";
 	template 'index',
 	  {
-	  	sess				  => $sess,
 		info_color            => $info_color,
 		message               => $message
 		
@@ -125,7 +124,7 @@ sub gestion_all_fichiers {
 	if (not defined $methode_tri) {$methode_tri = "created_date"}
 	if (not defined $choix_show_expir) {$choix_show_expir = "false"}
 
-	my $login_user = "abourgan";
+	my $login_user = $sess->{login};
 	my $id_user;
 
 	my @liste_user =
@@ -175,7 +174,9 @@ sub afficher_depot {
 
 	my @liste_deposit =
 	  schema->resultset('Deposit')->search( { download_code => $deposit, } );
-	template 'voirDepot', { sess => $sess,liste_deposit => \@liste_deposit, };
+	template 'voirDepot', { 
+		liste_deposit => \@liste_deposit 
+	};
 }
 
 sub supprimer_depot {
@@ -450,7 +451,6 @@ sub processUploadFiles {
 	}
 
 	template 'index', {
-		sess	   => $sess,
 		message    => $message,
 		info_color => $info_color,
 
