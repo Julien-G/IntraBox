@@ -103,7 +103,7 @@ $(function() {
 					[% FOREACH file IN deposit.files %]
 						[% deposit_size = deposit_size + file.size %]
 					[% END %]
-					[% arrondi(deposit_size / 1048576) %] mo
+					[% IF deposit_size >= 1048576 %][% arrondi(deposit_size / 1048576) %] Mo[% END %][% IF deposit_size < 1048576 %][% arrondi(deposit_size / 1024) %] ko[% END %]
 				</td>
 				<td>
 					[% FOREACH file IN deposit.files %]
