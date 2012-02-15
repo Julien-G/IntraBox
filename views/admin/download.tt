@@ -45,7 +45,7 @@
 			<tr>
 				<td>[% download.file.name %]</td>
 				<td class="acenter">[% download.user.login %]</td>
-				<td class="acenter">[% date.format(start_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td class="acenter">[% date.format(start_date, '%d %b %Y %Hh%M') %]</td>
 				<td class="acenter">[% download.dls_count %]</td>
 			</tr>
 			[% END %]

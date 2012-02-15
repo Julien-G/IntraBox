@@ -127,7 +127,7 @@
 					[% IF user_group.quota < 1048576 %][% arrondi(user_group.quota / 1024) %] ko[% END %]
 				</td>
 				<td>[% user_group.description %]</td>
-				<td>[% date.format(creation_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>[% date.format(creation_date, '%d %b %Y %Hh%M') %]</td>
 				<td><a href="[% request.uri_base %]/admin/group/modify/[% user_group.id_usergroup %]">Modifier</a>
 				<a href="[% request.uri_base %]/admin/group/delete/[% user_group.id_usergroup %]">Supprimer</a></td>
 			</tr>

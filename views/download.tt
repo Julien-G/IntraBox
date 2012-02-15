@@ -24,13 +24,14 @@
 	[% END %]
 	</div>
 [% END %]
-		
+[% USE format %]
+[% USE arrondi = format('%02.2f') %]	
 			[% IF access %]
 			
 			[% FOREACH file IN liste_file %]
 			<fieldset>
 				<table>				
-					<td>[% file.name %]<br/><br/>[% arrondi(file.size / 1048576) %] Mo<br/>[% file.name_on_disk %]</td>
+					<td>[% file.name %]<br/><br/>[% IF file.size >= 1048576 %][% arrondi(file.size / 1048576) %] Mo[% END %][% IF file.size < 1048576 %][% arrondi(file.size / 1024) %] ko[% END %]<br/>[% file.name_on_disk %]</td>
 					<td>
 						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
 							[% IF display_password %]
