@@ -1,0 +1,73 @@
+<div class="body" id="up">
+
+      <h1>Sommaire</h1>
+
+      <ol>
+	<li><a href="#id1" title="allez à ...">Qu'est-ce qu'IntraBox ?</a></li>
+
+	<li>
+	  <a href="#id2" title="allez à ...">Déposer un ou plusieurs fichiers</a>
+	  <ol>
+	    <li><a href="#id3" title="allez à ...">Les options de dépôt</a></li>
+	  </ol>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Gestion de vos fichiers</a>
+	  <ol>
+	    <li><a href="#id5" title="allez à ...">Modification des options de vos fichiers</a></li>
+	  </ol>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Créer une zone de dépôt pour un extérieur</a>
+	  <ol>
+	    <li><a href="#id5" title="allez à ...">Les options de la zone de dépôt</a></li>
+	  </ol>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Gestion de vos zone de dépôt pour les extérieurs</a>
+	  <ol>
+	    <li><a href="#id5" title="allez à ...">Récupération des fichiers de la zone de dépôt</a></li>
+	    <li><a href="#id5" title="allez à ...">Modification des options de vos fichiers</a></li>
+	  </ol>
+	</li>
+	<li><a href="#id6" title="allez à ...">Auteurs</a></li>
+	<li>
+	  <a href="#id7" title="allez à ...">FAQ</a>
+
+	  <ol>
+	    <li><a href="#id8" title="allez à ...">Je veux déposer plusieurs fichiers</a></li>
+	    <li><a href="#id9" title="allez à ...">Je ne vois pas la fenêtre de progression de dépôt de fichier</a></li>
+	    <li><a href="#id10" title="allez à ...">J'ai oublié l'adresse de téléchargement de mon fichier</a></li>
+	  </ol>
+	</li>
+      </ol>
+      
+      <h1 id="id1">1. Qu'est-ce qu'IntraBox ?</h1>
+      <br>
+      <p>FileX est un système de transfert et de partage de fichiers.</p>
+
+      <p>Il a été conçu dans le but de décharger la messagerie électronique de cette tâche. En effet, nombre d'utilisateurs de messagerie utilisent la fonctionnalité des « pièces
+      jointes » pour transmettre des documents volumineux, ce qui occasionne quelques désagréments pour les destinataires :</p>
+      
+      <ul>
+		<li>Boîtes de messagerie saturées.</li>
+		<li>Impossibilité de recevoir les messages s'ils sont trop volumineux.</li>
+		<li>Lenteur de réception des mails.</li>
+      </ul>
+
+      <p>Le principe de fonctionnement du système est le suivant :</p>
+      <ol>
+		<li>Vous déposez un fichier.</li>
+		<li>Une adresse internet (URL) identifiant le fichier est créée.</li>
+		<li>Vous envoyez cette adresse par e-mail à un plusieurs destinataires du fichier.</li>
+		<li>Le ou les destinataires récupèrent le fichier en utilisant leur navigateur internet.</li>
+      </ol>
+
+      <p>Le seul outil nécessaire pour effectuer toutes ces opérations est un navigateur internet !</p>
+
+      <p><strong>Attention :</strong> l'accès au service pour récupérer un fichier est libre (dans la mesure où on connait son URL et son éventuel mot de passe) mais seules les personnes autorisées et authentifiées par l'école peuvent déposer des
+      fichiers. Il est conservé une trace de toutes les activités sur ce serveur. Les fichiers eux-mêmes ne sont pas conservés au-delà de leur date d'expiration.</p>
+      <br>
+      <h1 id="id2">2. Déposer un ou plusieurs fichiers</h1>
+      
+</div>
