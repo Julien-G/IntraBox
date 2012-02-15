@@ -41,7 +41,6 @@ get '/' => sub {
 		push (@downloads, { 
 			file => $file,
 			deposit => $deposit,
-			start_date => Class::Date->new( $dl->start_date ),
 			user => $user,
 			dl => $dl,
 			dls_count => $dls_count

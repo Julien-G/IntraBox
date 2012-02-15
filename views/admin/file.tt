@@ -31,8 +31,8 @@
 				<td>[% deposit.id_user.login %]</td>
 				<td>[% deposit.id_deposit %]</td>
 				<td>[% FOREACH file IN deposit.files %][% deposit_size = deposit_size + file.size %][% END %][% IF deposit_size >= 1048576 %][% arrondi(deposit_size / 1048576) %] Mo[% END %][% IF deposit_size < 1048576 %][% arrondi(deposit_size / 1024) %] ko[% END %]</td>
-				<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>						
-				<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>[% date.format(created_date, '%d %b %Y %Hh%M') %]</td>						
+				<td>[% date.format(expiration_date, '%d %b %Y %Hh%M') %]</td>
 				<td>[% FOREACH download IN deposit.files.downloads %][% IF loop.last %][% loop.count %][% END %][% END %]</td>
 			</tr>
 			[% END %]
