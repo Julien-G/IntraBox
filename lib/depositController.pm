@@ -17,10 +17,7 @@ use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Load subroutines
-use subroutine;
-use subroutine2;
-use subroutine3;
+
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
@@ -62,6 +59,7 @@ get '/new' => sub {
 	  	sess				  => $sess,
 		info_color            => $info_color,
 		message               => $message
+		
 	  };
 };
 
@@ -166,7 +164,7 @@ sub gestion_all_fichiers {
 	for my $deposit_liste (@liste_deposit) {
 		$id_deposit = $deposit_liste->id_deposit;
 	}
-	template 'gestionFichiers', {
+	template 'gestionFichiers', {sess => $sess,
 		liste_deposit    => \@liste_deposit,
 		choix_show_expir => $choix_show_expir,
 	};
@@ -177,7 +175,7 @@ sub afficher_depot {
 
 	my @liste_deposit =
 	  schema->resultset('Deposit')->search( { download_code => $deposit, } );
-	template 'voirDepot', { liste_deposit => \@liste_deposit, };
+	template 'voirDepot', { sess => $sess,liste_deposit => \@liste_deposit, };
 }
 
 sub supprimer_depot {
@@ -195,7 +193,7 @@ sub afficher_modifier_depot {
 
 	my $liste_deposit =
 	  schema->resultset('Deposit')->find( { download_code => $deposit } );
-	template 'modifierDepot', { liste_deposit => $liste_deposit, };
+	template 'modifierDepot', { sess => $sess,liste_deposit => $liste_deposit, };
 
 }
 

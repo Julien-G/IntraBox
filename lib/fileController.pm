@@ -17,10 +17,7 @@ use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Load subroutines
-use subroutine;
-use subroutine2;
-use subroutine3;
+
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
@@ -34,7 +31,8 @@ my $sess = IntraBox::getSession();
 prefix '/file';
 
 # DEPRECATED
-my $user ="jgirault";
+my $user = "jgirault";
+
 #Vérification si il est admin
 #Récupération du groupe dans lequel il est
 #Récupération de la taille maximale de son espace personnel et fichier
@@ -50,10 +48,9 @@ my $user_size_space_limit;
 #Récupération de la taille actuelle utilisée de son espace personnel
 my $user_space_used;
 $user_space_used = calcul_used_space($user);
+
 #Calcul de l'espace libre de user
 my $user_space_free = $user_size_space_limit - $user_space_used;
-
-
 
 get '/download/:file_name' => sub {
 	my $param_file = param("file_name");
@@ -63,10 +60,12 @@ get '/download/:file_name' => sub {
 post '/downloadFile' => sub {
 
 	my $name_on_disk = param("name_on_disk");
-	my $name = param("name");
-	donwload_file_user($name_on_disk,$name);
-	
+	my $name         = param("name");
+	donwload_file_user( $name_on_disk, $name );
+
 };
+
+
 
 sub download_file {
 	my $download_code = $_[0];
@@ -141,14 +140,19 @@ sub download_file {
 	#Envoi d'un message d'erreur si fichier inexistant
 	if ( !$download_exist ) {
 		$message = $message_inexistant;
-		template 'download', { message => $message };
+		template 'download',
+		  { sess => $sess, message => $message };
 
 	}
 
 	#Envoi d'un message d'erreur si fichier non disponible
 	elsif ( !$download_available ) {
 		$message = $message_indispo;
-		template 'download', { message => $message };
+		template 'download',
+		  {
+			sess    => $sess,
+			message => $message
+		  };
 	}
 
 	#Si les fichiers sont bien présents et disponible
@@ -160,8 +164,7 @@ sub download_file {
 		my $file_liste;
 
 		my @liste_file =
-		  schema->resultset('File')
-		  ->search( { id_deposit => "$id_deposit", } );
+		  schema->resultset('File')->search( { id_deposit => "$id_deposit", } );
 		for my $file_liste (@liste_file) {
 			$cpt_file++;
 			$id_file[$cpt_file]      = $file_liste->id_file;
@@ -181,7 +184,8 @@ sub download_file {
 			access     => $access,
 			nbr_fic    => $cpt_file,
 			file_liste => $file_liste,
-			liste_file => \@liste_file
+			liste_file => \@liste_file,
+			sess => $sess,
 		  };
 	}
 }
@@ -195,8 +199,8 @@ sub donwload_file_user {
 
 	$IP_user    = request->remote_address;
 	$user_agent = request->user_agent;
-	
-	my $current_date    = DateTime->now;
+
+	my $current_date = DateTime->now;
 
 	my $search =
 	  schema->resultset('File')->find( { name_on_disk => $file_name_disk } );
@@ -211,18 +215,18 @@ sub donwload_file_user {
 			ip         => $IP_user,
 			useragent  => $user_agent,
 			start_date => $current_date,
+			sess => $sess,
 		}
 	);
 
 	send_file( "/Upload/$file_name_disk", filename => "$file_name" );
-	
-	$current_date    = DateTime->now;
+
+	$current_date = DateTime->now;
 	$new_download->end_date("$current_date");
 	$new_download->finished("1");
 	$new_download->update;
 }
 
 #--------- /ROUTEES -------
-
 
 true;

@@ -48,7 +48,7 @@
 
 		<h2>Système d'échange de fichiers</h2>
 		<div id="profile">Connecté sous:<br><em>[% sess.login %]</em> (<a href="">Se déconnecter</a>)<br>
-		Espace disque utilisé: [% sess.usedSpace %]mo/[% user_size_space_limit %]mo
+		Espace disque utilisé: [% sess.usedSpace %]mo/[% sess.quota / 1024 * 1024 %]mo
 		<div id="progressbar" style="position: static; margin: 0.1em auto 0; padding: 0;  bottom: 0.2em; width: 100%; height: 8px;"></div>
 		</div>
 	</div>

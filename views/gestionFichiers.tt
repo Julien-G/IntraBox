@@ -36,12 +36,12 @@
 						<td>[% deposit.id_status.name %]</td>
 						<td>[% deposit.created_date %]</td>						
 						<td>[% deposit.expiration_date %]</td>
-						<td>[% IF deposit.id_status.name == 'disponible' %]<a href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]">S</a> <a href="[% request.uri_base %]/deposit/[% deposit.download_code %]">V</a> <a href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]">M</a>[% END %]</td>
+						<td>[% IF deposit.id_status.id_status == 1 %]<a href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]">S</a> <a href="[% request.uri_base %]/deposit/[% deposit.download_code %]">V</a> <a href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]">M</a>[% END %]</td>
 					</tr>
 					
 					<tr>
 						<td></td>
-						<td>[% IF deposit.id_status.name == 'disponible' %]Fichiers présents :[% ELSE %]Fichiers qui étaient présents[% END %]</td>					
+						<td>[% IF deposit.id_status.id_status == 1 %]Fichiers présents :[% ELSE %]Fichiers qui étaient présents[% END %]</td>					
 						<td colspan="4">
 						<ul>[% FOREACH file = deposit.files %]
 						<li>[% file.name %]</li>
