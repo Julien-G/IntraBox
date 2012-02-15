@@ -1,19 +1,40 @@
-  		<div class="info info-rouge">
-			<h1>Information</h1>
-			<p>[% message %] </p>
-		</div> 
-		
+[% USE format %]
+[% USE arrondi = format('%02.2f') %]
+[% IF infoMsgs.size > 0 %]
+	<div class="info info-vert">
+		<h1>Information</h1>
+	[% FOREACH msg IN infoMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
+[% IF alertMsgs.size > 0 %]
+	<div class="info info-orange">
+		<h1>Avertissement</h1>
+	[% FOREACH msg IN alertMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
+[% IF errorMsgs.size > 0 %]
+	<div class="info info-rouge">
+		<h1>Erreur</h1>
+	[% FOREACH msg IN errorMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
 		
 			[% IF access %]
 			
-			[% FOREACH file_liste IN liste_file %]
+			[% FOREACH file IN liste_file %]
 			<fieldset>
 				<table>				
-					<td>[% file_liste.name %]<br/><br/>[% file_liste.size / 1024 %] Mo<br/>[% file_liste.name_on_disk %]</td>
+					<td>[% file.name %]<br/><br/>[% arrondi(file.size / 1048576) %] Mo<br/>[% file.name_on_disk %]</td>
 					<td>
 						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
-							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file_liste.name_on_disk %]">								
-							<input type="hidden" id="name" name="name" value="[% file_liste.name %]">
+							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
+							<input type="hidden" id="name" name="name" value="[% file.name %]">
 							<p class="acenter">
 							<button class="submit" type="submit">Download</button></p>
 						</form>						

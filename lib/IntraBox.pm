@@ -76,7 +76,7 @@ use Net::LDAP;
 sub getSession {
 
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
-	my $login = "lfoucher";
+	my $login = "abourgan";
 	my $usr;
 
 	#if there is no session, log the user

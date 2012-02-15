@@ -32,11 +32,6 @@ prefix '/file';
 
 #Récupération Variable de session
 my $user = $sess->{login};
-my $user_size_file_limit =$sess->{size_max};
-my $user_size_space_limit =$sess->{quota};
-my $user_space_used = $sess->{usedSpace};
-my $user_space_free = $user_size_space_limit - $user_space_used;
-
 
 get '/download/:file_name' => sub {
 	my $param_file = param("file_name");
@@ -103,19 +98,10 @@ sub download_file {
 		$password         = $deposit_liste->opt_password;
 	}
 
-	#- Initialisations des messages d'erreurs -
-	my $message_inexistant =
-"La page que vous avez demandé n\'existe pas. Vérifier que l'URL que vous avez indiqué est bonne";
-
-	my $message_indispo =
-	  "Le fichier que vous avez demandé n'est plus disponible.
- Après un temps déterminé, le fichier est automatiquement supprimé de nos serveurs.
- Vous pouvez contacter l'utilisateur afin qu'il redépose le fichier qui est en statut : $status";
-
 	#Vérification de la présence dans la base de données
 	#Vérification de la présence dans les fichiers encore existants
 	if ( not defined $id_deposit ) { $download_exist = false; }
-	elsif ( $id_status2 == "2" ) {
+	elsif ( $id_status2 == 2 ) {
 		$download_available = false;
 		$download_exist     = true;
 	}
@@ -123,20 +109,20 @@ sub download_file {
 
 	#Envoi d'un message d'erreur si fichier inexistant
 	if ( !$download_exist ) {
-		$message = $message_inexistant;
+		IntraBox::push_error("La page que vous avez demandé n\'existe pas. Vérifier que l'URL que vous avez indiqué est bonne");
 		template 'download',
-		  { sess => $sess, message => $message };
+		  {};
 
 	}
 
 	#Envoi d'un message d'erreur si fichier non disponible
 	elsif ( !$download_available ) {
-		$message = $message_indispo;
+		IntraBox::push_error("Le fichier que vous avez demandé n'est plus disponible. 
+		Après un temps déterminé, le fichier est automatiquement supprimé de nos serveurs.
+ Vous pouvez contacter l'utilisateur afin qu'il redépose le fichier qui est en statut : $status");
 		template 'download',
-		  {
-			sess    => $sess,
-			message => $message
-		  };
+		  { };
+		  
 	}
 
 	#Si les fichiers sont bien présents et disponible
@@ -160,16 +146,13 @@ sub download_file {
 
 		$access = true;
 
-		$message =
-"Les fichiers sont bien présents dans la base de données. Vous pouvez appuyer sur les boutons correspondant";
+		IntraBox::push_info("Les fichiers sont bien présents dans la base de données. Vous pouvez appuyer sur les boutons correspondant");
 		template 'download',
 		  {
-			message    => $message,
 			access     => $access,
 			nbr_fic    => $cpt_file,
 			file_liste => $file_liste,
 			liste_file => \@liste_file,
-			sess => $sess,
 		  };
 	}
 }
@@ -199,7 +182,6 @@ sub donwload_file_user {
 			ip         => $IP_user,
 			useragent  => $user_agent,
 			start_date => $current_date,
-			sess => $sess,
 		}
 	);
 
