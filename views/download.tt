@@ -33,6 +33,9 @@
 					<td>[% file.name %]<br/><br/>[% arrondi(file.size / 1048576) %] Mo<br/>[% file.name_on_disk %]</td>
 					<td>
 						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
+							[% IF display_password %]
+							<input type="password" name="password" id="password">
+							[% END %]
 							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
 							<input type="hidden" id="name" name="name" value="[% file.name %]">
 							<p class="acenter">
