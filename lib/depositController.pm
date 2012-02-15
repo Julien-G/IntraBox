@@ -30,6 +30,7 @@ my $sess = IntraBox::getSession();
 #------------------------------------------------------------
 prefix '/deposit';
 
+#Récupération Variable de session
 my $user = $sess->{login};
 my $user_size_file_limit =$sess->{size_max};
 my $user_size_space_limit =$sess->{quota};
@@ -327,8 +328,7 @@ sub processUploadFiles {
 				if ( $size_files[$i] >= $user_size_file_limit ) {
 					$info_color = "info-rouge";
 					my $temp_name_fic_prob = param("file$i");
-					$message = "Le fichier $temp_name_fic_prob 
-									est trop volumineux";
+					IntraBox::push_error("Le fichier $temp_name_fic_prob est trop volumineux");
 					$controle_valid = 0;
 					last;
 				}
