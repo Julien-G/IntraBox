@@ -150,13 +150,12 @@ sub getSession {
 	#calculate the space used by the user
 	my $usedSpace = 0;
 	my $deposits  =
-	  schema->resultset('Deposit')->search( { id_user => session 'id_user' } );
+	  schema->resultset('Deposit')->search( {
+	  	id_user => session->{id_user}, id_status => 1 } );
 	while ( my $deposit = $deposits->next ) {
 		my @files = $deposit->files;
-		for my $file (@files) {
-			if ( $file->on_server ) {
-				$usedSpace += $file->size;
-			}
+		for my $file (@files) {			
+				$usedSpace += $file->size;			
 		}
 	}
 	

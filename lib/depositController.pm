@@ -39,17 +39,12 @@ my $user_space_free = $user_size_space_limit - $user_space_used;
 
 #--------- ROUTEES -------
 get '/new' => sub {
-	my $info_color = "info-vert";
-	my $message    = "Vous pouvez uploader vos fichiers en renseignant tous les champs nécessaires";
+	IntraBox::push_info("Vous pouvez uploader vos fichiers en renseignant tous les champs nécessaires");
 	template 'index',
-	  {
-		info_color            => $info_color,
-		message               => $message
-		
-	  };
+	  {};
 };
 
-post '/upload' => sub {
+post '/new' => sub {
 	processUploadFiles();
 };
 
@@ -84,7 +79,6 @@ post '/modifierDepot/:deposit' => sub {
 	modifier_depot($param_file);
 	redirect '/';
 };
-
 
 #--------- /ROUTEES -------
 
@@ -232,8 +226,9 @@ sub processUploadFiles {
 	my $number_files = count_files();
 
 	if ( $number_files == 0 ) {
-		$info_color = "info-rouge";
-		$message    = "Aucun fichier renseigné. Veuillez indiquer un fichier";
+
+	IntraBox::push_alert("Aucun fichier renseigné. Veuillez indiquer un fichier");
+	
 	}
 	else {
 
@@ -300,8 +295,7 @@ sub processUploadFiles {
 				#passage du paramètre de contrôle à 0
 				$info_color = "info-rouge";
 				my $temp_name_fic_prob = param("file$i");
-				$message = "Le fichier $temp_name_fic_prob n'est 
-								pas valide ou n'existe pas";
+				IntraBox::push_alert("Le fichier $temp_name_fic_prob n'est pas valide ou n'existe pas");
 				$controle_valid = 0;
 				last;
 			}
@@ -337,9 +331,8 @@ sub processUploadFiles {
 
 		#------- Phase de contrôle -------
 		if ( $controle_valid == 1 ) {
-			if ( $total_size > 100 * 1024 * 1024 ) {
-				$info_color = "info-rouge";
-				$message    = "Les fichiers sont trop volumineux";
+			if ( $total_size >  $user_space_free  ) {
+				IntraBox::push_error("Vous n'avez pas assez d'espace libre. Veuillez supprimer des fichiers");
 
 				#Contrôle compte perso
 			}
@@ -361,9 +354,8 @@ sub processUploadFiles {
 					$temp_message =
 					  "$temp_message, $name_files[$j] ($size_files[$j])";
 				}
-				$info_color = "info-vert";
-
-				$message = "Upload terminé des fichiers : $temp_message";
+				
+				IntraBox::push_info("Upload terminé des fichiers : $temp_message");
 
 				#Création d'une clé de dépôt
 				my $deposit_key = generate_aleatoire_key(19);
@@ -430,9 +422,6 @@ my $id_user = $sess->{id_user};
 	}
 
 	template 'index', {
-		message    => $message,
-		info_color => $info_color,
-
 	};
 }
 
