@@ -17,6 +17,9 @@
 			</p>
 			</form>
 	</div> 
+[% USE date %]
+[% USE String %]
+[% USE format %]
 		<table>	
 					<tr>						
 						<td>N°</td>
@@ -29,14 +32,15 @@
 					</tr>
 			[% i = 1 %]			
 			[% FOREACH deposit = liste_deposit %]
-			
+			[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
+			[% expiration_date = String.new(deposit.expiration_date).replace('T', ' ') %]
 					<tr>
 						<td>[% i %]</td>
 						<td>[% deposit.download_code %]</td>
 						<td>[% deposit.id_status.name %]</td>
-						<td>[% deposit.created_date %]</td>						
-						<td>[% deposit.expiration_date %]</td>
-						<td>[% IF deposit.id_status.id_status == 1 %]<a href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]">S</a> <a href="[% request.uri_base %]/deposit/[% deposit.download_code %]">V</a> <a href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]">M</a>[% END %]</td>
+						<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>						
+						<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
+						<td>[% IF deposit.id_status.id_status == 1 %]<a href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]">Supprimer</a> <a href="[% request.uri_base %]/deposit/[% deposit.download_code %]">Voir</a> <a href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]">Modifier</a>[% END %]</td>
 					</tr>
 					
 					<tr>

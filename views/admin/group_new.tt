@@ -91,6 +91,9 @@
 </form>
 		</br>
 		</br>
+[% USE date %]
+[% USE String %]
+[% USE format %]
 		<table>
 			<tr>
 				<th>Identifiant</th>
@@ -105,6 +108,7 @@
 				<th>Actions</th>
 			</tr>
 			[% FOREACH user_group IN user_groups %]
+			[% creation_date = String.new(user_group.creation_date).replace('T', ' ') %]
 			<tr>
 				<td>[% user_group.id_usergroup %]</td>
 				<td>[% user_group.rule_type %]</td>
@@ -114,7 +118,7 @@
 				<td>[% user_group.size_max %]</td>
 				<td>[% user_group.quota %]</td>
 				<td>[% user_group.description %]</td>
-				<td>[% user_group.creation_date %]</td>
+				<td>[% date.format(creation_date, '%d %b %Y<br>%Hh%M') %]</td>
 				<td><a href="[% request.uri_base %]/admin/group/modify/[% user_group.id_usergroup %]">Modifier</a>
 				<a href="[% request.uri_base %]/admin/group/delete/[% user_group.id_usergroup %]">Supprimer</a></td>
 			</tr>
