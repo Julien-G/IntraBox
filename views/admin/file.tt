@@ -9,7 +9,10 @@
 			<h1>Information</h1>
 			<p>Voici la liste des dépôts non expirés</p>
 		</div>
-
+[% USE date %]
+[% USE String %]
+[% USE format %]
+[% USE arrondi = format('%02.2f') %]
 		<table>
 			<tr>
 				<th>Propriétaire</th>
@@ -18,15 +21,21 @@
 				<th>Date de création</th>
 				<th>Date d'expiration</th>
 				<th>Téléchargé</th>
-			</tr>
-			[% FOREACH deposit IN deposits %]
+			</tr>		
+			[% i = 1 %]	
+			[% FOREACH deposit = liste_deposit %]
+			[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
+			[% expiration_date = String.new(deposit.expiration_date).replace('T', ' ') %]
+			[% deposit_size = 0 %]
 			<tr>
-				<td>[% deposit.id_user %]</td>
+				<td>[% deposit.id_user.login %]</td>
 				<td>[% deposit.id_deposit %]</td>
-				<td>[% deposit.created_date %]</td>
-				<td>[% deposit.expiration_date %]</td>
-				<td>[% deposit.download_code %]</td>
+				<td>[% FOREACH file IN deposit.files %][% deposit_size = deposit_size + file.size %][% END %][% IF deposit_size >= 1048576 %][% arrondi(deposit_size / 1048576) %] Mo[% END %][% IF deposit_size < 1048576 %][% arrondi(deposit_size / 1024) %] ko[% END %]</td>
+				<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>						
+				<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>[% FOREACH download IN deposit.files.downloads %][% IF loop.last %][% loop.count %][% END %][% END %]</td>
 			</tr>
 			[% END %]
+			[% i = 1 %]
 		</table>
 [% END %]
