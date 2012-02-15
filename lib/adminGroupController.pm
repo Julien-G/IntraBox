@@ -20,6 +20,7 @@ use DBIx::Class::FromValidators;
 
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
+my $ldap = Net::LDAP->new( config->{ldapserver} ) or die "Can't bind to ldap: $!\n";
 #------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
@@ -27,7 +28,6 @@ prefix '/admin/group';
 my $user_group = "eleves";
 
 get '/' => sub {
-	IntraBox::push_info "";
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 	template 'admin/group_new',
 	  {
@@ -58,8 +58,7 @@ post '/new' => sub {
 	}
 	else { $space_size_max = $space_size_max * 1073741824 }
 
-	my $current_date = Class::Date->new;
-	$current_date = DateTime->now;
+	my $current_date = DateTime->now;
 
 	# recherche du groupe à ajouter
 	my $usergroups = schema->resultset('Usergroup')->find(
@@ -78,23 +77,36 @@ post '/new' => sub {
 		IntraBox::push_error
 		  "Ce groupe existe déjà : <strong>$rule</strong>.";
 	}
-
 	#sinon on l'ajoute
 	else {
-		IntraBox::push_info
-		  " Vous venez d'ajouter le groupe <strong>$rule</strong>.";
-		my $usergroups = schema->resultset('Usergroup')->create(
-			{
-				rule_type      => $type_group,
-				rule           => $rule,
-				name           => $name_group,
-				quota          => $space_size_max,
-				size_max       => $file_size_max,
-				expiration_max => $duration_max,
-				description    => $description,
-				creation_date  => $current_date,
+		my $stopProcess = 0;
+		if ($type_group == 'LDAP') {
+			my $info = '';
+			#Search all users in a group
+			my $mesg = $ldap->search(
+				base   => "ou=Groups,dc=enstimac,dc=fr",
+				filter => "(cn=$rule )", #Group
+			);
+			if ($mesg->entries == 0) {
+				IntraBox::push_error("Ce groupe LDAP n'existe pas.");
+				$stopProcess = 1;
 			}
-		);
+		}
+		if ($stopProcess eq 0) {
+			IntraBox::push_info(" Vous venez d'ajouter le groupe <strong>$rule</strong>.");
+			my $usergroups = schema->resultset('Usergroup')->create(
+				{
+					rule_type      => $type_group,
+					rule           => $rule,
+					name           => $name_group,
+					quota          => $space_size_max,
+					size_max       => $file_size_max,
+					expiration_max => $duration_max,
+					description    => $description,
+					creation_date  => $current_date,
+				}
+			);
+		}
 	}
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 
@@ -152,8 +164,7 @@ post '/update' => sub {
 	}
 	else { $space_size_max = $space_size_max * 1073741824 }
 
-	my $current_date = Class::Date->new;
-	$current_date = DateTime->now;
+	my $current_date = DateTime->now;
 
 	# recherche du groupe à ajouter
 	my $usergroups = schema->resultset('Usergroup')->find(

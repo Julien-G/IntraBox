@@ -107,6 +107,7 @@ fieldset {
 	padding-top: 2em;
 	border-radius: 5px;
 }
+fieldset h1 { font-size: 1em; }
 fieldset:hover {
 	border: 1px solid grey;
 }

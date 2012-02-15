@@ -6,7 +6,7 @@
 	            2: { sorter: false }, 
 	            5: { sorter: false }
 	        }, 
-			sortList: [[3,0]]
+			sortList: [[3,1]]
 		} ); 
 		$( ".expiredFiles" ).hide();
 		$( "#showExpiredFiles" ).click(function() {
