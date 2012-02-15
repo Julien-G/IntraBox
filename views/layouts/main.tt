@@ -10,7 +10,7 @@
 	<script>
 	$(function() {
 		$( "#progressbar" ).progressbar({
-			value: 37
+			value: [% session.usedSpace * 100 / session.quota %]
 		});
 		$( ".UIbutton" ).button();
 		$( ".UIradio" ).buttonset();
