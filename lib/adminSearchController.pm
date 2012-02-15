@@ -17,10 +17,7 @@ use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-# Load subroutines
-use subroutine;
-use subroutine2;
-use subroutine3;
+
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 use Data::Dumper;
