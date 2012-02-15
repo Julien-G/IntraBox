@@ -28,15 +28,24 @@ prefix '/admin/file';
 
 get '/' => sub {
 	
-#	my $current_date = Class::Date->new;
-#	$current_date = now;
-	
-	my @valid_files = schema->resultset('Deposit')->search( { expiration_date => undef } )->all;
-	
-	
+	my $current_date = DateTime->now;
+	my $methode_tri      = "created_date";
+
+	my @liste_deposit = schema->resultset('Deposit')->search(
+			{
+					id_status        => "1",
+					expiration_date  => { '>', $current_date }
+			},
+			{ order_by => "$methode_tri" },
+		);
+	my $id_deposit;
+	for my $deposit_liste (@liste_deposit) {
+		$id_deposit = $deposit_liste->id_deposit;
+	}
+
 
 	template 'admin/file', { 
-		valid_files => \@valid_files
+		liste_deposit => \@liste_deposit
 		 };
 };
 
