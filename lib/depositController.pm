@@ -30,24 +30,10 @@ my $sess = IntraBox::getSession();
 #------------------------------------------------------------
 prefix '/deposit';
 
-# DEPRECATED
 my $user = $sess->{login};
-#Vérification si il est admin
-#Récupération du groupe dans lequel il est
-#Récupération de la taille maximale de son espace personnel et fichier
-my $id_user;
-my $isAdmin;
-my $user_group;
-my $user_size_file_limit;
-my $user_size_space_limit;
-( $isAdmin, $user_group, $user_size_file_limit, $user_size_space_limit ) =
-  recuperation_donnees_session_user($user);
-
-# DEPRECATED
-#Récupération de la taille actuelle utilisée de son espace personnel
-my $user_space_used;
-$user_space_used = calcul_used_space($user);
-#Calcul de l'espace libre de user
+my $user_size_file_limit =$sess->{size_max};
+my $user_size_space_limit =$sess->{quota};
+my $user_space_used = $sess->{usedSpace};
 my $user_space_free = $user_size_space_limit - $user_space_used;
 
 #--------- ROUTEES -------
@@ -392,14 +378,7 @@ sub processUploadFiles {
 					  schema->resultset('Deposit')
 					  ->search( { download_code => "$deposit_key", } );
 				}
-
-				#Ecriture dans la base de données
-				my @liste_user =
-				  schema->resultset('User')->search( { login => "$user", } );
-				for my $user_liste (@liste_user) {
-					$id_user = $user_liste->id_user;
-				}
-
+my $id_user = $sess->{id_user};
 				my @liste_status =
 				  schema->resultset('Status')
 				  ->search( { id_status => '1', } );
