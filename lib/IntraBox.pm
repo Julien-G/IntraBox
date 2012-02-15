@@ -111,10 +111,6 @@ my $deposits = schema->resultset('Deposit')->search({ id_user => session 'id_use
 return session;
 }
 
-hook 'before' => sub {
-	getSession();
-};
-
 #------------------------------------------------------------
 # Controllers
 #------------------------------------------------------------
