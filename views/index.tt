@@ -1,10 +1,29 @@
-  		<div class="info [% info_color %]">
-			<h1>Information</h1>
-			<p>[% message %] </p>		
-			
-		</div> 
+[% IF infoMsgs.size > 0 %]
+	<div class="info info-vert">
+		<h1>Information</h1>
+	[% FOREACH msg IN infoMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
+[% IF alertMsgs.size > 0 %]
+	<div class="info info-orange">
+		<h1>Avertissement</h1>
+	[% FOREACH msg IN alertMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
+[% IF errorMsgs.size > 0 %]
+	<div class="info info-rouge">
+		<h1>Erreur</h1>
+	[% FOREACH msg IN errorMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
 
-		<form method="POST" action="[% request.uri_base %]/deposit/upload" enctype="multipart/form-data">
+		<form method="POST" action="[% request.uri_base %]/deposit/new" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Formulaire d'envoi de fichier</legend>
 			<p class="acenter" style="background-color: #f0f0f0; padding: 2px; width: 70%; margin-left: auto; margin-right: auto; text-align: center;">

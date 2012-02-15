@@ -1,3 +1,5 @@
+  	[% USE format %]
+	[% USE arrondi = format('%02.2f') %]
   	[% FOREACH deposit IN liste_deposit %]
   	[% taille_total = 0 %]
   	[% FOREACH file = deposit.files %][% taille_total = taille_total + file.size %][% END %]
@@ -7,7 +9,7 @@
 			<li>Statut : [% deposit.id_status.name %]</li>
 			<li>Date de création : [% deposit.created_date %]</li>						
 			<li>Date d'expiration : [% deposit.expiration_date %]</li>
-			<li>Taille total du dépôt : [% taille_total / 1024 %] Mo</li>
+			<li>Taille total du dépôt : [% arrondi(taille_total / 1048576) %] Mo</li>
 			</br>
 			<li>Vous pouvez télécharger votre fichier ici : <a href="[% request.uri_base %]/file/download/[% deposit.download_code %]">[% request.uri_base %]/download/[% deposit.download_code %]</a>
 			</br>
@@ -22,7 +24,7 @@
 			[% FOREACH file = deposit.files %]
 			<fieldset>
 				<table>				
-					<td><em>[% file.name %]</em><br/><br/>[% file.size / 1024 %] Mo</td>
+					<td><em>[% file.name %]</em><br/><br/>[% arrondi(file.size / 1048576) %] Mo</td>
 					<td>
 						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
 							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
