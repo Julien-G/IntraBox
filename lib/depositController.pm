@@ -45,10 +45,6 @@ get '/' => sub {
 	showAllDeposits();
 };
 
-post '/' => sub {
-	showAllDeposits( param("choix_tri"), param("choix_show_expir") );
-};
-
 get '/:deposit' => sub {
 	my @liste_deposit = schema->resultset('Deposit')->search( { download_code => param("deposit") } );
 	
@@ -87,41 +83,15 @@ post '/modifierDepot/:deposit' => sub {
 
 # This sub is the default route
 sub showAllDeposits {
-	my $methode_tri      = $_[0];
-	my $choix_show_expir = $_[1]; 
-	
-	if (not defined $methode_tri) {$methode_tri = "created_date"}
-	if (not defined $choix_show_expir) {$choix_show_expir = "false"}
-
-	my $current_date = DateTime->now;
-	my @liste_deposit;
-
-	if ( $choix_show_expir eq "true" ) {
-		@liste_deposit = schema->resultset('Deposit')->search(
-			-and => [
-					id_user         => $sess->{id_user},
-					area_access_code       => ,
-				],
-			{ order_by => "$methode_tri" },
-		);
-	}
-	else {
-		@liste_deposit = schema->resultset('Deposit')->search(
-			{
-				-and => [
-					id_user         => $sess->{id_user},
-					id_status       => "1",
-					expiration_date => { '>', $current_date },
-					area_access_code       => ,
-				],
-			},
-			{ order_by => "$methode_tri" },
-		);
-	}
+	my @liste_deposit = schema->resultset('Deposit')->search(
+		-and => [
+				id_user         => $sess->{id_user}
+			],
+		{ order_by => "created_date" },
+	);
 
 	template 'gestionFichiers', {
-		liste_deposit    => \@liste_deposit,
-		choix_show_expir => $choix_show_expir,
+		liste_deposit    => \@liste_deposit
 	};
 }
 
