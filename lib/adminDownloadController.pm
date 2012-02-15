@@ -24,11 +24,6 @@ use subroutine3;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
-# Session
-#------------------------------------------------------------
-my $sess = IntraBox::getSession();
-
-#------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 prefix '/admin/download';
@@ -55,8 +50,8 @@ get '/' => sub {
 			dls_count => $dls_count
 		});
 	}
-	IntraBox::push_info "Voici la liste des téléchargements en cours.";
-	template 'admin/download', { sess => $sess, downloads => \@downloads };
+	IntraBox::push_info("Voici la liste des téléchargements en cours.");
+	template 'admin/download', { downloads => \@downloads };
 };
 
 return 1;

@@ -24,17 +24,12 @@ use subroutine3;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
-# Session
-#------------------------------------------------------------
-my $sess = IntraBox::getSession();
-
-#------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 prefix '/deposit';
 
 # DEPRECATED
-my $user = $sess->{login};
+my $user = session "login";
 #Vérification si il est admin
 #Récupération du groupe dans lequel il est
 #Récupération de la taille maximale de son espace personnel et fichier
@@ -59,7 +54,6 @@ get '/new' => sub {
 	my $message    = "Vous pouvez uploader vos fichiers en renseignant tous les champs nécessaires";
 	template 'index',
 	  {
-	  	sess				  => $sess,
 		info_color            => $info_color,
 		message               => $message
 	  };
@@ -127,7 +121,7 @@ sub gestion_all_fichiers {
 	if (not defined $methode_tri) {$methode_tri = "created_date"}
 	if (not defined $choix_show_expir) {$choix_show_expir = "false"}
 
-	my $login_user = $sess->{login};
+	my $login_user =session "login";
 	my $id_user;
 
 	my @liste_user =
@@ -167,7 +161,6 @@ sub gestion_all_fichiers {
 		$id_deposit = $deposit_liste->id_deposit;
 	}
 	template 'gestionFichiers', {
-		sess			 => $sess,
 		liste_deposit    => \@liste_deposit,
 		choix_show_expir => $choix_show_expir,
 	};
@@ -179,7 +172,6 @@ sub afficher_depot {
 	my @liste_deposit =
 	  schema->resultset('Deposit')->search( { download_code => $deposit, } );
 	template 'voirDepot', { 
-		sess			 => $sess,
 		liste_deposit => \@liste_deposit 
 	};
 }
@@ -456,7 +448,6 @@ sub processUploadFiles {
 	}
 
 	template 'index', {
-		sess	   => $sess,
 		message    => $message,
 		info_color => $info_color,
 

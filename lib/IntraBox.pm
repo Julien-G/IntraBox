@@ -26,7 +26,6 @@ use subroutine3;
 #------------------------------------------------------------
 # Some useful tools
 #------------------------------------------------------------
-
 # The code below allows to put some 'info' or 'alert' or 'error'
 # (we only need to call 'IntraBox::push_info' or 'IntraBox::push_alert'
 # or 'IntraBox::push_error' to automatically transmit the message
@@ -58,6 +57,7 @@ use subroutine3;
     $tokens->{infoMsgs} = [all_info];
     $tokens->{alertMsgs} = [all_alert];
     $tokens->{errorMsgs} = [all_error];
+    $tokens->{session} = getSession();
   };
 
   hook after => sub {
@@ -70,7 +70,7 @@ use subroutine3;
 
 #------------------------------------------------------------
 # Session
-#------------------------------------------------------------
+#------------------------------------------------------------=
 # The subroutine getSession sets all sessions vars
 # and returns them;
 sub getSession {
@@ -111,14 +111,9 @@ my $deposits = schema->resultset('Deposit')->search({ id_user => session 'id_use
 return session;
 }
 
-#------------------------------------------------------------
-# DEPRECATED
-#my $sess;
-#hook 'before' => sub {
-#	$sess = getSession();
-#  	return 0;
-#};
-#------------------------------------------------------------
+hook 'before' => sub {
+	getSession();
+};
 
 #------------------------------------------------------------
 # Controllers

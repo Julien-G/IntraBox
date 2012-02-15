@@ -1,10 +1,10 @@
-[% IF !sess.isAdmin %]
+[% IF !session.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
 			<p>Cette section est réservée aux administrateurs. <a href="[% request.uri_base %]/">Cliquez-ici</a> pour retourner à l'application.</p>
 		</div>
 [% END %]
-[% IF sess.isAdmin %]
+[% IF session.isAdmin %]
 	[% FOREACH msg IN infoMsgs %]
  		<div class="info info-vert">
 			<h1>Information</h1>

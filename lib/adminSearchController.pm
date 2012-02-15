@@ -29,18 +29,13 @@ use Net::LDAP;
 my $ldap = Net::LDAP->new("ldap.enstimac.fr") or die "Can't bind to ldap: $!\n";
 
 #------------------------------------------------------------
-# Session
-#------------------------------------------------------------
-my $sess = IntraBox::getSession();
-
-#------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 
 prefix '/admin/search';
 
 get '/' => sub {
-	template 'admin/search', { sess => $sess, };
+	template 'admin/search';
 };
 
 post '/' => sub {
@@ -139,7 +134,6 @@ post '/' => sub {
 	
 	template 'admin/search',
 	  {
-		sess     => $sess,
 		deposits => \@deposits,
 		params	 => params
 	  };

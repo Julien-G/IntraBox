@@ -24,11 +24,6 @@ use subroutine3;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
-# Session
-#------------------------------------------------------------
-my $sess = IntraBox::getSession();
-
-#------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 prefix '/admin/group';
@@ -39,7 +34,6 @@ get '/' => sub {
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 	template 'admin/group_new',
 	  {
-		sess        => $sess,
 		user_group  => $user_group,
 		user_groups => \@usergroups
 	  };
@@ -109,7 +103,6 @@ post '/new' => sub {
 
 	template 'admin/group_new',
 	  {
-		sess        => $sess,
 		user_group  => $user_group,
 		user_groups => \@usergroups
 	  };
@@ -135,7 +128,6 @@ get qr{/modify/(?<id>\d+)} => sub {
  	IntraBox::push_info " Vous aller modifier le groupe <strong>$rule</strong>.";
 
 		template 'admin/group_edit', {
-			sess => $sess,
 			group => $group
 		};
 	}
@@ -201,7 +193,6 @@ post '/update' => sub {
 #	redirect "admin/group/modify/" . $usergroups->id_usergroup;
 	template 'admin/group_new',
 	  {
-		sess        => $sess,
 		user_group  => $user_group,
 		user_groups => \@usergroups
 	  };
@@ -230,7 +221,6 @@ get qr{/delete/(?<id>\d+)} => sub {
 
 	template 'admin/group_new',
 	  {
-		sess        => $sess,
 		user_group  => $user_group,
 		user_groups => \@usergroups
 	  };
