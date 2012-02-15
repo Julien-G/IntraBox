@@ -16,32 +16,25 @@ use Digest::SHA1;
 use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
-
-
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
 # Session
 #------------------------------------------------------------
 my $sess = IntraBox::getSession();
+# Get user free space
+my $userFreeSpace = $sess->{quota} - $sess->{usedSpace};
 
 #------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 prefix '/deposit';
 
-#Récupération Variable de session
-my $user = $sess->{login};
-my $user_size_file_limit =$sess->{size_max};
-my $user_size_space_limit =$sess->{quota};
-my $user_space_used = $sess->{usedSpace};
-my $user_space_free = $user_size_space_limit - $user_space_used;
 
 #--------- ROUTEES -------
 get '/new' => sub {
 	IntraBox::push_info("Vous pouvez uploader vos fichiers en renseignant tous les champs nécessaires");
-	template 'index',
-	  {};
+	template 'index';
 };
 
 post '/new' => sub {
@@ -49,89 +42,74 @@ post '/new' => sub {
 };
 
 get '/' => sub {
-	gestion_all_fichiers();
+	showAllDeposits();
 };
 
 post '/' => sub {
-	my $choix_tri = param("choix_tri");
-	my $choix_show_expir = param("choix_show_expir");
-	gestion_all_fichiers("$choix_tri", "$choix_show_expir");
+	showAllDeposits( param("choix_tri"), param("choix_show_expir") );
 };
 
 get '/:deposit' => sub {
-	my $param_file = param("deposit");
-	afficher_depot($param_file);
+	my @liste_deposit = schema->resultset('Deposit')->search( { download_code => param("deposit") } );
+	
+	template 'voirDepot', { liste_deposit => \@liste_deposit };
 };
 
 get '/supprimerDepot/:deposit' => sub {
-	my $param_file = param("deposit");
-	supprimer_depot($param_file);
+	deleteDeposit( param("deposit") );
 	redirect '/deposit/';
 };
 
 get '/modifierDepot/:deposit' => sub {
-	my $param_file = param("deposit");
-	afficher_modifier_depot($param_file);
+	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => param("deposit") } );
+	template 'modifierDepot', { liste_deposit => $liste_deposit };
 };
 
 post '/modifierDepot/:deposit' => sub {
-	my $param_file = param("deposit");
-	modifier_depot($param_file);
+	editDeposit( param("deposit") );
 	redirect '/';
 };
 
 #--------- /ROUTEES -------
 
-my $downloads_report;
-my $acknowlegdement;
-my $password;
-my $comment;
-my $created_date;
-my $expiration_date;
-my $id_deposit;
+#my $downloads_report;
+#my $acknowlegdement;
+#my $password;
+#my $comment;
+#my $created_date;
+#my $expiration_date;
+#
+#my $deposit_liste;
+#my $files_liste;
+#
+#my $status;
+#my $download_code;
 
-my $deposit_liste;
-my $files_liste;
-
-my $id_status;
-my $status;
-my $id_status2;
-my $download_code;
-
-sub gestion_all_fichiers {
+# This sub is the default route
+sub showAllDeposits {
 	my $methode_tri      = $_[0];
 	my $choix_show_expir = $_[1]; 
 	
 	if (not defined $methode_tri) {$methode_tri = "created_date"}
 	if (not defined $choix_show_expir) {$choix_show_expir = "false"}
 
-	my $login_user = $sess->{login};
-	my $id_user;
-
-	my @liste_user =
-	  schema->resultset('User')->search( { login => "$login_user", } );
-
-	for my $user_liste (@liste_user) {
-		$id_user = $user_liste->id_user;
-	}
 	my $current_date = DateTime->now;
 	my @liste_deposit;
 
 	if ( $choix_show_expir eq "true" ) {
 		@liste_deposit = schema->resultset('Deposit')->search(
 			-and => [
-					id_user         => "$id_user",
+					id_user         => $sess->{id_user},
 					area_access_code       => ,
 				],
 			{ order_by => "$methode_tri" },
 		);
-
 	}
 	else {
 		@liste_deposit = schema->resultset('Deposit')->search(
 			{
 				-and => [
-					id_user         => "$id_user",
+					id_user         => $sess->{id_user},
 					id_status       => "1",
 					expiration_date => { '>', $current_date },
 					area_access_code       => ,
@@ -141,73 +119,34 @@ sub gestion_all_fichiers {
 		);
 	}
 
-	for my $deposit_liste (@liste_deposit) {
-		$id_deposit = $deposit_liste->id_deposit;
-	}
-	template 'gestionFichiers', {sess => $sess,
+	template 'gestionFichiers', {
 		liste_deposit    => \@liste_deposit,
 		choix_show_expir => $choix_show_expir,
 	};
 }
 
-sub afficher_depot {
-	my $deposit = $_[0];
-
-	my @liste_deposit =
-	  schema->resultset('Deposit')->search( { download_code => $deposit, } );
-	template 'voirDepot', { 
-		liste_deposit => \@liste_deposit 
-	};
-}
-
-sub supprimer_depot {
+# This sub is the delete route
+sub deleteDeposit {
 	my $deposit       = $_[0];
-	my $liste_deposit =
-	  schema->resultset('Deposit')->find( { download_code => $deposit } );
+	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => $deposit } );
 	$liste_deposit->id_status('2');
 	$liste_deposit->update;
-	gestion_all_fichiers();
+	showAllDeposits();
 }
 
-sub afficher_modifier_depot {
-
+# This sub is the edit route
+sub editDeposit {
 	my $deposit = $_[0];
 
-	my $liste_deposit =
-	  schema->resultset('Deposit')->find( { download_code => $deposit } );
-	template 'modifierDepot', { sess => $sess,liste_deposit => $liste_deposit, };
-
-}
-
-sub modifier_depot {
-	my $deposit = $_[0];
-
-	my $expiration_days;
-	my $downloads_report;
-
-	my $comment_option;
-	my $comment;
-
-	my $expiration_date;
-	my $expiration_days_date;
-	my $id_status;
-
-	#------- Phase de récupération de tous les paramètres -------
-	$expiration_days  = param("ext_expiration_days");
-	$downloads_report = param("downloads_report");
-	if ( $downloads_report eq "1" ) { $downloads_report = true }
-	else { $downloads_report = false }
-	$acknowlegdement = param("acknowlegdement");
-	if ( $acknowlegdement eq "1" ) { $acknowlegdement = true }
-	else { $acknowlegdement = false }
-
-	$comment_option = param("comment_option");
-	if ( $comment_option eq "1" ) { $comment_option = true }
-	else { $comment_option = false }
-	if ($comment_option) { $comment = param("comment"); }
-	my $exist_deposit =
-	  schema->resultset('Deposit')->find( { download_code => $deposit } );
-	$expiration_date = $exist_deposit->expiration_date;
+	# Get parameters
+	my $expiration_days  = param("ext_expiration_days");
+	my $downloads_report = ( param("downloads_report") eq "1" ) ? true : false;
+	my $acknowlegdement = ( param("acknowlegdement") eq "1" ) ? true : false;
+	my $comment_option = param("comment_option");
+	my $comment = ( $comment_option eq 1 ) ? param("comment") : undef;
+	
+	my $exist_deposit = schema->resultset('Deposit')->find( { download_code => $deposit } );
+	my $expiration_date = $exist_deposit->expiration_date;
 	$expiration_date->add( days => $expiration_days );
 	$exist_deposit->expiration_date("$expiration_date");
 	$exist_deposit->opt_acknowledgement("$acknowlegdement");
@@ -217,200 +156,140 @@ sub modifier_depot {
 }
 
 
-#--- UPLOAD ----
+# This sub is the upload route
 sub processUploadFiles {
-
-	my $message;
-	my $info_color;
 
 	my $number_files = count_files();
 
 	if ( $number_files == 0 ) {
-
-	IntraBox::push_alert("Aucun fichier renseigné. Veuillez indiquer un fichier");
-	
+		IntraBox::push_alert("Aucun fichier renseigné. Veuillez indiquer un fichier");
 	}
 	else {
-
-		#------- Initialisation variables ---------
-		my $i;
-		my @upload_files;
-		my @size_files;
-		my @name_files;
+		#------- Init vars ---------
+		my @filesToUpload;
 		my @hash_names;
-		my $total_size;
-		my $id_deposit;
-
+		my $depositSize;
 		my $controle_valid = 1;
+		
+		#------- Get all parameters -------
+		my $expiration_days  = param("expiration_days");
+		# Option to have a downloads report
+		my $downloads_report = ( param("downloads_report") eq "1" ) ? true : false;
+		# Option to have an acknowlegdement
+		my $acknowlegdement = ( param("acknowlegdement") eq "1" ) ? true : false;
+		# Option to have a password protection
+		my $password_protection = param("password_protection");
+		my $password = ( $password_protection eq "1" ) ? param("password") : undef;
+		# Option to set a comment
+		my $comment_option = param("comment_option");
+		my $comment = ( $comment_option eq "1" ) ? param("comment") : undef;
 
-		my $expiration_days;
-		my $downloads_report;
-		my $acknowlegdement;
-		my $password_protection;
-		my $password;
-		my $comment_option;
-		my $comment;
-		my $current_date;
-		my $expiration_date;
-		my $expiration_days_date;
-		my $id_status;
-
-		#------- Phase de récupération de tous les paramètres -------
-		my $IP_user;
-		my $user_agent;
-
-		#------- Phase de récupération de tous les paramètres -------
-		$expiration_days  = param("expiration_days");
-		$downloads_report = param("downloads_report");
-		if ( $downloads_report eq "1" ) { $downloads_report = true }
-		else { $downloads_report = false }
-		$acknowlegdement = param("acknowlegdement");
-		if ( $acknowlegdement eq "1" ) { $acknowlegdement = true }
-		else { $acknowlegdement = false }
-		$password_protection = param("password_protection");
-		if ( $password_protection eq "1" ) { $password_protection = true }
-		else { $password_protection = false }
-		if ($password_protection) { $password = param("password"); }
-		$comment_option = param("comment_option");
-		if ( $comment_option eq "1" ) { $comment_option = true }
-		else { $comment_option = false }
-		if ($comment_option) { $comment = param("comment"); }
-
-		$current_date    = DateTime->now;
-		$expiration_date = DateTime->now;
+		# Get dates
+		my $current_date    = DateTime->now;
+		my $expiration_date = DateTime->now;
 		$expiration_date->add( days => $expiration_days );
 		
-		$IP_user = request -> remote_address;
-		$user_agent = request -> user_agent;
+		# Get user info
+		my $userIP = request -> remote_address;
+		my $userAgent = request -> user_agent;
 		
-		#------- Phase d'upload de tous les fichiers -------
-		for ( $i = 1 ; $i <= $number_files ; $i++ ) {
+		#------- Browse and validate each file -------
+		for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
 
-			$upload_files[$i] = upload("file$i");
+			$filesToUpload[$i] = upload("file$i");
 
-			#Verification validité de chaque fichier
-			if ( not defined $upload_files[$i] ) {
-
-				#Si un fichier invalide, sorti de boucle et
-				#passage du paramètre de contrôle à 0
-				$info_color = "info-rouge";
-				my $temp_name_fic_prob = param("file$i");
-				IntraBox::push_alert("Le fichier $temp_name_fic_prob n'est pas valide ou n'existe pas");
+			# Verify each file validity
+			if ( not defined $filesToUpload[$i] ) {
+				my $fileName = param("file$i");
+				IntraBox::push_alert("Le fichier $fileName n'est pas valide ou n'existe pas");
 				$controle_valid = 0;
+				# End of loop is a file is invalid ($controle_valid=0)
 				last;
 			}
+			# Valid files
 			else {
-
-				$size_files[$i] = $upload_files[$i]->size;
-				$name_files[$i] = $upload_files[$i]->basename;
-
-				$hash_names[$i] = generate_aleatoire_key(15);
-
-				#Vérification de l'unicité de la clé du fichier
-				my @liste_file =
-				  schema->resultset('File')
-				  ->search( { name_on_disk => "$hash_names[$i]", } );
-				while (@liste_file) {
-					$hash_names[$i] = generate_aleatoire_key(15);
-					@liste_file =
-					  schema->resultset('File')
-					  ->search( { name_on_disk => "$hash_names[$i]", } );
-				}
-
-				$total_size = $total_size + $size_files[$i];
-
-				if ( $size_files[$i] >= $user_size_file_limit ) {
-					$info_color = "info-rouge";
-					my $temp_name_fic_prob = param("file$i");
-					IntraBox::push_error("Le fichier $temp_name_fic_prob est trop volumineux");
+				# Verify the file size
+				if ( $filesToUpload[$i]->size >= $sess->{size_max} ) {
+					my $fileName = param("file$i");
+					IntraBox::push_error("Le fichier $fileName est trop volumineux");
 					$controle_valid = 0;
+					# End of loop is a file is too big
 					last;
 				}
+				
+				# Generates a hash for each file
+				$hash_names[$i] = generateHash(15);
+
+				# Verify that the hash is unique
+				my @filesWithSameHash = schema->resultset('File')->search( { name_on_disk => $hash_names[$i] } );
+				while (@filesWithSameHash) {
+					$hash_names[$i] = generateHash(15);
+					@filesWithSameHash = schema->resultset('File')->search( { name_on_disk => $hash_names[$i] } );
+				}
+				
+				# Increase the deposit size
+				$depositSize += $filesToUpload[$i]->size;
 			}
 		}
 
-		#------- Phase de contrôle -------
+		#------- Process the upload -------
 		if ( $controle_valid == 1 ) {
-			if ( $total_size >  $user_space_free  ) {
+			# if the user does not have enough free space
+			if ( $depositSize >  $userFreeSpace  ) {
 				IntraBox::push_error("Vous n'avez pas assez d'espace libre. Veuillez supprimer des fichiers");
 
 				#Contrôle compte perso
 			}
 			else {
 
-				#Vérification présence base données
-				#--
-				#Insertion dans base de données
-				#--
+				# Upload each file
+				my $infoMsg = "$filesToUpload[1]->basename ($filesToUpload[1]->size)";
+				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
+					# Upload the file
+					$filesToUpload[$i]->copy_to("/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload/$hash_names[$i]");
+					# Generate the info message
+					$infoMsg = "$infoMsg, $filesToUpload[$i]->basename ($filesToUpload[$i]->size)";
+				}			
+				IntraBox::push_info("Upload terminé des fichiers : $infoMsg");
 
-				for ( $i = 1 ; $i <= $number_files ; $i++ ) {
-					$upload_files[$i]->copy_to(
-"/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload/$hash_names[$i]"
-					);
-				}
-				my $j;
-				my $temp_message = "$name_files[1] ($size_files[1])";
-				for ( $j = 2 ; $j <= $number_files ; $j++ ) {
-					$temp_message =
-					  "$temp_message, $name_files[$j] ($size_files[$j])";
-				}
-				
-				IntraBox::push_info("Upload terminé des fichiers : $temp_message");
+				# Generate a hash for the deposit
+				my $depositHash = generateHash(19);
 
-				#Création d'une clé de dépôt
-				my $deposit_key = generate_aleatoire_key(19);
-
-				#Vérification de l'unicité de la clé
-				my @liste_deposit =
-				  schema->resultset('Deposit')
-				  ->search( { download_code => "$deposit_key", } );
-				while (@liste_deposit) {
-					$deposit_key   = generate_aleatoire_key(19);
-					@liste_deposit =
-					  schema->resultset('Deposit')
-					  ->search( { download_code => "$deposit_key", } );
-				}
-my $id_user = $sess->{id_user};
-				my @liste_status =
-				  schema->resultset('Status')
-				  ->search( { id_status => '1', } );
-				for my $status_liste (@liste_status) {
-					$id_status = $status_liste->id_status;
+				# Verify that the hash is unique
+				my @depositsWithSameHash = schema->resultset('Deposit')->search( { download_code => $depositHash } );
+				while (@depositsWithSameHash) {
+					$depositHash   = generateHash(19);
+					@depositsWithSameHash = schema->resultset('Deposit')->search( { download_code => $depositHash } );
 				}
 
+				# Insert deposit in the DB
 				my $new_deposit = schema->resultset('Deposit')->create(
 					{
-						id_user              => $id_user,
-						download_code        => $deposit_key,
-						id_status            => $id_status,
+						id_user              => $sess->{id_user},
+						download_code        => $depositHash,
+						id_status            => 1,
 						expiration_date      => $expiration_date,
 						expiration_days      => $expiration_days,
 						opt_acknowledgement  => $acknowlegdement,
 						opt_downloads_report => $downloads_report,
 						created_date         => $current_date,
-						created_ip           => $IP_user,
-						created_useragent    => $user_agent,
+						created_ip           => $userIP,
+						created_useragent    => $userAgent,
 						opt_comment          => $comment,
 						opt_password         => $password,
 					}
 				);
 
-				#Recherche de l'id_deposit
-				my @liste_deposit2 =
-				  schema->resultset('Deposit')
-				  ->search( { download_code => "$deposit_key", } );
-				for my $deposit_liste (@liste_deposit2) {
-					$id_deposit = $deposit_liste->id_deposit;
-				}
+				# Find the id_deposit
+				my $deposit = schema->resultset('Deposit')->find( { download_code => $depositHash } );
 
-				#Ecriture dans la base de données des fichiers
-				my $k;
-				for ( $k = 1 ; $k <= $number_files ; $k++ ) {
-					my $new_file = schema->resultset('File')->create(
+				# Insert files in the DB
+				for ( my $k = 1 ; $k <= $number_files ; $k++ ) {
+					my $newFile = schema->resultset('File')->create(
 						{
-							id_deposit   => $id_deposit,
-							name         => $name_files[$k],
-							size         => $size_files[$k],
+							id_deposit   => $deposit->id_deposit,
+							name         => $filesToUpload[$k]->basename,
+							size         => $filesToUpload[$k]->size,
 							name_on_disk => $hash_names[$k],
 							on_server    => "1",
 						}
@@ -421,44 +300,37 @@ my $id_user = $sess->{id_user};
 		}
 	}
 
-	template 'index', {
-	};
+	template 'index';
 }
 
+# This sub counts how many files we need to upload
 sub count_files {
 	my $cpt = 1;
 
-	#Première itération
-	my $temp_fic = param("file$cpt");
-	if ( not defined $temp_fic ) {
-		return 0;
+	# First iteration
+	my $file = param("file$cpt");
+	# While param exists
+	while ( defined $file ) {
+		$cpt++;
+		$file = param("file$cpt");
 	}
-	else {
-
-		#Tant qu'il existe un paramètre on continue la boucle
-		while ( defined $temp_fic ) {
-			$cpt++;
-			$temp_fic = param("file$cpt");
-		}
-		my $number_files = $cpt - 1;
-		return $number_files;
-	}
+	return $cpt - 1;
 }
 
-sub randomposition {
+# This sub gets a random position into a string
+sub randomPosition {
 	my $chaine = $_[0];
 	return int rand length $chaine;
 }
 
-sub generate_aleatoire_key {
+# This sub generates a random hash
+sub generateHash {
 	my $lenght = $_[0];
 	my $key;
-	my $i;
-	my $list_char =
-	  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-	for ( $i = 1 ; $i < $lenght ; ++$i ) {
-		my $temp_key = substr( $list_char, randomposition($list_char), 1 );
-		$key = "$key$temp_key";
+	my $charList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	for ( my $i = 1 ; $i < $lenght ; ++$i ) {
+		my $tempKey = substr( $charList, randomPosition($charList), 1 );
+		$key = "$key$tempKey";
 	}
 	return $key;
 }
