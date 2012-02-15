@@ -243,12 +243,12 @@ sub processUploadFiles {
 			else {
 
 				# Upload each file
-				my $infoMsg = "$filesToUpload[1]->basename ($filesToUpload[1]->size)";
+				my $infoMsg = $filesToUpload[1]->basename . " (" . $filesToUpload[1]->size . ")";
 				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
 					# Upload the file
 					$filesToUpload[$i]->copy_to("/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload/$hash_names[$i]");
 					# Generate the info message
-					$infoMsg = "$infoMsg, $filesToUpload[$i]->basename ($filesToUpload[$i]->size)";
+					$infoMsg = $infoMsg . ", " . $filesToUpload[$i]->basename . " (" . $filesToUpload[$i]->size . ")";
 				}			
 				IntraBox::push_info("Upload terminé des fichiers : $infoMsg");
 
