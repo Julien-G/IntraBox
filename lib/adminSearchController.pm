@@ -94,11 +94,10 @@ post '/' => sub {
 	if ( params->{opt_group} eq "on" ) {
 		my @ldapGroups = split(/ /, params->{group});
 		for my $ldapGroup (@ldapGroups) {
-			#Recherche de tous les users pour un groupe
+			#Search all users in a group
 			my $mesg = $ldap->search(
 				base   => "ou=Groups,dc=enstimac,dc=fr",
-				filter => "(cn=$ldapGroup )", #Indiquez le groupe dans lequel on cherche
-				#On peut mettre "*" pour chercher dans tous les groupes
+				filter => "(cn=$ldapGroup )", #Group
 			);
 			foreach my $entry ( $mesg->entries ) {
 				my @logins = $entry->get_value('rfc822MailMember');
@@ -115,11 +114,12 @@ post '/' => sub {
 
 	# Process the query
 	# Distinguish if a list of user is searched
-	# First case: A list of user
+	# this code eliminates doublons
 	my (%doublons,@usrIds)=();
 	undef %doublons;
 	@usrIds = sort(grep(!$doublons{$_}++, @queryUsrs));
 	 
+	# First case: A list of user
 	if (@usrIds > 0) {
 		for my $usrId (@usrIds) {
 			$queryParams{id_user} = $usrId;
