@@ -26,7 +26,7 @@ use subroutine3;
 #------------------------------------------------------------
 # Session
 #------------------------------------------------------------
-IntraBox::getSession();
+my $sess = IntraBox::getSession();
 
 #------------------------------------------------------------
 # Routes
@@ -34,7 +34,7 @@ IntraBox::getSession();
 prefix '/deposit';
 
 # DEPRECATED
-my $user = session "login";
+my $user = $sess->{login};
 #Vérification si il est admin
 #Récupération du groupe dans lequel il est
 #Récupération de la taille maximale de son espace personnel et fichier
@@ -126,7 +126,7 @@ sub gestion_all_fichiers {
 	if (not defined $methode_tri) {$methode_tri = "created_date"}
 	if (not defined $choix_show_expir) {$choix_show_expir = "false"}
 
-	my $login_user =session "login";
+	my $login_user = $sess->{login};
 	my $id_user;
 
 	my @liste_user =
