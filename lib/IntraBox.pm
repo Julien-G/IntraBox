@@ -20,7 +20,6 @@ use DBIx::Class::FromValidators;
 #Load LDAP plugins
 use Data::Dumper;
 use Net::LDAP;
-use Unicode::String qw(utf8 latin1 utf16);
 
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
@@ -77,7 +76,7 @@ use Unicode::String qw(utf8 latin1 utf16);
 sub getSession {
 
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
-	my $login = "abourgan";
+	my $login = "lfoucher";
 	my $usr;
 
 	#if there is no session, log the user
@@ -93,49 +92,45 @@ sub getSession {
 		);
 
 		#Determination du groupe de l'utilisateur
-		my $group_user;
-		my $quota_max = 0;
-		my @liste_group_user;
+		my $userGroup;
+		my $quotaMax = 0;
+		my @userGroups;
 
-		my $ldap = Net::LDAP->new("ldap.enstimac.fr")
-		  or die "Can't bind to ldap: $!\n";
+		my $ldap = Net::LDAP->new( config->{ldapserver} ) or die "Can't bind to ldap: $!\n";
 		my $mesg = $ldap->bind();
 		if ( $mesg->code ) {
 			print $mesg->error;
 		}
 
-		my $searchUser = $login;
-
-		#Recherche de groupes pour un utilisateur
+		#Find all groups for a user
 		$mesg = $ldap->search(
 			base   => "ou=Groups,dc=enstimac,dc=fr",
 			filter =>
-			  "(rfc822MailMember= $searchUser)",    #mettre login pour savoir
+			  "(rfc822MailMember=$login)",
 		);
 
 		foreach my $entry ( $mesg->entries ) {
 			my $cn = $entry->get_value('cn');
-			push( @liste_group_user, $cn );
+			push( @userGroups, $cn );
 		}
 
-		foreach my $group_temp (@liste_group_user) {
+		foreach my $grp (@userGroups) {
 			my $search =
-			  schema->resultset('Usergroup')->find( { rule => $group_temp } );
+			  schema->resultset('Usergroup')->find( { rule => $grp } );
 			if ($search) {
 				my $quota_temp = $search->quota;
-				if ( $quota_temp > $quota_max ) {
-					$group_user = $group_temp;
-					$quota_max  = $quota_temp;
+				if ( $search->quota > $quotaMax ) {
+					$userGroup = $grp;
+					$quotaMax  = $search->quota;
 				}
 			}
 		}
 
-		if (not defined $group_user) {
-			$group_user = "default";
+		if (not defined $userGroup) {
+			$userGroup = "default";
 		}
 		
-		my $group =
-			  schema->resultset('Usergroup')->find( { rule => $group_user } );		
+		my $group = schema->resultset('Usergroup')->find({ rule => $userGroup });		
 
 		#store the session
 		session id_user => $usr->id_user;
@@ -158,7 +153,6 @@ sub getSession {
 				$usedSpace += $file->size;			
 		}
 	}
-	
 	session usedSpace => $usedSpace;
 	return session;
 }

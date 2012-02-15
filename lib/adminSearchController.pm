@@ -23,7 +23,7 @@ use DBIx::Class::FromValidators;
 use Data::Dumper;
 use Net::LDAP;
 #use Unicode::String qw(utf8 latin1 utf16);
-my $ldap = Net::LDAP->new("ldap.enstimac.fr") or die "Can't bind to ldap: $!\n";
+my $ldap = Net::LDAP->new( config->{ldapserver} ) or die "Can't bind to ldap: $!\n";
 
 #------------------------------------------------------------
 # Routes
