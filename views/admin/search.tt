@@ -101,6 +101,7 @@ $(function() {
 					<th style="width: 12em;">Date d'expiration</th>
 					<th style="width: 16em;">Taille totale du dépôt</th>
 					<th style="width: 7em;">Nom des fichiers</th>
+					<th style="width: 8em;">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -122,6 +123,16 @@ $(function() {
 				<td>
 					[% FOREACH file IN deposit.files %]
 						[% file.name %]
+					[% END %]
+				</td>
+				<td>
+					[% IF deposit.id_status.id_status == 1 %]
+					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/search/[% deposit.download_code %]"></a>
+					<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/admin/search/modifyDeposit/[% deposit.download_code %]"></a>
+					<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/admin/search/deleteDeposit/[% deposit.download_code %]"></a> 
+					[% END %]
+					[% IF deposit.id_status.id_status == 2 %]
+					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/search/[% deposit.download_code %]"></a> 
 					[% END %]
 				</td>
 			</tr>

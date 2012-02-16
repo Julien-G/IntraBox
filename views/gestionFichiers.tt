@@ -69,8 +69,11 @@
 						<td>
 							[% IF deposit.id_status.id_status == 1 %]
 								<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/deposit/[% deposit.download_code %]"></a> 
-								<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]"></a>
-								<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]"></a> 
+								<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/deposit/modifyDeposit/[% deposit.download_code %]"></a>
+								<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/deposit/deleteDeposit/[% deposit.download_code %]"></a> 
+							[% END %]
+							[% IF deposit.id_status.id_status == 2 %]
+								<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/deposit/[% deposit.download_code %]"></a>  
 							[% END %]
 						</td>
 					</tr>

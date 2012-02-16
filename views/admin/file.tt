@@ -50,8 +50,9 @@
 				<td>[% FOREACH download IN deposit.files.downloads %][% IF loop.last %][% loop.count %][% END %][% END %]</td>
 				<td>
 					[% IF deposit.id_status.id_status == 1 %]
-					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a> 
-					<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/admin/file/supprimerFile/[% deposit.download_code %]"></a> 
+					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a>
+					<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/admin/file/modifyDeposit/[% deposit.download_code %]"></a> 
+					<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/admin/file/deleteDeposit/[% deposit.download_code %]"></a> 
 					[% END %]
 				</td>
 			</tr>
