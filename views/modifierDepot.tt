@@ -4,7 +4,7 @@
 			</p>				
 		</div> 
 
-		<form method="POST" action="[% request.uri_base %]/deposit/modifierDepot/[% liste_deposit.download_code %]" enctype="multipart/form-data">
+		<form method="POST" action="[% request.uri_base %]/deposit/modifierDepot/[% liste_deposit.download_code %]">
 		<fieldset>
 			<legend>Formulaire de modification de fichier</legend>
 			<p> Vous pouvez étendre la durée de validité de votre foichier de :

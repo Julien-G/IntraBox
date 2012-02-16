@@ -158,6 +158,7 @@ sub editDeposit {
 
 # This sub is the upload route
 sub processUploadFiles {
+	my $path = "/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload";
 
 	my $number_files = count_files();
 
@@ -180,6 +181,11 @@ sub processUploadFiles {
 		# Option to have a password protection
 		my $password_protection = param("password_protection");
 		my $password = ( $password_protection eq "1" ) ? param("password") : undef;
+		# Password cryptage
+#		my $sha = Digest::SHA1->new;
+#		$sha->add($password);
+#		$password = $sha->hexdigest;
+		
 		# Option to set a comment
 		my $comment_option = param("comment_option");
 		my $comment = ( $comment_option eq "1" ) ? param("comment") : undef;
@@ -246,7 +252,7 @@ sub processUploadFiles {
 				my $infoMsg = $filesToUpload[1]->basename . " (" . $filesToUpload[1]->size . ")";
 				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
 					# Upload the file
-					$filesToUpload[$i]->copy_to("/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload/$hash_names[$i]");
+					$filesToUpload[$i]->copy_to("$path/$hash_names[$i]");
 					# Generate the info message
 					$infoMsg = $infoMsg . ", " . $filesToUpload[$i]->basename . " (" . $filesToUpload[$i]->size . ")";
 				}			
