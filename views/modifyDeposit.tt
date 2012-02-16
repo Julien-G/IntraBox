@@ -3,11 +3,14 @@
 			<p>Vous pouvez ici changer les informations du dépôt n°[% liste_deposit.download_code %]
 			</p>				
 		</div> 
-
-		<form method="POST" action="[% request.uri_base %]/deposit/modifierDepot/[% liste_deposit.download_code %]">
+		[% IF isAdminView == 1 %]
+		<form method="POST" action="[% request.uri_base %]/admin/file/modifyDeposit/[% liste_deposit.download_code %]">
+		[% ELSE %]
+		<form method="POST" action="[% request.uri_base %]/deposit/modifyDeposit/[% liste_deposit.download_code %]">
+		[% END %]
 		<fieldset>
 			<legend>Formulaire de modification de fichier</legend>
-			<p> Vous pouvez étendre la durée de validité de votre foichier de :
+			<p> Vous pouvez étendre la durée de validité de votre fichier de :
 				<select id="ext_expiration_days" name="ext_expiration_days">
 					<option value="0">Pas d'extension</option>
 					<option value="10">10 jours</option>

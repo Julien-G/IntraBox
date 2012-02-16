@@ -1,3 +1,13 @@
+<script>
+	$(function() {
+		$( ".tablesorter" ).tablesorter( {
+		    headers: { 
+	            0: { sorter: false }
+	        }, 
+			sortList: [[2,0]]
+		} ); 
+	});
+</script>
 [% IF !session.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
@@ -33,13 +43,16 @@
 [% USE date %]
 [% USE String %]
 [% USE format %]
-		<table>
+		<table class="tablesorter" cellspacing="1">
+			<thead>
 			<tr>
-				<th class="aleft" style="width: 40%">Nom du fichier</th>
-				<th>Dépôt de</th>
-				<th>Commencé</th>
-				<th>Nombre de téléchargements</th>
+				<th style="width: 7em;">Nom du fichier</th>
+				<th style="width: 5em;">Dépôt de</th>
+				<th style="width: 8em;">Commencé</th>
+				<th style="width: 8em;">Téléchargements</th>
 			</tr>
+			</thead>
+			<tbody>
 			[% FOREACH download IN downloads %]
 			[% start_date = String.new(download.dl.start_date).replace('T', ' ') %]
 			<tr>
@@ -49,5 +62,6 @@
 				<td class="acenter">[% download.dls_count %]</td>
 			</tr>
 			[% END %]
+			</tbody>
 		</table>
 [% END %]

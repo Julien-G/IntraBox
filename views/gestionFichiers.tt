@@ -23,6 +23,26 @@
 			$(".tablesorter").trigger("update"); 
         	$(".tablesorter").trigger("sorton",[[3,0]]); 
 		});
+		
+		$( ".deleteButton" ).click(function() {
+			var id = $(this).children("span").text();
+			$( "#dialog-confirmDelete" ).dialog({
+				resizable: false,
+				height: 160,
+				draggable: false,
+				modal: true,
+				buttons: {
+					"Supprimer ce dépôt": function() {
+						window.location.href = "[% request.uri_base %]/deposit/supprimerDepot/" + id;
+					},
+					"Annuler": function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+			return false;
+		});
+
 	});
 </script>
 [% USE date %]
@@ -67,13 +87,17 @@
 						<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>						
 						<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
 						<td>
+								<a class="UIbutton ui-icon ui-icon-search viewButton" href="[% request.uri_base %]/deposit/[% deposit.download_code %]"></a> 
 							[% IF deposit.id_status.id_status == 1 %]
-								<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/deposit/[% deposit.download_code %]"></a> 
-								<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]"></a>
-								<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]"></a> 
+								<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]"></a>
+								<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a> 
 							[% END %]
 						</td>
 					</tr>
 			[% i = i + 1 %][% END %]
 			</tbody>
 		</table>
+		<div id="dialog-confirmDelete" title="Supprimer un dépôt?" style="display: none;">
+			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+			Vous êtes sur le point de supprimer un dépôt. Êtes-vous sûr?</p>
+		</div>

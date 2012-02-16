@@ -1,3 +1,19 @@
+<script>
+	$(function() {
+		$( ".tablesorter" ).tablesorter( {
+		    headers: { 
+	            0: { sorter: false },
+	            2: { sorter: false },
+	            4: { sorter: false },
+	            5: { sorter: false },
+	            6: { sorter: false },
+	            7: { sorter: false },
+	            9: { sorter: false }
+	        }, 
+			sortList: [[1,0]]
+		} ); 
+	});
+</script>
 [% IF !session.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
@@ -30,67 +46,54 @@
 		</div>
 	[% END %]
 		
-	<form method="POST" action="[% request.uri_base %]/admin/group/update" enctype="multipart/form-data">
+	<form method="POST" action="[% request.uri_base %]/admin/group/new" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Ajouter un groupe</legend>
-			<input type="hidden" name="id_usergroup" value="[% group.id_usergroup %]">
-			<p class="aright" style="float: right;">
-			<label for="name_group">Nom :</label>
-			<input id="name_group" name="name_group" type="text" value="[% group.name %]">
+			<h1>1. Choisir le type de règle</h1>
+			<p class="acenter">
+				Type de règles :
+				<span class="UIradio" style="font-size: 0.8em;">
+					<input type="radio" id="radio1" name="type_group" value="LDAP" checked="checked" /><label for="radio1">LDAP</label>
+					<input type="radio" id="radio2" name="type_group" value="UID" /><label for="radio2">UID</label>
+					<input type="radio" id="radio3" name="type_group" value="Fichiers à plat" /><label for="radio3">Fichier à plat</label>
+					<input type="radio" id="radio4" name="type_group" value="SGBD" /><label for="radio4">SGBD</label>
+				</span>
 			</p>
-			
-			<p class="aleft">
-			<label for="type_group">Type de groupes :</label>
-			<select id="type_group" name="type_group">
-				<option value="LDAP"[% IF group.rule_type == 'LDAP' %] selected[% END %]>LDAP</option>
-				<option value="UID"[% IF group.rule_type == 'UID' %] selected[% END %]>UID</option>
-				<option value="Fichiers à plat"[% IF group.rule_type == 'Fichiers à plat' %] selected[% END %]>Fichiers à plat</option>
-				<option value="SGBD"[% IF group.rule_type == 'SGBD' %] selected[% END %]>SGBD</option>
-			</select>
+			<h1>2. Definir la règle</h1>
+			<p class="aleft" style="margin-left: 3em;">
+				<label for="rule">Règle :</label>
+				<input id="rule" name="rule" type="text">
 			</p>
-			</br>
-			<p class="aleft">
-			<label for="rule">Règle :</label>
-			<input id="rule" name="rule" type="text" value="[% group.rule %]">
+			<h1>3. Informations sur la règle</h1>
+			<p class="aright" style="float: right; margin-right: 3em;">
+				<label for="description">Description :</label>
+				<input id="description" name="description" type="text">
+			</p>	
+			<p class="aleft" style="margin-left: 3em;">
+				<label for="name_group">Nom :</label>
+				<input id="name_group" name="name_group" type="text">
 			</p>
-			
-		</fieldset>
-		</br>
-		</br>
-		<fieldset>
-			<legend>Ajouter un quota</legend>
-
-			<p class="aleft">
-			<label for="description">Description :</label>
-			<input id="description" name="description" type="text" value="[% group.description %]">
-			</p>		
-			</br>
-			
-			<p class="aleft">
-			<label for="duration_max">Durée de validité maximale de fichier :</label>
-			<input id="duration_max" name="duration_max" type="text" value="[% group.expiration_max %]"><text> jours</text>
-
+			<h1>4. Paramètres pour les utilisateurs de cette règle</h1>
+			<p class="aleft" style="margin-left: 3em;">
+				<label for="duration_max">Durée de validité maximale de fichier :</label>
+				<input id="duration_max" name="duration_max" type="text"><text> jours</text>
 			</p>
-	
-			</br>
-			<p class="aleft">
-			<label for="file_size_max">Taille maximale de fichier :</label>
-			<input id="file_size_max" name="file_size_max" type="text" value="[% IF group.size_max >= 1073741824 %][% group.size_max / 1073741824 %][% ELSE %][% group.size_max / 1048576 %][% END %]">
-			<select id="unit_file_size_max" name="unit_file_size_max">
-				<option value="Mo"[% IF group.size_max < 1073741824 %] selected[% END %]>Mo</option>
-				<option value="Go"[% IF group.size_max >= 1073741824 %] selected[% END %]>Go</option>
-			</select>
+			<p class="aleft" style="clear: both; margin-left: 3em;">
+				<label for="file_size_max">Taille maximale de fichier :</label>
+				<input id="file_size_max" name="file_size_max" type="text">
+				<select id="unit_file_size_max" name="unit_file_size_max">
+					<option value="Mo" selected>Mo</option>
+					<option value="Go">Go</option>
+				</select>
 			</p>
-			</br>
-			<p class="aleft">
-			<label for="space_size_max">Taille totale utilisée :</label>
-			<input id="space_size_max" name="space_size_max" type="text" value="[% IF group.quota >= 1073741824 %][% group.quota / 1073741824 %][% ELSE %][% group.quota / 1048576 %][% END %]">
-			<select id="unit_space_size_max" name="unit_space_size_max">
-				<option value="Mo"[% IF group.quota < 1073741824 %] selected[% END %]>Mo</option>
-				<option value="Go"[% IF group.quota >= 1073741824 %] selected[% END %]>Go</option>
-			</select>
+			<p class="aleft" style="margin-left: 3em;">
+				<label for="space_size_max">Taille totale utilisée :</label>
+				<input id="space_size_max" name="space_size_max" type="text">
+				<select id="unit_space_size_max" name="unit_space_size_max">
+					<option value="Mo" selected>Mo</option>
+					<option value="Go">Go</option>
+				</select>
 			</p>
-			</br>
 			<p class="acenter">
 				<button class="submit" type="submit">Envoyer</button>
 			</p>
@@ -103,7 +106,8 @@
 [% USE format %]
 [% USE Math %]
 [% USE arrondi = format('%02.2f') %]
-		<table>
+		<table class="tablesorter" cellspacing="1">
+			<thead>
 			<tr>
 				<th>Identifiant</th>
 				<th>Type</th>
@@ -116,6 +120,8 @@
 				<th>Date</th>
 				<th>Actions</th>
 			</tr>
+			</thead>
+			<tbody>
 			[% FOREACH user_group IN user_groups %]
 			[% creation_date = String.new(user_group.creation_date).replace('T', ' ') %]
 			<tr>
@@ -138,6 +144,7 @@
 				<a href="[% request.uri_base %]/admin/group/delete/[% user_group.id_usergroup %]">Supprimer</a></td>
 			</tr>
 			[% END %]
+			</tbody>
 		</table>
 	
 [% END %]

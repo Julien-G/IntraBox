@@ -30,6 +30,36 @@
 	    <li><a href="#id5" title="allez à ...">Modification des options de vos fichiers</a></li>
 	  </ol>
 	</li>
+[% IF session.isAdmin %]
+	<li>
+	<a href="#id1" title="allez à ...">Comment accéder à l'administration ?</a>
+	</li>
+	<li>
+	  <a href="#id2" title="allez à ...">Visualiser les téléchargements en cours</a>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Gestion des fichiers non expirés</a>
+	  <ol>
+	    <li><a href="#id5" title="allez à ...">Modification des options de ces fichiers</a></li>
+	  </ol>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Gérer les groupes d'utilisateurs</a>
+	  <ol>
+	    <li><a href="#id5" title="allez à ...">Créer un groupe</a></li>
+	    <li><a href="#id5" title="allez à ...">Modifier ou supprimer un groupe</a></li>
+	  </ol>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Gérer les administrateurs</a>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Faire des statistiques</a>
+	</li>
+	<li>
+	  <a href="#id4" title="allez à ...">Effectuer une recherche</a>
+	</li>
+[% END %]
 	<li><a href="#id6" title="allez à ...">Auteurs</a></li>
 	<li>
 	  <a href="#id7" title="allez à ...">FAQ</a>

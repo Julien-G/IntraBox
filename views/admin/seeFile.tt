@@ -1,3 +1,4 @@
+[% IF session.isAdmin %]
   	[% USE format %]
   	[% USE date %]
 	[% USE String %]
@@ -43,9 +44,4 @@
 			[% END %]
 
 		[% END %]
-			
-
-		
-				
-	
-		
+[% END %]
