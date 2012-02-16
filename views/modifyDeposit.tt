@@ -3,8 +3,11 @@
 			<p>Vous pouvez ici changer les informations du dépôt n°[% liste_deposit.download_code %]
 			</p>				
 		</div> 
-
+		[% IF isAdminView == 1 %]
+		<form method="POST" action="[% request.uri_base %]/admin/file/modifyDeposit/[% liste_deposit.download_code %]">
+		[% ELSE %]
 		<form method="POST" action="[% request.uri_base %]/deposit/modifyDeposit/[% liste_deposit.download_code %]">
+		[% END %]
 		<fieldset>
 			<legend>Formulaire de modification de fichier</legend>
 			<p> Vous pouvez étendre la durée de validité de votre fichier de :

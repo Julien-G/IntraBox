@@ -136,12 +136,6 @@ post '/' => sub {
 	  };
 };
 
-get '/:deposit' => sub {
-	my @liste_deposit = schema->resultset('Deposit')->search( { download_code => param("deposit") } );
-	
-	template 'seeDeposit', { liste_deposit => \@liste_deposit };
-};
-
 get '/modifyDeposit/:deposit' => sub {
 	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => param("deposit") } );
 	template 'modifyDeposit', { liste_deposit => $liste_deposit };

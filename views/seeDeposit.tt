@@ -24,22 +24,20 @@
 			[% IF deposit.opt_comment %]<li>Vous avez laissé en commentaire : [% deposit.opt_comment %]</li>[% END %]
 	</div> 
 	
-
 			[% FOREACH file = deposit.files %]
+			<form method="POST" action="[% request.uri_base %]/file/downloadFile">
 			<fieldset>
 				<table>				
 					<td><em>[% file.name %]</em><br/><br/>[% IF file.size >= 1048576 %][% arrondi(file.size / 1048576) %] Mo[% END %][% IF file.size < 1048576 %][% arrondi(file.size / 1024) %] ko[% END %]</td>
 					<td>
-						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
 							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
 							<input type="hidden" id="name" name="name" value="[% file.name %]">
 							<p class="acenter">
 							<button class="submit" type="submit">Download</button></p>
-						</form>						
 					</td>
 				</table>
 			</fieldset>
-			<br/>
+			</form>	
 			[% END %]
 
 		[% END %]

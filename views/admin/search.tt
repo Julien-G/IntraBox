@@ -6,6 +6,24 @@
 	        }, 
 			sortList: [[2,0]]
 		} ); 
+		$( ".deleteButton" ).click(function() {
+			var id = $(this).children("span").text();
+			$( "#dialog-confirmDelete" ).dialog({
+				resizable: false,
+				height: 160,
+				draggable: false,
+				modal: true,
+				buttons: {
+					"Supprimer ce dépôt": function() {
+						window.location.href = "[% request.uri_base %]/deposit/supprimerDepot/" + id;
+					},
+					"Annuler": function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+			return false;
+		});	
 	});
 </script>
 [% IF !session.isAdmin %]
@@ -126,13 +144,10 @@ $(function() {
 					[% END %]
 				</td>
 				<td>
+					<a class="UIbutton ui-icon ui-icon-search viewButton" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a> 
 					[% IF deposit.id_status.id_status == 1 %]
-					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/search/[% deposit.download_code %]"></a>
-					<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/admin/search/modifyDeposit/[% deposit.download_code %]"></a>
-					<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/admin/search/deleteDeposit/[% deposit.download_code %]"></a> 
-					[% END %]
-					[% IF deposit.id_status.id_status == 2 %]
-					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/search/[% deposit.download_code %]"></a> 
+					<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/admin/file/modifyDeposit/[% deposit.download_code %]"></a>
+					<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/admin/file/deleteDeposit/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a> 
 					[% END %]
 				</td>
 			</tr>
@@ -140,4 +155,8 @@ $(function() {
 		</tbody>
 		</table>
 	[% END %]
+		<div id="dialog-confirmDelete" title="Supprimer un dépôt?" style="display: none;">
+			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+			Vous êtes sur le point de supprimer un dépôt. Êtes-vous sûr?</p>
+		</div>
 [% END %]

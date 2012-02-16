@@ -27,8 +27,7 @@
 		<table class="tablesorter" cellspacing="1">
 			<thead>
 			<tr>
-				<th>Propriétaire</th>
-				<th>Numéro du dépôt</th>
+				<th class="aleft">Propriétaire</th>
 				<th>Taille du dépôt</th>
 				<th>Date de création</th>
 				<th>Date d'expiration</th>
@@ -43,12 +42,11 @@
 			[% deposit_size = 0 %]
 			<tr>
 				<td>[% deposit.id_user.login %]</td>
-				<td>[% deposit.id_deposit %]</td>
-				<td>[% FOREACH file IN deposit.files %][% deposit_size = deposit_size + file.size %][% END %][% IF deposit_size >= 1048576 %][% arrondi(deposit_size / 1048576) %] Mo[% END %][% IF deposit_size < 1048576 %][% arrondi(deposit_size / 1024) %] ko[% END %]</td>
-				<td>[% date.format(created_date, '%d %b %Y %Hh%M') %]</td>						
-				<td>[% date.format(expiration_date, '%d %b %Y %Hh%M') %]</td>
-				<td>[% FOREACH download IN deposit.files.downloads %][% IF loop.last %][% loop.count %][% END %][% END %]</td>
-				<td>
+				<td class="acenter">[% FOREACH file IN deposit.files %][% deposit_size = deposit_size + file.size %][% END %][% IF deposit_size >= 1048576 %][% arrondi(deposit_size / 1048576) %] Mo[% END %][% IF deposit_size < 1048576 %][% arrondi(deposit_size / 1024) %] ko[% END %]</td>
+				<td class="acenter">[% date.format(created_date, '%d %b %Y %Hh%M') %]</td>						
+				<td class="acenter">[% date.format(expiration_date, '%d %b %Y %Hh%M') %]</td>
+				<td class="acenter">[% IF deposit.files.downloads.size > 0 %][% FOREACH download IN deposit.files.downloads %][% IF loop.last %][% loop.count %][% END %][% END %][% ELSE %]0[% END %]</td>
+				<td class="acenter">
 					[% IF deposit.id_status.id_status == 1 %]
 					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a>
 					<a class="UIbutton ui-icon ui-icon-pencil" href="[% request.uri_base %]/admin/file/modifyDeposit/[% deposit.download_code %]"></a> 
