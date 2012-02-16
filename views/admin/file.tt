@@ -1,3 +1,14 @@
+<script>
+	$(function() {
+		$( ".tablesorter" ).tablesorter( {
+		    headers: { 
+	            1: { sorter: false },
+	            6: { sorter: false }
+	        }, 
+			sortList: [[2,0]]
+		} ); 
+	});
+</script>
 [% IF !session.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
@@ -13,7 +24,8 @@
 [% USE String %]
 [% USE format %]
 [% USE arrondi = format('%02.2f') %]
-		<table>
+		<table class="tablesorter" cellspacing="1">
+			<thead>
 			<tr>
 				<th>Propriétaire</th>
 				<th>Numéro du dépôt</th>
@@ -21,8 +33,10 @@
 				<th>Date de création</th>
 				<th>Date d'expiration</th>
 				<th>Téléchargé</th>
-			</tr>		
-			[% i = 1 %]	
+				<th>Actions</th>
+			</tr>	
+			</thead>	
+			<tbody>	
 			[% FOREACH deposit = liste_deposit %]
 			[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
 			[% expiration_date = String.new(deposit.expiration_date).replace('T', ' ') %]
@@ -34,8 +48,14 @@
 				<td>[% date.format(created_date, '%d %b %Y %Hh%M') %]</td>						
 				<td>[% date.format(expiration_date, '%d %b %Y %Hh%M') %]</td>
 				<td>[% FOREACH download IN deposit.files.downloads %][% IF loop.last %][% loop.count %][% END %][% END %]</td>
+				<td>
+					[% IF deposit.id_status.id_status == 1 %]
+					<a class="UIbutton ui-icon ui-icon-search" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a> 
+					<a class="UIbutton ui-icon ui-icon-trash" href="[% request.uri_base %]/admin/file/supprimerFile/[% deposit.download_code %]"></a> 
+					[% END %]
+				</td>
 			</tr>
 			[% END %]
-			[% i = 1 %]
+			</tbody>	
 		</table>
 [% END %]

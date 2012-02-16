@@ -49,4 +49,26 @@ get '/' => sub {
 		 };
 };
 
+get '/:deposit' => sub {
+	my @liste_deposit = schema->resultset('Deposit')->search( { download_code => param("deposit") } );
+	
+	template 'voirDepot', { liste_deposit => \@liste_deposit };
+};
+
+get '/supprimerFile/:deposit' => sub {
+	my $deposit       = param("deposit");
+	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => $deposit } );
+	$liste_deposit->id_status('2');
+	$liste_deposit->update;
+	redirect '/admin/file/';
+};
+
+sub deleteDeposit {
+	my $deposit       = $_[0];
+	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => $deposit } );
+	$liste_deposit->id_status('2');
+	$liste_deposit->update;
+	showAllDeposits();
+}
+
 return 1;
