@@ -3,79 +3,74 @@
       <h1>Sommaire</h1>
 
       <ol>
-	<li><a href="#id1" title="allez à ...">Qu'est-ce qu'IntraBox ?</a></li>
+	<li><a href="#id1" title="allez à ...">Qu'est-ce qu'IntraBox&nbsp;?</a>	  
+	</li>
 
 	<li>
 	  <a href="#id2" title="allez à ...">Déposer un ou plusieurs fichiers</a>
 	  <ol>
-	    <li><a href="#id3" title="allez à ...">Les options de dépôt</a></li>
+	    <li><a href="#id3" title="allez à ...">L'environnement du dépôt</a></li>
+	    <li><a href="#id4" title="allez à ...">Les options de dépôt</a></li>
 	  </ol>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Gestion de vos fichiers</a>
+	  <a href="#id5" title="allez à ...">Gestion de vos fichiers</a>
 	  <ol>
-	    <li><a href="#id5" title="allez à ...">Modification des options de vos fichiers</a></li>
+	    <li><a href="#id6" title="allez à ...">Modification des options de vos fichiers</a></li>
 	  </ol>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Créer une zone de dépôt pour un extérieur</a>
+	  <a href="#id7" title="allez à ...">Créer une zone de dépôt pour un extérieur</a>
 	  <ol>
-	    <li><a href="#id5" title="allez à ...">Les options de la zone de dépôt</a></li>
+	    <li><a href="#id8" title="allez à ...">Les options de la zone de dépôt</a></li>
 	  </ol>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Gestion de vos zone de dépôt pour les extérieurs</a>
+	  <a href="#id9" title="allez à ...">Gestion de vos zones de dépôt pour les extérieurs</a>
 	  <ol>
-	    <li><a href="#id5" title="allez à ...">Récupération des fichiers de la zone de dépôt</a></li>
-	    <li><a href="#id5" title="allez à ...">Modification des options de vos fichiers</a></li>
+	    <li><a href="#id10" title="allez à ...">Récupération des fichiers de la zone de dépôt</a></li>
+	    <li><a href="#id11" title="allez à ...">Modification des options de vos fichiers</a></li>
 	  </ol>
 	</li>
 [% IF session.isAdmin %]
 	<li>
-	<a href="#id1" title="allez à ...">Comment accéder à l'administration ?</a>
+	<a href="#id12" title="allez à ...">Comment accéder à l'administration ?</a>
 	</li>
 	<li>
-	  <a href="#id2" title="allez à ...">Visualiser les téléchargements en cours</a>
+	  <a href="#id13" title="allez à ...">Visualiser les téléchargements en cours</a>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Gestion des fichiers non expirés</a>
-	  <ol>
-	    <li><a href="#id5" title="allez à ...">Modification des options de ces fichiers</a></li>
-	  </ol>
+	  <a href="#id14" title="allez à ...">Gestion des fichiers non expirés</a>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Gérer les groupes d'utilisateurs</a>
-	  <ol>
-	    <li><a href="#id5" title="allez à ...">Créer un groupe</a></li>
-	    <li><a href="#id5" title="allez à ...">Modifier ou supprimer un groupe</a></li>
-	  </ol>
+	  <a href="#id15" title="allez à ...">Gérer les groupes d'utilisateurs</a>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Gérer les administrateurs</a>
+	  <a href="#id16" title="allez à ...">Gérer les administrateurs</a>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Faire des statistiques</a>
+	  <a href="#id17" title="allez à ...">Faire des statistiques</a>
 	</li>
 	<li>
-	  <a href="#id4" title="allez à ...">Effectuer une recherche</a>
+	  <a href="#id18" title="allez à ...">Effectuer une recherche</a>
 	</li>
 [% END %]
-	<li><a href="#id6" title="allez à ...">Auteurs</a></li>
+	<li><a href="#id19" title="allez à ...">Auteurs</a></li>
 	<li>
-	  <a href="#id7" title="allez à ...">FAQ</a>
+	  <a href="#id20" title="allez à ...">FAQ</a>
 
 	  <ol>
-	    <li><a href="#id8" title="allez à ...">Je veux déposer plusieurs fichiers</a></li>
-	    <li><a href="#id9" title="allez à ...">Je ne vois pas la fenêtre de progression de dépôt de fichier</a></li>
-	    <li><a href="#id10" title="allez à ...">J'ai oublié l'adresse de téléchargement de mon fichier</a></li>
+	    <li><a href="#id" title="allez à ...">Je veux déposer plusieurs fichiers</a></li>
+	    <li><a href="#id" title="allez à ...">Je ne vois pas la fenêtre de progression de dépôt de fichier</a></li>
+	    <li><a href="#id" title="allez à ...">J'ai oublié l'adresse de téléchargement de mon fichier</a></li>
 	  </ol>
 	</li>
       </ol>
       
-      <h1 id="id1">1. Qu'est-ce qu'IntraBox ?</h1>
+      <h1 id="id1">1. Qu'est-ce qu'IntraBox&nbsp;?</h1>
       <br>
-      <p>FileX est un système de transfert et de partage de fichiers.</p>
-
+      <p>IntraBox est un système de transfert et de partage de fichiers.</p>
+	  <br>
       <p>Il a été conçu dans le but de décharger la messagerie électronique de cette tâche. En effet, nombre d'utilisateurs de messagerie utilisent la fonctionnalité des « pièces
       jointes » pour transmettre des documents volumineux, ce qui occasionne quelques désagréments pour les destinataires :</p>
       
@@ -85,19 +80,242 @@
 		<li>Lenteur de réception des mails.</li>
       </ul>
 
+	  <p>Il a également été conçu pour permettre à des utilisateurs extérieurs (utilisateurs ne possédant pas de compte pour l'application) de pouvoir tout de même venir déposer des fichiers 
+	  à destination des utilisateurs internes de l'application (possédant un compte).</p>
+	  <br>
       <p>Le principe de fonctionnement du système est le suivant :</p>
       <ol>
-		<li>Vous déposez un fichier.</li>
-		<li>Une adresse internet (URL) identifiant le fichier est créée.</li>
-		<li>Vous envoyez cette adresse par e-mail à un plusieurs destinataires du fichier.</li>
+		<li>Vous déposez un ou plusieurs fichiers en un dépôt.</li>
+		<li>Une adresse internet (URL) identifiant le fichier est créée pour chaque fichier de votre dépôt.</li>
+		<li>Cette adresse est directement envoyée par e-mail à un ou plusieurs destinataires du fichier.</li>
 		<li>Le ou les destinataires récupèrent le fichier en utilisant leur navigateur internet.</li>
       </ol>
 
       <p>Le seul outil nécessaire pour effectuer toutes ces opérations est un navigateur internet !</p>
-
+	  <br>
       <p><strong>Attention :</strong> l'accès au service pour récupérer un fichier est libre (dans la mesure où on connait son URL et son éventuel mot de passe) mais seules les personnes autorisées et authentifiées par l'école peuvent déposer des
-      fichiers. Il est conservé une trace de toutes les activités sur ce serveur. Les fichiers eux-mêmes ne sont pas conservés au-delà de leur date d'expiration.</p>
+      fichiers. Il est conservé une trace de toutes les activités sur ce serveur. Les fichiers eux-mêmes ne sont pas conservés au-delà de leur date d'expiration. Contactez l'administrateur pour plus d'informations.</p>
       <br>
+      <p>Enfin, de n'importe quel page vous pouvez accéder à la page principale c'est-à-dire la page de dépôt en cliquant sur le nom de l'application <em>IntraBox</em>.</p>
+	  <br>
+      
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
       <h1 id="id2">2. Déposer un ou plusieurs fichiers</h1>
+      <br>
+      <p>Pour déposer un fichier&nbsp;: sélectionner un fichier depuis votre disque dur en utilisant le bouton <em>Parcourir</em>. 
+      Vous pouvez déposer jusqu'à quatres fichiers en un seul dépôt, vous n'êtes bien sûr pas obligé de remplir les quatres champs.
+      Finalement, appuyez sur le bouton <em>Envoyer</em>.</p>
+	  <br>
+      <p>Lorsque le dépôt est terminé, un message vous indiquera l'adresse à laquelle le fichier pourra être téléchargé durant sa
+      période de validité. Vous recevrez également une confirmation de dépôt de fichier par courrier électronique.</p>
+
+      <p>Pour qu'une personne récupère votre fichier, remplissez le champ des destinataires ou vous pouvez aussi lui transmettre
+      cette adresse par courrier électronique ou tout autre moyen de communication.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h2 id="id3">2.1. L'environnement du dépôt</h2>
+      <br>
+      <p>Vous pouvez voir en haut à droite de votre page votre identifiant de compte ainsi que la place que vous utilisez par rapport à votre place totale disponible sur votre compte. 
+      La barre en-dessous vous indique graphiquement ce rapport place utilisée/place totale disponible.</p>
+      
+      <p>Vous pouvez également vous déconnectez de l'application en appuyant sur le lien <span class="underline">Se Déconnecter</span>.
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h2 id="id4">2.2. Les options de dépôt</h2>
+      <br>
+      <p>Les options suivantes sont disponibles lors du dépôt d'un ou de plusieurs fichiers (les options s'appliqueront à tous les fichiers d'un même dépôt)&nbsp;:</p>
+		<br>
+      <dl>
+	  <dt><span class="underline">Expiration du fichier</span></dt>
+	  <dd>Le fichier ne sera plus disponible au téléchargement après le nombre de jours sélectionné.</dd>
+		<br>
+	  <dt><span class="underline">Recevoir un avis de réception à chaque téléchargement</span></dt>
+	  <dd>Recevoir un e-mail de confirmation à chaque téléchargement du fichier.</dd>
+		<br>
+	  <dt><span class="underline">Recevoir un récapitulatif des téléchargements lorsque le fichier aura expiré</span></dt>
+	  <dd>Recevoir un e-mail détaillant les téléchargements du fichier lorsque celui-ci arrivera à expiration.</dd>
+		<br>
+	  <dt><span class="underline">Utiliser un mot de passe pour le téléchargement</span></dt>
+	  <dd>Vous pouvez définir un mot de passe qui sera demandé à chaque téléchargement de vos fichiers appartenant à ce même dépôt.</dd>
+      <br>
+	  <dt><span class="underline">Insérer un commentaire</span></dt>
+	  <dd>Vous pouvez insérer un commentaire qui sera visible lors du téléchargement du fichier ainsi que dans le mail envoyé aux destinataires de ce dépôt.</dd>
+      </dl>
+	  <br>
+      <p>Toutes ces options sont modifiables ultérieurement via la <em>Gestion de vos fichiers</em>.</p>
+	  <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id5">3. Gestion de vos fichiers</h1>
+      <br>
+      <p>La <em>Gestion de vos fichiers</em> est accessible depuis la page de dépôt de fichiers. Elle permet de consulter l'historique
+      de tous les fichiers que vous avez déposés sur le système, d'en modifier les options et de les faire expirer s'il ne le sont pas.</p>
+	  <br>
+      <p>La liste de vos fichiers est triée par défaut de manière décroissante sur la date de dépôt (le fichier le plus récent en
+      haut). Vous pouvez néanmoins retrier cette liste en cliquant sur le nom de la colonne du critère désiré 
+      (les colonnes où n'apparaissent pas de flèches ne peuvent être un critère de tri).</p>
+	  <br>
+      <p>Pour avoir des informations détaillées sur un fichier, cliquez sur l'icone <em>loupe</em>.
+      <p>Pour modifier les options, cliquez sur l'icone <em>crayon</em>.</p>
+      <p>Pour faire expirer un fichier, cliquez sur l'icone <em>poubelle</em>. Il ne sera alors plus disponible au
+	  téléchargement et sera supprimé du système. <strong>Cette action est définitive</strong>.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h2 id="id6">3.1. Modification des options de vos fichiers</h2>
+	  <br>
+      <p>Les options suivantes sont modifiables si le fichier <strong>n'a pas expiré</strong>&nbsp;:</p>
+	  <br>
+      <dl>
+	  <dt><span class="underline">Mot de passe</span></dt>
+	  <dd>Cette option vous permet de définir (ou supprimer) un mot de passe pour le téléchargement de votre fichier.
+        Décochez la case devant mot de passe pour ne pas avoir à utiliser de mot de passe pour télécharger votre fichier
+        ou cochez-la et saisissez un mot de passe dans le champ de droite&nbsp;; soit pour créer un nouveau mot de passe
+        ou mettre à jour un précédemment défini.<br>
+        </dd>
+		<br>
+	  <dt><span class="underline">Augmenter la durée de vie du fichier</span></dt>
+	  <dd>Cette option vous permet de prolonger la durée de vie de votre fichier de <strong>n</strong> jours.</dd>
+		<br>
+	  <dt><span class="underline">Recevoir un message à chaque téléchargement</span></dt>
+	  <dd>Cochez ou décochez pour recevoir ou ne plus recevoir l'e-mail de notification de chaque téléchargement du fichier.</dd>
+		<br>
+	  <dt><span class="underline">Recevoir un récapitulatif lorsque le fichier sera supprimé</span></dt>
+	  <dd>Cochez ou décochez pour recevoir ou ne plus recevoir un e-mail récapitulant tous les téléchargements 
+	  du fichier lorsque celui-ci arrivera à expiration.</dd>
+	  <br>
+	  <dt><span class="underline">Insérer un commentaire</span></dt>
+	  <dd>Cochez ou décochez pour insérer ou désinsérer un commentaire, vous pouvez également modifier le texte du commentaire.</dd>
+      </dl>
+
+      <p>Cliquez sur le bouton <em>Modifier</em> pour appliquer vos modifications.</p>
+	  <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id7">4. Créer une zone de dépôt pour un extérieur</h1>
+      <br>
+      <h2 id="id8">4.1. Les options de la zone de dépôt</h2>
+		<br>
+      
+      <h1 id="id9">5. Gestion de vos zones de dépôt pour les extérieurs</h1>
+      <br>
+      <h2 id="id10">5.1. Récupération des fichiers de la zone de dépôt</h2>
+	  <br>
+	  <h2 id="id11">5.2. Modification des options de vos fichiers</h2>
+	  <br>
+      
+[% IF session.isAdmin %]
+      <h1 id="id12">6. Comment accéder à l'administration ?</h1>
+      <br>
+      <p>Cliquez sur l'onglet administration en haut à droite de votre page pour accéder au menu de l'administration.</p>
+      <p>Cliquez sur le nom de l'application <em>IntraBox</em> pour retourner à la partie non administrative.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id13">7. Visualiser les téléchargements en cours</h1>
+      <br>
+      <p>Cliquez sur l'onglet <em>Téléchargements en cours</em> pour accéder à la page des téléchargements en cours.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id14">8. Gestion des fichiers non expirés</h1>
+      <br>
+      <p>Cliquez sur l'onglet <em>Gestion des fichiers non expirés</em> pour accéder à la page de gestion des fichiers non expirés.</p>
+      <br>
+      <p>Vous pouvez voir, modifier ou faire expirer un fichier en cliquant sur les icones correspondantes dans la colonne <em>Actions</em>
+      (voir 3. Gestion de vos fichiers).</p>
+      <br>
+      <p>Vous pouvez également trier les données du tableau selon différents critères, selon le nom des colonnes où apparaissent des flèches</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id15">9. Gérer les groupes d'utilisateurs</h1>
+      <br>
+      <p>Cliquez sur l'onglet <em>Gestion des groupes d'utilisateurs</em> pour accéder à la page gestion des groupes d'utilisateurs.</p>
+      <br>
+      <p>Vous pouvez créer, modifier ou supprimer une règle de groupe.<p>
+      <br>
+      <p>Pour créer une règle de groupe, il faut remplir tous les champs du formulaire. Les champs <em>règle</em>, <em>durée de validité maximale</em>, 
+      <em>taille de fichier maximal</em>, <em>taille totale utilisée</em> sont obligatoires.</p>
+      <p>Pour valider, cliquez sur le bouton <em>Envoyer</em>.
+      <p>Une nouvelle ligne apparait alors dans le tableau.</p>
+      <br>
+      <p>Pour modifier une règle de groupe, cliquez sur l'icône <em>crayon</em> dans la colonne <em>Actions</em>. Vous pouvez alors modifier tous les champs que vous souhaiter.
+      Pour valider les changements, cliquez sur le bouton <em>Envoyer</em>.
+      <br>
+      <p>Pour supprimer une règle de groupe, cliquez sur l'icône <em>poubelle</em> dans la colonne <em>Actions</em>.
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id16">10. Gérer les administrateurs</h1>
+      <br>
+      <p>Cliquez sur l'onglet <em>Gestion des administrateurs</em> pour accéder à la page de gestion des administrateurs.</p>
+      <br>
+      <p>Vous pouvez voir les identifiants des administrateurs dans le tableau. Vous pouvez également supprimer un 
+      administrateur en cliquant sur le bouton <em>Supprimer</em>.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id17">11. Faire des statistiques</h1>
+      <br>
+      <p>Cliquez sur l'onglet <em>Statistiques</em> pour accéder à la page des statistiques.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+      
+      <h1 id="id18">12. Effectuer une recherche</h1>
+      <br>
+      <p>Cliquez sur l'onglet <em>Recherche</em> pour accéder à la page de recherche.</p>
+      <br>
+      <p>Vous pouvez remplir autant de champs de recherche que vous le souhaitez. Pour les sélectionner, vous devez cochez la case devant chaque champ de recherche. 
+      De plus, la recherche est multiple c'est-à-dire que vous pouvez saisir plusieurs recherches dans un même champ.</p>
+      <p>Le champ <em>Nom de l'identifiant de l'utilisateur</em> permet de faire une recherche sur tous les fichiers déposés par un ou des utilisateurs.</p>
+      <p>Le champ <em>Groupe d'utilisateurs LDAP</em> permet de faire une recherche sur tous les fichiers déposés tout un groupe d'utilisateurs LDAP.</p>
+      <p>Le champ <em>Date de création du dépôt</em> permet de faire une recherche sur tous les fichiers déposés avant ou après la date choisie. Par défaut, c'est après qui est sélectionné.</p>
+      <p>Le champ <em>Date d'expiration du dépôt</em> permet de faire une recherche sur tous les fichiers expirés avant ou après la date choisie. Par défaut, c'est après qui est sélectionné.</p>
+      <br>
+      <p>Appuyez sur le bouton <em>Envoyer</em> pour effectuer la recherche saisie dans les différents champs.</p>
+      <br>
+      <p>Un tableau des résultats se créé alors.</p>
+      <p>Vous pouvez également trier les données du tableau selon différents critères, selon le nom des colonnes où apparaissent des flèches</p>
+      <br>
+      <p>Pour les dépôts expirés et non expirés, vous pouvez visualiser les détails du dépôt en cliquant sur l'icône <em>loupe</em>.
+      Pour les dépôts non expirés uniquement, vous pouvez modifier ou faire expirer le dépôt en cliquant respectivement sur l'icône <em>crayon</em> et l'icône <em>poubelle</em>.
+      Voir Gestion de vos fichiers pour plus de détails.</p>
+      <br>
+      <a href="#up" title="Retour en haut de page"
+      class="linkup">[haut]</a>
+      <br>
+[% END %]
+
+      <h1 id="id19">13. FAQ</h1>
+      
+      <h1 id="id20">14. Auteurs</h1>
       
 </div>
