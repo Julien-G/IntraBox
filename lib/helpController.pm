@@ -1,4 +1,4 @@
-package IntraBox::adminFileController;
+package IntraBox::adminSearchController;
 ## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
 use warnings;
@@ -20,33 +20,17 @@ use DBIx::Class::FromValidators;
 
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
+use Data::Dumper;
+use Net::LDAP;
+#use Unicode::String qw(utf8 latin1 utf16);
+my $ldap = Net::LDAP->new( config->{ldapserver} ) or die "Can't bind to ldap: $!\n";
+
 #------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 
-prefix '/admin/file';
+prefix '/help';
 
 get '/' => sub {
-	
-	my $current_date = DateTime->now;
-	my $methode_tri      = "created_date";
-
-	my @liste_deposit = schema->resultset('Deposit')->search(
-			{
-					id_status        => "1",
-					expiration_date  => { '>', $current_date }
-			},
-			{ order_by => "$methode_tri" },
-		);
-	my $id_deposit;
-	for my $deposit_liste (@liste_deposit) {
-		$id_deposit = $deposit_liste->id_deposit;
-	}
-
-
-	template 'admin/file', { 
-		liste_deposit => \@liste_deposit
-		 };
+	template 'help';
 };
-
-return 1;

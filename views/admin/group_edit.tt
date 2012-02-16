@@ -5,22 +5,28 @@
 		</div>
 [% END %]
 [% IF session.isAdmin %]
-	[% FOREACH msg IN infoMsgs %]
+	[% IF infoMsgs.size > 0 %]
  		<div class="info info-vert">
 			<h1>Information</h1>
-			<p>Voici la liste des groupes.[% msg %] </p>
+		[% FOREACH msg IN infoMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
 		</div>
 	[% END %]
-	[% FOREACH msg IN alertMsgs %]
+	[% IF alertMsgs.size > 0 %]
  		<div class="info info-orange">
 			<h1>Avertissement</h1>
+		[% FOREACH msg IN alertMsgs %]
 			<p>[% msg %]</p>
+		[% END %]
 		</div>
 	[% END %]
-	[% FOREACH msg IN errorMsgs %]
+	[% IF errorMsgs.size > 0 %]
  		<div class="info info-rouge">
-			<h1>Alerte</h1>
+			<h1>Erreur</h1>
+		[% FOREACH msg IN errorMsgs %]
 			<p>[% msg %]</p>
+		[% END %]
 		</div>
 	[% END %]
 		
@@ -95,6 +101,8 @@
 [% USE date %]
 [% USE String %]
 [% USE format %]
+[% USE Math %]
+[% USE arrondi = format('%02.2f') %]
 		<table>
 			<tr>
 				<th>Identifiant</th>
@@ -116,10 +124,16 @@
 				<td>[% user_group.name %]</td>
 				<td>[% user_group.rule %]</td>
 				<td>[% user_group.expiration_max %]</td>
-				<td>[% user_group.size_max %]</td>
-				<td>[% user_group.quota %]</td>
+				<td>[% IF user_group.size_max >= 1073741824 %][% arrondi(user_group.size_max / 1073741824) %] Go[% END %]
+					[% IF user_group.size_max < 1073741824 && user_group.size_max >= 1048576 %][% arrondi(user_group.size_max / 1048576) %] Mo[% END %]
+					[% IF user_group.size_max < 1048576 %][% arrondi(user_group.size_max / 1024) %] ko[% END %]
+				</td>
+				<td>[% IF user_group.quota >= 1073741824 %][% arrondi(user_group.quota / 1073741824) %] Go[% END %]
+					[% IF user_group.quota < 1073741824 && user_group.quota >= 1048576 %][% arrondi(user_group.quota / 1048576) %] Mo[% END %]
+					[% IF user_group.quota < 1048576 %][% arrondi(user_group.quota / 1024) %] ko[% END %]
+				</td>
 				<td>[% user_group.description %]</td>
-				<td>[% date.format(creation_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>[% date.format(creation_date, '%d %b %Y %Hh%M') %]</td>
 				<td><a href="[% request.uri_base %]/admin/group/modify/[% user_group.id_usergroup %]">Modifier</a>
 				<a href="[% request.uri_base %]/admin/group/delete/[% user_group.id_usergroup %]">Supprimer</a></td>
 			</tr>

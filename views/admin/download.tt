@@ -29,7 +29,10 @@
 		[% END %]
 		</div>
 	[% END %]
-	
+
+[% USE date %]
+[% USE String %]
+[% USE format %]
 		<table>
 			<tr>
 				<th class="aleft" style="width: 40%">Nom du fichier</th>
@@ -38,10 +41,11 @@
 				<th>Nombre de téléchargements</th>
 			</tr>
 			[% FOREACH download IN downloads %]
+			[% start_date = String.new(download.dl.start_date).replace('T', ' ') %]
 			<tr>
 				<td>[% download.file.name %]</td>
 				<td class="acenter">[% download.user.login %]</td>
-				<td class="acenter">[% download.start_date %]</td>
+				<td class="acenter">[% date.format(start_date, '%d %b %Y %Hh%M') %]</td>
 				<td class="acenter">[% download.dls_count %]</td>
 			</tr>
 			[% END %]

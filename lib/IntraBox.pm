@@ -76,7 +76,7 @@ use Net::LDAP;
 sub getSession {
 
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
-	my $login = "abourgan";
+	my $login = "lfoucher";
 	my $usr;
 
 	#if there is no session, log the user
@@ -163,6 +163,7 @@ sub getSession {
 # Load controllers
 use depositController;
 use fileController;
+use helpController;
 use adminDownloadController;
 use adminAdminController;
 use adminGroupController;

@@ -1,3 +1,13 @@
+<script>
+	$(function() {
+		$( ".tablesorter" ).tablesorter( {
+		    headers: { 
+	            5: { sorter: false }
+	        }, 
+			sortList: [[2,0]]
+		} ); 
+	});
+</script>
 [% IF !session.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
@@ -75,21 +85,25 @@ $(function() {
 			</p>
 		</fieldset>
 </form>
+<br>
 [% USE date %]
 [% USE Math %]
 [% USE String %]
 [% USE format %]
 [% USE arrondi = format('%02.2f') %]
 [% IF deposits.size > 0 %]
-		<table style="margin-top: 2em;">
-			<tr>
-				<th class="aleft">Nom du propriétaire</th>
-				<th>Groupe d'utilisateur</th>
-				<th>Date de création du dépôt</th>
-				<th>Date d'expiration du dépôt</th>
-				<th>Taille totale du dépôt</th>
-				<th>Nom des fichiers</th>
-			</tr>
+		<table class="tablesorter" cellspacing="1">
+			<thead>
+				<tr>
+					<th style="width: 10em;">Nom du propriétaire</th>
+					<th style="width: 7em;">Groupe</th>
+					<th style="width: 12em;">Date du dépôt</th>
+					<th style="width: 12em;">Date d'expiration</th>
+					<th style="width: 16em;">Taille totale du dépôt</th>
+					<th style="width: 7em;">Nom des fichiers</th>
+				</tr>
+			</thead>
+			<tbody>
 		[% FOREACH deposit IN deposits %]
 			[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
 			[% expiration_date = String.new(deposit.expiration_date).replace('T', ' ')  %]
@@ -97,8 +111,8 @@ $(function() {
 			<tr class="acenter">
 				<td class="aleft">[% deposit.id_user.login %]</td>
 				<td></td>
-				<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>
-				<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
+				<td>[% date.format(created_date, '%d %b %Y %Hh%M') %]</td>
+				<td>[% date.format(expiration_date, '%d %b %Y %Hh%M') %]</td>
 				<td>
 					[% FOREACH file IN deposit.files %]
 						[% deposit_size = deposit_size + file.size %]
@@ -112,6 +126,7 @@ $(function() {
 				</td>
 			</tr>
 		[% END %]
+		</tbody>
 		</table>
 	[% END %]
 [% END %]
