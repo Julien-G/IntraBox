@@ -86,10 +86,10 @@
 						</td>
 						<td>[% date.format(created_date, '%d %b %Y<br>%Hh%M') %]</td>						
 						<td>[% date.format(expiration_date, '%d %b %Y<br>%Hh%M') %]</td>
-						<td
-							[% IF deposit.id_status.id_status == 1 %]
+						<td>
 								<a class="UIbutton ui-icon ui-icon-search viewButton" href="[% request.uri_base %]/deposit/[% deposit.download_code %]"></a> 
-								<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a>
+							[% IF deposit.id_status.id_status == 1 %]
+								<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]"></a>
 								<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a> 
 							[% END %]
 						</td>

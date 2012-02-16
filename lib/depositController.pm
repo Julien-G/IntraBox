@@ -48,22 +48,22 @@ get '/' => sub {
 get '/:deposit' => sub {
 	my @liste_deposit = schema->resultset('Deposit')->search( { download_code => param("deposit") } );
 	
-	template 'voirDepot', { liste_deposit => \@liste_deposit };
+	template 'seeDeposit', { liste_deposit => \@liste_deposit };
 };
 
-get '/supprimerDepot/:deposit' => sub {
+get '/deleteDeposit/:deposit' => sub {
 	deleteDeposit( param("deposit") );
 	redirect '/deposit/';
 };
 
-get '/modifierDepot/:deposit' => sub {
+get '/modifyDeposit/:deposit' => sub {
 	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => param("deposit") } );
-	template 'modifierDepot', { liste_deposit => $liste_deposit };
+	template 'modifyDeposit', { liste_deposit => $liste_deposit };
 };
 
-post '/modifierDepot/:deposit' => sub {
+post '/modifyDeposit/:deposit' => sub {
 	editDeposit( param("deposit") );
-	redirect '/';
+	redirect '/deposit/';
 };
 
 #--------- /ROUTEES -------
