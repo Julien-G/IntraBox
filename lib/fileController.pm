@@ -2,6 +2,7 @@ package IntraBox::fileController;
 ## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
 use warnings;
+use utf8;
 
 # Configuration
 use lib '.';
@@ -16,6 +17,8 @@ use Digest::SHA1;
 use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
+
+use Dancer::Plugin::Email;
 
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
@@ -71,61 +74,44 @@ sub download_file {
 	my $id_status2;
 	my $status;
 
-	my @id_file;
-	my @name;
-	my @size;
-	my @on_server;
-	my @name_on_disk;
-
-	my $login_user;
-
 	my $access = false;
 
 	my $deposit_liste =
 	  schema->resultset('Deposit')
 	  ->find( { download_code => "$download_code", } );
-	$id_deposit       = $deposit_liste->id_deposit;
-	$id_user          = $deposit_liste->id_user;
-	$id_user2         = $id_user->login;
-	$id_status        = $deposit_liste->id_status;
-	$status           = $id_status->name;
-	$id_status2       = $id_status->id_status;
-	$expiration_date  = $deposit_liste->expiration_date;
-	$acknowlegdement  = $deposit_liste->opt_acknowledgement;
-	$downloads_report = $deposit_liste->opt_downloads_report;
 
-	$password = $deposit_liste->opt_password;
+	if ($deposit_liste) {
+		$id_deposit = $deposit_liste->id_deposit;
+		$id_user    = $deposit_liste->id_user;
+		$id_user2   = $id_user->login;
+		$id_status  = $deposit_liste->id_status;
+
+		$status     = $id_status->name;
+		$id_status2 = $id_status->id_status;
+
+		$expiration_date  = $deposit_liste->expiration_date;
+		$acknowlegdement  = $deposit_liste->opt_acknowledgement;
+		$downloads_report = $deposit_liste->opt_downloads_report;
+
+		$password = $deposit_liste->opt_password;
+	}
 
 	#Vérification de la présence dans la base de données
 	#Vérification de la présence dans les fichiers encore existants
-	if ( not defined $id_deposit ) { $download_exist = false; }
-	elsif ( $id_status2 == 2 ) {
-		$download_available = false;
-		$download_exist     = true;
-	}
-	else { $download_available = true; $download_exist = true; }
-
-	#Envoi d'un message d'erreur si fichier inexistant
-	if ( !$download_exist ) {
+	if ( not defined $id_deposit ) {    #Depot inexistant
 		IntraBox::push_error(
 "La page que vous avez demandé n\'existe pas. Vérifier que l'URL que vous avez indiqué est bonne"
 		);
 		template 'download', {};
-
 	}
-
-	#Envoi d'un message d'erreur si fichier non disponible
-	elsif ( !$download_available ) {
+	elsif ( $id_status2 == 2 ) {        #Depot expiré
 		IntraBox::push_error(
 			"Le fichier que vous avez demandé n'est plus disponible. 
 		Après un temps déterminé, le fichier est automatiquement supprimé de nos serveurs.
  Vous pouvez contacter l'utilisateur afin qu'il redépose le fichier qui est en statut : $status"
 		);
 		template 'download', {};
-
 	}
-
-	#Si les fichiers sont bien présents et disponible
 	else {
 
 #On récupère toutes les informations du fichiers présent dans la base de données
@@ -171,18 +157,18 @@ sub donwload_file_user {
 	my $download_code   = $id_deposit_temp->download_code;
 
 	if ( defined $password ) {
-		
+
 		my $search_pass =
 		  schema->resultset('Deposit')->find( { id_deposit => $id_deposit } );
 		my $password_deposit = $search_pass->opt_password;
 
 		my $sha = Digest::SHA1->new;
 		$sha->add($password);
-		my $digest = $sha->digest;
+		my $digest = $sha->hexdigest;
 
 		if ( $password_deposit eq $digest ) { $access = true }
 		else { $access = false }
-		
+
 	}
 	else { $access = true }
 
@@ -194,24 +180,31 @@ sub donwload_file_user {
 				ip         => $IP_user,
 				useragent  => $user_agent,
 				start_date => $current_date,
+
 			}
 		);
 
-		send_file( "/Upload/$file_name_disk", filename => "$file_name" );
+		email {
+			to      => 'antoine.bourganel@gmail.com',
+			from    => 'no_reply@Intrabox.com',
+			subject => "Avis de téléchargement pour le fichier $file_name",
+			msg     => "$file_name a été téléchargé 4 x on vous prévient",
+			headers => {	
+				"X-Mailer" => 'This fine Dancer application',
+				"X-Accept-Language" => 'en',
+			  }
+		};
+		template 'download',{};
 
-		$current_date = DateTime->now;
-		$new_download->end_date("$current_date");
-		$new_download->finished("1");
-		$new_download->update;
+			  send_file( "/Upload/$file_name_disk", filename => "$file_name" );
 
+		  } else {
+			IntraBox::push_error(
+				"Mauvais mot de passe ! Veuillez réessayer :");
+			download_file($download_code);
+		}
 	}
-	else {
-		IntraBox::push_error(
-			"Mauvais mot de passe ! Veuillez réessayer :");
-		download_file($download_code);
-	}
-}
 
-#--------- /ROUTEES -------
+	#--------- /ROUTEES -------
 
-true;
+	true;

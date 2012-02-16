@@ -152,9 +152,9 @@ sub processUploadFiles {
 		my $password_protection = param("password_protection");
 		my $password = ( $password_protection eq "1" ) ? param("password") : undef;
 		# Password cryptage
-#		my $sha = Digest::SHA1->new;
-#		$sha->add($password);
-#		$password = $sha->hexdigest;
+		my $sha = Digest::SHA1->new;
+		$sha->add($password);
+		$password = $sha->hexdigest;
 		
 		# Option to set a comment
 		my $comment_option = param("comment_option");

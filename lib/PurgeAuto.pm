@@ -1,5 +1,6 @@
 # Programme de suppression automatique des fichiers et d'expiration automatique des dépôts anciens
 ## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
+package IntraBox::PurgeAuto;
 use strict;
 use warnings;
 

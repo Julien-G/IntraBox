@@ -48,7 +48,7 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`deposit` (
   `opt_acknowledgement` TINYINT(1) NOT NULL DEFAULT '0' ,
   `opt_downloads_report` TINYINT(1) NOT NULL DEFAULT '0' ,
   `opt_comment` TINYTEXT NULL DEFAULT NULL ,
-  `opt_password` VARCHAR(20) NULL DEFAULT NULL ,
+  `opt_password` VARCHAR(64) NULL DEFAULT NULL ,
   `id_status` INT(11) NOT NULL ,
   `expiration_days` TINYINT(4) NOT NULL ,
   `expiration_date` DATETIME NOT NULL ,
