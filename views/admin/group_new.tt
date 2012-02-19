@@ -140,8 +140,8 @@
 				</td>
 				<td>[% user_group.description %]</td>
 				<td>[% date.format(creation_date, '%d %b %Y %Hh%M') %]</td>
-				<td><a href="[% request.uri_base %]/admin/group/modify/[% user_group.id_usergroup %]">Modifier</a>
-				<a href="[% request.uri_base %]/admin/group/delete/[% user_group.id_usergroup %]">Supprimer</a></td>
+				<td><a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/admin/group/modify/[% user_group.id_usergroup %]">Modifier</a>
+				<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/admin/group/delete/[% user_group.id_usergroup %]">Supprimer</a></td>
 			</tr>
 			[% END %]
 			</tbody>

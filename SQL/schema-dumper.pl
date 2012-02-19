@@ -10,7 +10,7 @@ my $classe_base     = 'DB::intrabox';
 my $repertoire_base = '../lib';
 my $dsn = 'dbi:mysql:intrabox:localhost';
 my $user = 'root';
-my $password = 'tnwadt22';
+my $password = 'Musique12';
 
 make_schema_at(
 	       $classe_base,

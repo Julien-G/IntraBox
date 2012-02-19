@@ -1,73 +1,67 @@
+[% USE format %]
+[% USE date %]
+[% USE String %]
+[% USE arrondi = format('%02.2f') %]
 
-  	[% USE format %]
-  	[% USE date %]
-	[% USE String %]
-	[% USE arrondi = format('%02.2f') %]
-	<script type="text/javascript">
-		$(function() {
-			$( "#downloadInputLink" ).hover(function() {
-				$( this ).select();
-			});
-		});
-	</script>
+<script type="text/javascript">
+$(function() {
+	$( "#downloadInputLink" ).hover(function() {
+		$( this ).select();
+	});
+});
+</script>
 	
-  [% FOREACH deposit IN liste_deposit %]
+ [% FOREACH deposit IN liste_deposit %]
   	[% taille_total = 0 %]
   	[% FOREACH file = deposit.files %][% taille_total = taille_total + file.size %][% END %]
   	[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
 	[% expiration_date = String.new(deposit.expiration_date).replace('T', ' ') %]
-	<div class="ui-corner-all" style="border: 1px solid #333333; background-color: #EFB400; padding: 1em; margin-bottom: 2em;">
+
+<div class="ui-corner-all" style="border: 1px solid #333333; background-color: #EFB400; padding: 1em; margin-bottom: 2em;">
 	<h1 class="acenter">Le lien de téléchargement</h1>
 	<p class="acenter" style="margin: 1em 0 1em; font-size: 1.5em;">
 		<input id="downloadInputLink" style="width: 70%"  type="text" name="downloadLink" value="[% request.uri_base %]/file/download/[% deposit.download_code %]">
 		<a class="UIbutton" href="[% request.uri_base %]/file/download/[% deposit.download_code %]">Ouvrir</a> 
 	</p>
-	</div>
-	<h2 style="margin-top: 2.5em;">Fichiers</h2>
-			[% FOREACH file = deposit.files %]
-			<form method="POST" action="[% request.uri_base %]/file/downloadFile">
-			<div class="ui-state-highlight ui-corner-all" style="margin: 1em 7em 1.5em; padding: 0 1em;"> 
-				<button class="UIbutton" style="margin-top: 0.5em; float: right" type="submit">Télécharger</button>
-			<p style="margin: 0; padding: 0.8em 0;">
-				<span class="ui-icon ui-icon-document" style="float: left; margin-right: .6em;"></span>
-				<strong>[% file.name %]</strong> 
-				<span style="margin-left: 2em;">
-					<em>([% IF file.size >= 1048576 %][% arrondi(file.size / 1048576) %] Mo[% END %][% IF file.size < 1048576 %][% arrondi(file.size / 1024) %] ko[% END %])</em>
-				</span>
-			</p>
-			</div>	
-			<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
-			<input type="hidden" id="name" name="name" value="[% file.name %]">
-			</fieldset>
-			</form>	
-			[% END %]
-	<h2>Informations sur le dépôt</h2>
-	<ul class="info-deposit">
-			<li><span class="ui-icon ui-icon-check" style="float: left; margin-right: 0.3em;"></span> Statut : [% deposit.id_status.name %]</li>
-			<li style="clear: both;"><span class="ui-icon ui-icon-disk" style="float: left; margin-right: 0.3em;"></span> Taille totale du dépôt : [% IF taille_total >= 1048576 %][% arrondi(taille_total / 1048576) %] Mo[% END %][% IF taille_total < 1048576 %][% arrondi(taille_total / 1024) %] ko[% END %]</li>
-			<li style="clear: both; float: left;"><span class="ui-icon ui-icon-arrowstop-1-w" style="float: left; margin-right: 0.3em;"></span> Date de création : [% date.format(created_date, '%d %b %Y %Hh%M') %]</li>						
-			<li style="float: left; margin-left: 2em;"><span class="ui-icon ui-icon-arrowstop-1-e" style="float: left; margin-right: 0.3em;"></span> Date d'expiration : [% date.format(expiration_date, '%d %b %Y %Hh%M') %]</li>
-	</ul>
-	<h2 style="clear: both; margin-top: 2.5em;">Options</h2>
-	<ul class="info-deposit">
-			[% IF deposit.opt_acknowledgement %]<li style="clear: both; margin-top: 1em;"><span class="ui-icon ui-icon-mail-closed" style="float: left; margin-right: 0.3em;"></span> Vous souhaitez recevoir un récapitulatif de téléchargement</li>[% END %]
-			[% IF deposit.opt_downloads_report %]<li style="clear:both"><span class="ui-icon ui-icon-document" style="float: left; margin-right: 0.3em;"></span> Vous souhaitez recevoir un rapport à chaque téléchargement</li>[% END %]
-			[% IF deposit.opt_password %]<li style="clear:both"><span class="ui-icon ui-icon-locked" style="float: left; margin-right: 0.3em;"></span> Vous avez renseigné un mot de passe pour télécharger les fichiers</li>[% END %]
-			[% IF deposit.opt_comment %]<li style="clear:both"><span class="ui-icon ui-icon-comment" style="float: left; margin-right: 0.3em;"></span> Vous avez laissé en commentaire : </li>[% END %]
-	</ul>
-	[% IF deposit.opt_comment %]
-	<div class="ui-state-highlight ui-corner-all" style="margin: 1em 7em 2em;"> 
-		<p style="padding: 0.8em 1em;">
-			<span class="ui-icon ui-icon-comment" style="float: left; margin-right: .6em;"></span>
-			[% deposit.opt_comment %]
-		</p>
-	</div>
-	[% END %]
-	
-[% END %]
-			
+</div>
+<h2 style="margin-top: 2.5em;">Fichiers</h2>
 
-		
-				
-	
-		
+[% FOREACH file = deposit.files %][% IF file.on_server == 1 %]
+<form method="POST" action="[% request.uri_base %]/file/downloadFile">
+	<div class="ui-state-highlight ui-corner-all" style="margin: 1em 7em 1.5em; padding: 0 1em;"> 
+		<button class="UIbutton" style="margin-top: 0.5em; float: right" type="submit">Télécharger</button>
+		<p style="margin: 0; padding: 0.8em 0;">
+			<span class="ui-icon ui-icon-document" style="float: left; margin-right: .6em;"></span>
+			<strong>[% file.name %]</strong> 
+			<span style="margin-left: 2em;">
+				<em>([% IF file.size >= 1048576 %][% arrondi(file.size / 1048576) %] Mo[% END %][% IF file.size < 1048576 %][% arrondi(file.size / 1024) %] ko[% END %])</em>
+			</span>
+		</p>
+	</div>	
+	<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
+	<input type="hidden" id="name" name="name" value="[% file.name %]">
+</form>	
+[% END %][% END %]
+<h2>Informations sur le dépôt</h2>
+<ul class="info-deposit">
+		<li><span class="ui-icon ui-icon-check" style="float: left; margin-right: 0.3em;"></span> Statut : [% deposit.id_status.name %]</li>
+		<li style="clear: both;"><span class="ui-icon ui-icon-disk" style="float: left; margin-right: 0.3em;"></span> Taille totale du dépôt : [% IF taille_total >= 1048576 %][% arrondi(taille_total / 1048576) %] Mo[% END %][% IF taille_total < 1048576 %][% arrondi(taille_total / 1024) %] ko[% END %]</li>
+		<li style="clear: both; float: left;"><span class="ui-icon ui-icon-arrowstop-1-w" style="float: left; margin-right: 0.3em;"></span> Date de création : [% date.format(created_date, '%d %b %Y %Hh%M') %]</li>						
+		<li style="float: left; margin-left: 2em;"><span class="ui-icon ui-icon-arrowstop-1-e" style="float: left; margin-right: 0.3em;"></span> Date d'expiration : [% date.format(expiration_date, '%d %b %Y %Hh%M') %]</li>
+</ul>
+<h2 style="clear: both; margin-top: 2.5em;">Options</h2>
+<ul class="info-deposit">
+		[% IF deposit.opt_acknowledgement %]<li style="clear: both; margin-top: 1em;"><span class="ui-icon ui-icon-mail-closed" style="float: left; margin-right: 0.3em;"></span> Vous souhaitez recevoir un récapitulatif de téléchargement</li>[% END %]
+		[% IF deposit.opt_downloads_report %]<li style="clear:both"><span class="ui-icon ui-icon-document" style="float: left; margin-right: 0.3em;"></span> Vous souhaitez recevoir un rapport à chaque téléchargement</li>[% END %]
+		[% IF deposit.opt_password %]<li style="clear:both"><span class="ui-icon ui-icon-locked" style="float: left; margin-right: 0.3em;"></span> Vous avez renseigné un mot de passe pour télécharger les fichiers</li>[% END %]
+		[% IF deposit.opt_comment %]<li style="clear:both"><span class="ui-icon ui-icon-comment" style="float: left; margin-right: 0.3em;"></span> Vous avez laissé en commentaire : </li>[% END %]
+</ul>
+[% IF deposit.opt_comment %]
+<div class="ui-state-highlight ui-corner-all" style="margin: 1em 7em 2em;"> 
+	<p style="padding: 0.8em 1em;">
+		<span class="ui-icon ui-icon-comment" style="float: left; margin-right: .6em;"></span>
+		[% deposit.opt_comment %]
+	</p>
+</div>
+[% END %]
+[% END %]

@@ -1,5 +1,7 @@
+package IntraBox::PurgeAuto;
 # Programme de suppression automatique des fichiers et d'expiration automatique des dépôts anciens
 ## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
+package IntraBox::PurgeAuto;
 use strict;
 use warnings;
 
@@ -17,6 +19,7 @@ use Digest::SHA1;
 use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
+
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #Chemin des fichiers enregistrés
@@ -62,7 +65,7 @@ foreach my $deposit (@depositsExpired) {
 	$id_deposit = $deposit->id_deposit;
 
 	#On averti l'utlisateur du dépôt expiré
-	
+
 
 	#Recherche des fichiers associés aux dépôts expirés
 	my @fileExpired = $schema->resultset('File')->search(
@@ -102,15 +105,4 @@ print {$LOG_DEL} "\nTotal size free : $total_size bytes";
 print {$LOG_DEL} "\n---------------------------\n\n";
 close $LOG_DEL or die "Impossible de lire";
 
-#Programme d'avertissement de l'utilisateur de son dépôt terminé
-sub warn_user {
-	my $id_deposit = $_[0];
 
-	my $depositJustExpired =
-	  $schema->resultset('Deposit')->find( { id_deposit => $id_deposit, } );
-	
-	if ($depositJustExpired->opt_acknowledgement == 1) {
-		print "ouhhhh !";
-		#Envoi d'un email
-	}
-}

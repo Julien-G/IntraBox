@@ -48,7 +48,7 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`deposit` (
   `opt_acknowledgement` TINYINT(1) NOT NULL DEFAULT '0' ,
   `opt_downloads_report` TINYINT(1) NOT NULL DEFAULT '0' ,
   `opt_comment` TINYTEXT NULL DEFAULT NULL ,
-  `opt_password` VARCHAR(20) NULL DEFAULT NULL ,
+  `opt_password` VARCHAR(64) NULL DEFAULT NULL ,
   `id_status` INT(11) NOT NULL ,
   `expiration_days` TINYINT(4) NOT NULL ,
   `expiration_date` DATETIME NOT NULL ,
@@ -149,3 +149,4 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 INSERT INTO status VALUES (1, 'disponible');
 INSERT INTO status VALUES (2, 'expire');
+INSERT INTO usergroup VALUES (1, 'LDAP', 'default', 'default', '1073741824', '1073741824', '15', NULL, NULL);

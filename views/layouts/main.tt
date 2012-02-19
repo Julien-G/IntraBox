@@ -12,7 +12,7 @@
 	<script>
 	$(function() {
 		$( "#progressbar" ).progressbar({
-			value: [% session.usedSpace * 100 / session.quota %]
+			value: [% if not session.login %] 0 [% ELSE %][% session.usedSpace * 100 / session.quota %][% END %]
 		});
 		$( ".UIbutton" ).button();
 		$( ".UIradio" ).buttonset();
@@ -21,6 +21,9 @@
 	</script>
 </head>
 <body>
+[% if not session.login %]
+
+[% else %]
 [% USE format %]
 [% USE arrondi = format('%02.2f') %]
 [% IF session.isAdmin %]
@@ -38,6 +41,7 @@
 			<li><a href="[% request.uri_base %]/admin/admin">Gestion des administrateurs</a></li>
 			<li><a href="[% request.uri_base %]/admin/stats">Statistiques</a></li>
 			<li><a href="[% request.uri_base %]/admin/search">Recherche</a></li>
+			<li><a href="[% request.uri_base %]/admin/purge">Purge automatique</a></li>
 		</menu>
 	</div>
 [% END %]
@@ -69,8 +73,10 @@
 		</menu>
 
 	</div>
+	[% END %]
 	<div id="corps">
 		[% content %]
 	</div>
+	
 </body>
 </html>
