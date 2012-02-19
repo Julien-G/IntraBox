@@ -26,29 +26,27 @@
 [% END %]
 [% USE format %]
 [% USE arrondi = format('%02.2f') %]	
-			[% IF access %]
-			
-			[% FOREACH file IN liste_file %]
-			<fieldset>
-				<table>				
-					<td>[% file.name %]<br/><br/>[% IF file.size >= 1048576 %][% arrondi(file.size / 1048576) %] Mo[% END %][% IF file.size < 1048576 %][% arrondi(file.size / 1024) %] ko[% END %]<br/>[% file.name_on_disk %]</td>
-					<td>
-						<form method="POST" action="[% request.uri_base %]/file/downloadFile">
-							[% IF display_password %]
-							<input type="password" name="password" id="password">
-							[% END %]
-							<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
-							<input type="hidden" id="name" name="name" value="[% file.name %]">
-							<p class="acenter">
-							<button class="submit" type="submit">Download</button></p>
-						</form>						
-					</td>
-				</table>
-			</fieldset>
-			<br/>
-			[% END %]
-			
-			[% END %]
+
+[% IF access %]
+<h2>Fichiers à télécharger</h2>
+
+[% FOREACH file IN liste_file %]
+<form method="POST" action="[% request.uri_base %]/file/downloadFile">
+	<div class="ui-state-highlight ui-corner-all" style="margin: 1em 7em 1.5em; padding: 0 1em;"> 
+		<button class="UIbutton" style="margin-top: 0.5em; float: right" type="submit">Télécharger</button>
+		<p style="margin: 0; padding: 0.8em 0;">
+			<span class="ui-icon ui-icon-document" style="float: left; margin-right: .6em;"></span>
+			<strong>[% file.name %]</strong> 
+			<span style="margin-left: 2em;">
+				<em>([% IF file.size >= 1048576 %][% arrondi(file.size / 1048576) %] Mo[% END %][% IF file.size < 1048576 %][% arrondi(file.size / 1024) %] ko[% END %])</em>
+			</span>
+		</p>
+	</div>	
+	<input type="hidden" id="name_on_disk" name="name_on_disk" value="[% file.name_on_disk %]">								
+	<input type="hidden" id="name" name="name" value="[% file.name %]">
+</form>	
+[% END %]
+[% END %]
 				
 	
 		

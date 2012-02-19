@@ -31,6 +31,8 @@ span.UIradio { font-size: 0.8em; }
 .acenter { text-align: center; }
 .aright { text-align: right; }
 
+h2 { font-size: 1em; }
+
 /* Définition de la topbar */
 #topbar {
 	background-color: #44413B;
@@ -161,7 +163,10 @@ button.submit_upload:hover {
 .info-rouge { border: 1px solid red; color: red; }
 .info-rouge h1 { border: 1px solid red; color: red; }
 
-
+.info-deposit {
+	list-style: none;
+	margin: 1em;
+}
 /* Définition de la bar d'administration */
 #adminbar {
 	position: absolute;
