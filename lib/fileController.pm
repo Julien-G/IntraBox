@@ -35,13 +35,12 @@ prefix '/file';
 #Récupération Variable de session
 my $user = $sess->{login};
 
-get '/download/:file_name' => sub {
-	my $param_file = param("file_name");
+get '/download/:download_code' => sub {
+	my $param_file = param("download_code");
 	download_file($param_file);
 };
 
 post '/downloadFile' => sub {
-
 	my $name_on_disk = param("name_on_disk");
 	my $name         = param("name");
 	my $password     = param("password");
@@ -194,7 +193,8 @@ Ceci est email automatique. Merci de ne pas y répondre.\n
 Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
 Merci d'utiliser IntraBox.",
 		};
-		template 'download', {};
+		
+		
 
 		send_file( "/Upload/$file_name_disk", filename => "$file_name" );
 

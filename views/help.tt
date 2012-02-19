@@ -32,39 +32,35 @@
 	    <li><a href="#id11" title="allez à ...">Modification des options de vos fichiers</a></li>
 	  </ol>
 	</li>
+	<li><a href="#id12" title="allez à ...">Auteurs</a>
+	</li>
+	<li>
+	  <a href="#id13" title="allez à ...">FAQ</a>
+	</li>
 [% IF session.isAdmin %]
 	<li>
-	<a href="#id12" title="allez à ...">Comment accéder à l'administration ?</a>
+	<a href="#id14" title="allez à ...">Comment accéder à l'administration ?</a>
 	</li>
 	<li>
-	  <a href="#id13" title="allez à ...">Visualiser les téléchargements en cours</a>
+	  <a href="#id15" title="allez à ...">Visualiser les téléchargements en cours</a>
 	</li>
 	<li>
-	  <a href="#id14" title="allez à ...">Gestion des fichiers non expirés</a>
+	  <a href="#id16" title="allez à ...">Gestion des fichiers non expirés</a>
 	</li>
 	<li>
-	  <a href="#id15" title="allez à ...">Gérer les groupes d'utilisateurs</a>
+	  <a href="#id17" title="allez à ...">Gérer les groupes d'utilisateurs</a>
 	</li>
 	<li>
-	  <a href="#id16" title="allez à ...">Gérer les administrateurs</a>
+	  <a href="#id18" title="allez à ...">Gérer les administrateurs</a>
 	</li>
 	<li>
-	  <a href="#id17" title="allez à ...">Faire des statistiques</a>
+	  <a href="#id19" title="allez à ...">Faire des statistiques</a>
 	</li>
 	<li>
-	  <a href="#id18" title="allez à ...">Effectuer une recherche</a>
+	  <a href="#id20" title="allez à ...">Effectuer une recherche</a>
 	</li>
 [% END %]
-	<li><a href="#id19" title="allez à ...">Auteurs</a></li>
-	<li>
-	  <a href="#id20" title="allez à ...">FAQ</a>
-
-	  <ol>
-	    <li><a href="#id" title="allez à ...">Je veux déposer plusieurs fichiers</a></li>
-	    <li><a href="#id" title="allez à ...">Je ne vois pas la fenêtre de progression de dépôt de fichier</a></li>
-	    <li><a href="#id" title="allez à ...">J'ai oublié l'adresse de téléchargement de mon fichier</a></li>
-	  </ol>
-	</li>
+	
       </ol>
       
       <h1 id="id1">1. Qu'est-ce qu'IntraBox&nbsp;?</h1>
@@ -218,9 +214,13 @@
 	  <br>
 	  <h2 id="id11">5.2. Modification des options de vos fichiers</h2>
 	  <br>
+      <h1 id="id12">6. FAQ</h1>
+      <br>
+      <h1 id="id13">7. Auteurs</h1>
+      <br>
       
 [% IF session.isAdmin %]
-      <h1 id="id12">6. Comment accéder à l'administration ?</h1>
+      <h1 id="id14">8. Comment accéder à l'administration ?</h1>
       <br>
       <p>Cliquez sur l'onglet administration en haut à droite de votre page pour accéder au menu de l'administration.</p>
       <p>Cliquez sur le nom de l'application <em>IntraBox</em> pour retourner à la partie non administrative.</p>
@@ -229,7 +229,7 @@
       class="linkup">[haut]</a>
       <br>
       
-      <h1 id="id13">7. Visualiser les téléchargements en cours</h1>
+      <h1 id="id15">9. Visualiser les téléchargements en cours</h1>
       <br>
       <p>Cliquez sur l'onglet <em>Téléchargements en cours</em> pour accéder à la page des téléchargements en cours.</p>
       <br>
@@ -237,7 +237,7 @@
       class="linkup">[haut]</a>
       <br>
       
-      <h1 id="id14">8. Gestion des fichiers non expirés</h1>
+      <h1 id="id16">10. Gestion des fichiers non expirés</h1>
       <br>
       <p>Cliquez sur l'onglet <em>Gestion des fichiers non expirés</em> pour accéder à la page de gestion des fichiers non expirés.</p>
       <br>
@@ -250,7 +250,7 @@
       class="linkup">[haut]</a>
       <br>
       
-      <h1 id="id15">9. Gérer les groupes d'utilisateurs</h1>
+      <h1 id="id17">11. Gérer les groupes d'utilisateurs</h1>
       <br>
       <p>Cliquez sur l'onglet <em>Gestion des groupes d'utilisateurs</em> pour accéder à la page gestion des groupes d'utilisateurs.</p>
       <br>
@@ -270,7 +270,7 @@
       class="linkup">[haut]</a>
       <br>
       
-      <h1 id="id16">10. Gérer les administrateurs</h1>
+      <h1 id="id18">12. Gérer les administrateurs</h1>
       <br>
       <p>Cliquez sur l'onglet <em>Gestion des administrateurs</em> pour accéder à la page de gestion des administrateurs.</p>
       <br>
@@ -281,7 +281,7 @@
       class="linkup">[haut]</a>
       <br>
       
-      <h1 id="id17">11. Faire des statistiques</h1>
+      <h1 id="id19">13. Faire des statistiques</h1>
       <br>
       <p>Cliquez sur l'onglet <em>Statistiques</em> pour accéder à la page des statistiques.</p>
       <br>
@@ -289,7 +289,7 @@
       class="linkup">[haut]</a>
       <br>
       
-      <h1 id="id18">12. Effectuer une recherche</h1>
+      <h1 id="id20">14. Effectuer une recherche</h1>
       <br>
       <p>Cliquez sur l'onglet <em>Recherche</em> pour accéder à la page de recherche.</p>
       <br>
@@ -314,8 +314,6 @@
       <br>
 [% END %]
 
-      <h1 id="id19">13. FAQ</h1>
       
-      <h1 id="id20">14. Auteurs</h1>
       
 </div>

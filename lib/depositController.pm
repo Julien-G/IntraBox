@@ -305,7 +305,7 @@ sub processUploadFiles {
 				my $infoMsg =
 				    $filesToUpload[1]->basename . " ("
 				  . $filesToUpload[1]->size . ")";
-				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
+				for ( my $i = 2 ; $i <= $number_files ; $i++ ) {
 
 					# Upload the file
 					$filesToUpload[$i]->copy_to("$path/$hash_names[$i]");

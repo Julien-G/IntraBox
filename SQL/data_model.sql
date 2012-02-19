@@ -149,3 +149,4 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 INSERT INTO status VALUES (1, 'disponible');
 INSERT INTO status VALUES (2, 'expire');
+INSERT INTO usergroup VALUES (1, 'LDAP', 'default', 'default', '1073741824', '1073741824', '15', NULL, NULL);

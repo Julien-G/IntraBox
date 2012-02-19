@@ -151,7 +151,7 @@ get '/deleteDeposit/:deposit' => sub {
 	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => $deposit } );
 	$liste_deposit->id_status('2');
 	$liste_deposit->update;
-	redirect '/admin/search/';
+	redirect '/admin/search/';	
 };
 
 # This sub is the edit route
