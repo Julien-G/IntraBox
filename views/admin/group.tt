@@ -49,10 +49,10 @@
 	[% END %]
 
 [% IF isEditGroup %]		
-	<form method="POST" action="[% request.uri_base %]/admin/group/update">
+	<form name="group" method="POST" action="[% request.uri_base %]/admin/group/update">
 		<input type="hidden" name="id_usergroup" value="[% group.id_usergroup %]">
 [% ELSE %]
-	<form method="POST" action="[% request.uri_base %]/admin/group/new">
+	<form name="group" method="POST" action="[% request.uri_base %]/admin/group/new">
 [% END %]
 		<fieldset>
 [% IF isEditGroup %]		
