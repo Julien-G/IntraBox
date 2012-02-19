@@ -154,6 +154,8 @@ sub donwload_file_user {
 	my $id_file         = $search->id_file;
 	my $id_deposit_temp = $search->id_deposit;
 	my $id_deposit      = $id_deposit_temp->id_deposit;
+	my $id_user         = $id_deposit_temp->id_user;
+	my $author_login    = $id_user->login;
 	my $download_code   = $id_deposit_temp->download_code;
 
 	if ( defined $password ) {
@@ -184,10 +186,13 @@ sub donwload_file_user {
 		);
 
 		email {
-			to      => 'antoine.bourganel@gmail.com',
+			to      => $author_login . "\@mines-albi.fr",
 			from    => 'no_reply@Intrabox.com',
-			subject => "Avis de téléchargement pour le fichier $file_name",
-			message => "$file_name a été téléchargé 4 x on vous prévient",
+			subject => "IntraBox : Avis de téléchargement pour le fichier $file_name",
+			message => "Le fichier $file_name vient d\'être téléchargé par l'utilisateur : $IP_user.\n
+Ceci est email automatique. Merci de ne pas y répondre.\n
+Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
+Merci d'utiliser IntraBox.",
 		};
 		template 'download', {};
 
@@ -199,19 +204,6 @@ sub donwload_file_user {
 		download_file($download_code);
 	}
 
-	#Programme d'avertissement de l'utilisateur de son dépôt terminé
-	sub warn_user {
-		my $id_deposit = $_[0];
-
-		my $depositJustExpired =
-		  schema->resultset('Deposit')->find( { id_deposit => $id_deposit, } );
-
-		if ( $depositJustExpired->opt_acknowledgement == 1 ) {
-			print "ouhhhh !";
-
-			#Envoi d'un email
-		}
-	}
 }
 
 #--------- /ROUTEES -------
