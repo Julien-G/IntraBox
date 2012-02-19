@@ -21,21 +21,27 @@ use DBIx::Class::FromValidators;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 my $ldap = Net::LDAP->new( config->{ldapserver} ) or die "Can't bind to ldap: $!\n";
+
+my $OneMo = 1048576;
+my $OneGo = 1073741824;
+
 #------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
 prefix '/admin/group';
 my $user_group = "eleves";
 
+# returns the usergroup list
 get '/' => sub {
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
-	template 'admin/group_new',
+	template 'admin/group',
 	  {
 		user_group  => $user_group,
 		user_groups => \@usergroups
 	  };
 };
 
+# add a group
 post '/new' => sub {
 
 	my $name_group         = param("name_group");
@@ -43,27 +49,17 @@ post '/new' => sub {
 	my $rule               = param("rule");
 	my $description        = param("description");
 	my $duration_max       = param("duration_max");
-	my $file_size_max      = param("file_size_max");
-	my $unit_file_size_max = param("unit_file_size_max");
+	
+	my $file_size_max      = ( param("unit_file_size_max") eq "Mo" ) ? param("file_size_max") * $OneGo : param("file_size_max") * $OneMo;
 
-	if ( $unit_file_size_max eq "Mo" ) {
-		$file_size_max = $file_size_max * 1048576;
-	}
-	else { $file_size_max = $file_size_max * 1073741824 }
-	my $space_size_max      = param("space_size_max");
-	my $unit_space_size_max = param("unit_space_size_max");
-
-	if ( $unit_space_size_max eq "Mo" ) {
-		$space_size_max = $space_size_max * 1048576;
-	}
-	else { $space_size_max = $space_size_max * 1073741824 }
+	my $space_size_max      = ( param("unit_space_size_max") eq "Mo" ) ? param("space_size_max") * $OneGo : param("space_size_max") * $OneMo;
 
 	my $current_date = DateTime->now;
 
-	# recherche du groupe à ajouter
+	# try to find the group
 	my $usergroups = schema->resultset('Usergroup')->find(
 		{
-			rule_type      => $type_group,
+			rule_type      => param("type_group"),
 			rule           => $rule,
 			name           => $name_group,
 			quota          => $space_size_max,
@@ -72,26 +68,27 @@ post '/new' => sub {
 		}
 	);
 
-	# si le groupe existe déjà
+	# return error if the group already exists
 	if ( defined $usergroups ) {
-		IntraBox::push_error
-		  "Ce groupe existe déjà : <strong>$rule</strong>.";
+		IntraBox::push_error("Ce groupe existe déjà : <strong>$rule</strong>.");
 	}
-	#sinon on l'ajoute
+	# else, add it
 	else {
 		my $stopProcess = 0;
-		if ($type_group == 'LDAP') {
+		if ($type_group == 'LDAP') {  # check LDAP
 			my $info = '';
-			#Search all users in a group
+			# search all users in a group
 			my $mesg = $ldap->search(
 				base   => "ou=Groups,dc=enstimac,dc=fr",
 				filter => "(cn=$rule )", #Group
 			);
+			# return error if the group already exists
 			if ($mesg->entries == 0) {
 				IntraBox::push_error("Ce groupe LDAP n'existe pas.");
 				$stopProcess = 1;
 			}
 		}
+		# if no error has happened
 		if ($stopProcess eq 0) {
 			IntraBox::push_info(" Vous venez d'ajouter le groupe <strong>$rule</strong>.");
 			my $usergroups = schema->resultset('Usergroup')->create(
@@ -110,13 +107,14 @@ post '/new' => sub {
 	}
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 
-	template 'admin/group_new',
+	template 'admin/group',
 	  {
 		user_group  => $user_group,
 		user_groups => \@usergroups
 	  };
 };
 
+# edit 	a group
 get qr{/modify/(?<id>\d+)} => sub {
 
 	my $id = captures->{'id'};    # le paramètre id est dans l'URL
@@ -128,20 +126,21 @@ get qr{/modify/(?<id>\d+)} => sub {
 	# recherche du groupe à supprimer
 	my $group = schema->resultset('Usergroup')->find($id);
 	if ( not defined $group ) {
-		IntraBox::push_error
-		  "Il n'y a pas de groupe à l'ID <strong>$id</strong>.";
+		IntraBox::push_error("Il n'y a pas de groupe à l'ID <strong>$id</strong>.");
 	}
 	else {
 
  	my $rule = $group->rule;
- 	IntraBox::push_info " Vous aller modifier le groupe <strong>$rule</strong>.";
+ 	IntraBox::push_info(" Vous allez modifier le groupe <strong>$rule</strong>.");
 
-		template 'admin/group_edit', {
+		template 'admin/group', {
+			isEditGroup => 1,
 			group => $group
 		};
 	}
 };
 
+# update the group in DB
 post '/update' => sub {
 
 	my $name_group         = param("name_group");
@@ -149,41 +148,25 @@ post '/update' => sub {
 	my $rule               = param("rule");
 	my $description        = param("description");
 	my $duration_max       = param("duration_max");
-	my $file_size_max      = param("file_size_max");
-	my $unit_file_size_max = param("unit_file_size_max");
 
-	if ( $unit_file_size_max eq "Mo" ) {
-		$file_size_max = $file_size_max * 1048576;
-	}
-	else { $file_size_max = $file_size_max * 1073741824 }
-	my $space_size_max      = param("space_size_max");
-	my $unit_space_size_max = param("unit_space_size_max");
+	my $file_size_max      = ( param("unit_file_size_max") eq "Mo" ) ? param("file_size_max") * $OneGo : param("file_size_max") * $OneMo;
 
-	if ( $unit_space_size_max eq "Mo" ) {
-		$space_size_max = $space_size_max * 1048576;
-	}
-	else { $space_size_max = $space_size_max * 1073741824 }
+	my $space_size_max      = ( param("unit_space_size_max") eq "Mo" ) ? param("space_size_max") * $OneGo : param("space_size_max") * $OneMo;
 
 	my $current_date = DateTime->now;
 
-	# recherche du groupe à ajouter
-	my $usergroups = schema->resultset('Usergroup')->find(
-		{
-			id_usergroup => param("id_usergroup")
-		}
-	);
+	# find the group to edit
+	my $usergroup = schema->resultset('Usergroup')->find( { id_usergroup => param("id_usergroup") } );
 
-	# si le groupe existe déjà
-	if ( not defined $usergroups ) {
-		IntraBox::push_error
-		  "Ce groupe n'existe pas : <strong>$rule</strong>.";
+	# if the group does not exist
+	if ( not defined $usergroup ) {
+		IntraBox::push_error( "Ce groupe n'existe pas : <strong>$rule</strong>." );
 	}
 
-	#sinon on le modifie
+	# else, we edit it
 	else {
-		IntraBox::push_info
-		  " Vous venez de modifier le groupe <strong>$rule</strong>.";
-		$usergroups->update(
+		IntraBox::push_info( "Vous venez de modifier le groupe <strong>$rule</strong>." );
+		$usergroup->update(
 			{
 				rule_type      => $type_group,
 				rule           => $rule,
@@ -199,7 +182,7 @@ post '/update' => sub {
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 
 #	redirect "admin/group/modify/" . $usergroups->id_usergroup;
-	template 'admin/group_new',
+	template 'admin/group',
 	  {
 		user_group  => $user_group,
 		user_groups => \@usergroups
@@ -207,6 +190,7 @@ post '/update' => sub {
 
 };
 
+# delete a group
 get qr{/delete/(?<id>\d+)} => sub {
 
 	my $id = captures->{'id'};    # le paramètre id est dans l'URL
@@ -215,19 +199,17 @@ get qr{/delete/(?<id>\d+)} => sub {
 	# recherche du groupe à supprimer
 	my $usergroups = schema->resultset('Usergroup')->find($id);
 	if ( not defined $usergroups ) {
-		IntraBox::push_error
-		  "Il n'y a pas de groupe à l'ID <strong>$id</strong>.";
+		IntraBox::push_error( "Il n'y a pas de groupe à l'ID <strong>$id</strong>." );
 	}
 	else {
 		my $rule = $usergroups->rule;
-		IntraBox::push_info
-		  "Vous venez de retirer le groupe <strong>$rule</strong>.";
+		IntraBox::push_info( "Vous venez de retirer le groupe <strong>$rule</strong>." );
 		$usergroups->delete();
 	}
 
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 
-	template 'admin/group_new',
+	template 'admin/group',
 	  {
 		user_group  => $user_group,
 		user_groups => \@usergroups

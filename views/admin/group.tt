@@ -1,3 +1,5 @@
+[% USE format %]
+[% USE arrondi = format('%02.2f') %]
 <script>
 	$(function() {
 		$( ".tablesorter" ).tablesorter( {
@@ -45,53 +47,69 @@
 		[% END %]
 		</div>
 	[% END %]
-		
-	<form method="POST" action="[% request.uri_base %]/admin/group/new" enctype="multipart/form-data">
+
+[% IF isEditGroup %]		
+	<form method="POST" action="[% request.uri_base %]/admin/group/update">
+		<input type="hidden" name="id_usergroup" value="[% group.id_usergroup %]">
+[% ELSE %]
+	<form method="POST" action="[% request.uri_base %]/admin/group/new">
+[% END %]
 		<fieldset>
+[% IF isEditGroup %]		
+			<legend>Modifier un groupe</legend>
+[% ELSE %]
 			<legend>Ajouter un groupe</legend>
+[% END %]
 			<h1>1. Choisir le type de règle</h1>
 			<p class="acenter">
 				Type de règles :
 				<span class="UIradio" style="font-size: 0.8em;">
+				[% IF isEditGroup %]		
+					<input type="radio" id="radio1" name="type_group" value="LDAP"[% IF group.rule_type == "LDAP" %] checked="checked"[% END %] /><label for="radio1">LDAP</label>
+					<input type="radio" id="radio2" name="type_group" value="UID"[% IF group.rule_type == "UID" %] checked="checked"[% END %] /><label for="radio2">UID</label>
+					<input type="radio" id="radio3" name="type_group" value="Fichiers à plat"[% IF group.rule_type == "Fichiers à plat" %] checked="checked"[% END %] /><label for="radio3">Fichier à plat</label>
+					<input type="radio" id="radio4" name="type_group" value="SGBD"[% IF group.rule_type == "SGBD" %] checked="checked"[% END %] /><label for="radio4">SGBD</label>
+				[% ELSE %]
 					<input type="radio" id="radio1" name="type_group" value="LDAP" checked="checked" /><label for="radio1">LDAP</label>
 					<input type="radio" id="radio2" name="type_group" value="UID" /><label for="radio2">UID</label>
 					<input type="radio" id="radio3" name="type_group" value="Fichiers à plat" /><label for="radio3">Fichier à plat</label>
 					<input type="radio" id="radio4" name="type_group" value="SGBD" /><label for="radio4">SGBD</label>
+				[% END %]				
 				</span>
 			</p>
 			<h1>2. Definir la règle</h1>
 			<p class="aleft" style="margin-left: 3em;">
 				<label for="rule">Règle :</label>
-				<input id="rule" name="rule" type="text">
+				<input id="rule" name="rule" type="text" value="[% group.rule %]">
 			</p>
 			<h1>3. Informations sur la règle</h1>
 			<p class="aright" style="float: right; margin-right: 3em;">
 				<label for="description">Description :</label>
-				<input id="description" name="description" type="text">
+				<input id="description" name="description" type="text" value="[% group.description %]">
 			</p>	
 			<p class="aleft" style="margin-left: 3em;">
 				<label for="name_group">Nom :</label>
-				<input id="name_group" name="name_group" type="text">
+				<input id="name_group" name="name_group" type="text" value="[% group.name %]">
 			</p>
 			<h1>4. Paramètres pour les utilisateurs de cette règle</h1>
 			<p class="aleft" style="margin-left: 3em;">
 				<label for="duration_max">Durée de validité maximale de fichier :</label>
-				<input id="duration_max" name="duration_max" type="text"><text> jours</text>
+				<input id="duration_max" name="duration_max" type="text" value="[% group.expiration_max %]"> jours
 			</p>
 			<p class="aleft" style="clear: both; margin-left: 3em;">
 				<label for="file_size_max">Taille maximale de fichier :</label>
-				<input id="file_size_max" name="file_size_max" type="text">
+				<input id="file_size_max" name="file_size_max" type="text" value="[% IF group.size_max >= 1073741824 %][% arrondi( group.size_max / 1073741824 ); %][% ELSE %][% arrondi( group.size_max / 1048576 ); %][% END %]">
 				<select id="unit_file_size_max" name="unit_file_size_max">
-					<option value="Mo" selected>Mo</option>
-					<option value="Go">Go</option>
+					<option value="Mo"[% IF group.size_max < 1073741824 %] selected[% END %]>Mo</option>
+					<option value="Go"[% IF group.size_max >= 1073741824 %] selected[% END %]>Go</option>
 				</select>
 			</p>
 			<p class="aleft" style="margin-left: 3em;">
 				<label for="space_size_max">Taille totale utilisée :</label>
-				<input id="space_size_max" name="space_size_max" type="text">
+				<input id="space_size_max" name="space_size_max" type="text" value="[% IF group.quota >= 1073741824 %][% arrondi( group.quota / 1073741824 ); %][% ELSE %][% arrondi( group.quota / 1048576 ); %][% END %]">
 				<select id="unit_space_size_max" name="unit_space_size_max">
-					<option value="Mo" selected>Mo</option>
-					<option value="Go">Go</option>
+					<option value="Mo"[% IF group.quota < 1073741824 %] selected[% END %]>Mo</option>
+					<option value="Go"[% IF group.quota >= 1073741824 %] selected[% END %]>Go</option>
 				</select>
 			</p>
 			<p class="acenter">
@@ -103,9 +121,8 @@
 		</br>
 [% USE date %]
 [% USE String %]
-[% USE format %]
 [% USE Math %]
-[% USE arrondi = format('%02.2f') %]
+[% IF !isEditGroup %]		
 		<table class="tablesorter" cellspacing="1">
 			<thead>
 			<tr>
@@ -146,5 +163,5 @@
 			[% END %]
 			</tbody>
 		</table>
-	
+[% END %]
 [% END %]
