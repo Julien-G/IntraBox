@@ -1,3 +1,17 @@
+<script type="text/javascript">
+$(function() {
+	$( "#slider-expiration_days" ).slider({
+			range: "min",
+			value: [% session.expiration_max %],
+			min: 1,
+			max: [% session.expiration_max %],
+			slide: function( event, ui ) {
+				$( "#expiration_days" ).val( ui.value );
+			}
+		});
+		$( "#expiration_days" ).val( $( "#slider-expiration_days" ).slider( "value" ) );
+});
+</script>
 [% IF infoMsgs.size > 0 %]
 	<div class="info info-vert">
 		<h1>Information</h1>
@@ -33,14 +47,18 @@
 				<input id="file3" name="file3" type="file" value="Cliquez-ici">
 				<input id="file4" name="file4" type="file" value="Cliquez-ici">
 			</p>
+			<div style="margin: 1em auto 0; width: 10em;" id="slider-expiration_days"></div>
 			<p class="acenter">
 				<label for="expiration_days">Expiration du fichier:</label>
+				<input type="text" id="expiration_days" name="expiration_days" style="width: 2em; border:0; color:#f6931f; font-weight:bold;" /> jours
+				<!--
 				<span class="UIradio">
 					<input type="radio" id="radio1" name="expiration_days" value="10" checked="checked" /><label for="radio1">10 jours</label>
 					<input type="radio" id="radio2" name="expiration_days" value="15" /><label for="radio2">15 jours</label>
 					<input type="radio" id="radio3" name="expiration_days" value="20" /><label for="radio3">20 jours</label>
 					<input type="radio" id="radio4" name="expiration_days" value="30" /><label for="radio4">30 jours</label>
 				</span>
+				-->
 				<!-- DEPRECATED
 				<select id="expiration_days" name="expiration_days">
 					<option value="10" selected>10 jours</option>
