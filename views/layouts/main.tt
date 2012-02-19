@@ -41,6 +41,7 @@
 			<li><a href="[% request.uri_base %]/admin/admin">Gestion des administrateurs</a></li>
 			<li><a href="[% request.uri_base %]/admin/stats">Statistiques</a></li>
 			<li><a href="[% request.uri_base %]/admin/search">Recherche</a></li>
+			<li><a href="[% request.uri_base %]/admin/purge">Purge automatique</a></li>
 		</menu>
 	</div>
 [% END %]
