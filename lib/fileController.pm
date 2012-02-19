@@ -99,7 +99,7 @@ sub download_file {
 	#Vérification de la présence dans les fichiers encore existants
 	if ( not defined $id_deposit ) {    #Depot inexistant
 		IntraBox::push_error(
-"La page que vous avez demandé n\'existe pas. Vérifier que l'URL que vous avez indiqué est bonne"
+"La page que vous avez demandé n\'existe pas. Vérifier que l'URL que vous avez indiqué est bon"
 		);
 		template 'download', {};
 	}
@@ -107,7 +107,7 @@ sub download_file {
 		IntraBox::push_error(
 			"Le fichier que vous avez demandé n'est plus disponible. 
 		Après un temps déterminé, le fichier est automatiquement supprimé de nos serveurs.
- Vous pouvez contacter l'utilisateur afin qu'il redépose le fichier qui est en statut : $status"
+ Vous pouvez contacter l'utilisateur afin qu'il redépose le fichier"
 		);
 		template 'download', {};
 	}
@@ -123,7 +123,7 @@ sub download_file {
 		else { $display_password = false }
 
 		IntraBox::push_info(
-"Les fichiers sont bien présents dans la base de données. Vous pouvez appuyer sur les boutons correspondant"
+"Les fichiers sont disponibles. Vous pouvez les télécharger en cliquant sur le bouton \"Download\"."
 		);
 		template 'download',
 		  {
@@ -191,11 +191,11 @@ sub donwload_file_user {
 			message => "Le fichier $file_name vient d\'être téléchargé par l'utilisateur : $IP_user.\n
 Ceci est email automatique. Merci de ne pas y répondre.\n
 Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
-Merci d'utiliser IntraBox.",
+Vous pouvez à tout moment enlever cette option, en allant dans l'onglet \"gestion de vos fichier\" puis
+\"modifier le dépôt\".",
 		};
 		
-		
-
+		#Server send file to client
 		send_file( "/Upload/$file_name_disk", filename => "$file_name" );
 
 	}

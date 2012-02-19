@@ -142,7 +142,7 @@ sub warn_user {
 			$ip_dl        = $download->ip;
 			$useragent_dl = $download->useragent;
 			$date_dl      = $download->start_date;
-			$id_file = $download->id_file;
+			$id_file      = $download->id_file;
 
 			#Récupération du nom du fichier
 			my $fileExpired =
@@ -151,7 +151,8 @@ sub warn_user {
 
 			$text_email = $text_email . "\nFichier : $name_file\n";
 			$text_email = $text_email . "Date de téléchargement : $date_dl\n";
-			$text_email = $text_email . "IP : $ip_dl\nUser-Agent : $useragent_dl\n";
+			$text_email =
+			  $text_email . "IP : $ip_dl\nUser-Agent : $useragent_dl\n";
 		}
 
 		email {
@@ -302,21 +303,15 @@ sub processUploadFiles {
 			else {
 
 				# Upload each file
-				my $infoMsg =
-				    $filesToUpload[1]->basename . " ("
-				  . $filesToUpload[1]->size . ")";
-				for ( my $i = 2 ; $i <= $number_files ; $i++ ) {
+				my $infoMsg;
+				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
 
 					# Upload the file
 					$filesToUpload[$i]->copy_to("$path/$hash_names[$i]");
 
 					# Generate the info message
-					$infoMsg =
-					    $infoMsg . ", "
-					  . $filesToUpload[$i]->basename . " ("
-					  . $filesToUpload[$i]->size . ")";
+					$infoMsg = $infoMsg . ", " . $filesToUpload[$i]->basename;
 				}
-				IntraBox::push_info("Upload terminé des fichiers : $infoMsg");
 
 				# Generate a hash for the deposit
 				my $depositHash = generateHash(19);
@@ -349,12 +344,17 @@ sub processUploadFiles {
 						opt_password         => $password,
 					}
 				);
+				IntraBox::push_info(
+"Upload terminé des fichiers : $infoMsg \n\n\n Le lien de téléchargement pour 
+accéder à vos fichiers est le suivant : <a href=\"http://localhost/cgi-bin
+/IntraBox/public/dispatch.cgi/file/download/$depositHash\">http://localhost
+/cgi-bin/IntraBox/public/dispatch.cgi/file/download/$depositHash</a>"
+				);
 
 				# Find the id_deposit
 				my $deposit =
 				  schema->resultset('Deposit')
 				  ->find( { download_code => $depositHash } );
-
 				# Insert files in the DB
 				for ( my $k = 1 ; $k <= $number_files ; $k++ ) {
 					my $newFile = schema->resultset('File')->create(
