@@ -16,6 +16,8 @@ use Digest::SHA1;
 use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
+
+use Dancer::Plugin::Email;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 
 #------------------------------------------------------------
@@ -104,7 +106,61 @@ sub deleteDeposit {
 	  schema->resultset('Deposit')->find( { download_code => $deposit } );
 	$liste_deposit->id_status('2');
 	$liste_deposit->update;
+	warn_user($deposit);
 	showAllDeposits();
+}
+
+#Programme d'avertissement de l'utilisateur de son dépôt terminé
+sub warn_user {
+	my $deposit = $_[0];
+
+	my $depositJustExpired =
+	  schema->resultset('Deposit')->find( { download_code => $deposit } );
+	my $id_user      = $depositJustExpired->id_user;
+	my $author_login = $id_user->login;
+
+	if ( $depositJustExpired->opt_downloads_report == 1 ) {
+		my $text_email = "Rapport de téléchargement des fichiers\n";
+		my $id_deposit = $depositJustExpired->id_deposit;
+
+		#Initialization Variables
+		my $id_file;
+		my $name_file;
+
+		my $ip_dl;
+		my $useragent_dl;
+		my $date_dl;
+
+		#Recuperation des téléchargements effectués
+		my @downloads =
+		  schema->resultset('Download')
+		  ->search( { id_deposit => $id_deposit, } );
+
+		foreach my $download (@downloads) {
+
+			#Récupération dans la base de données des infos
+			$ip_dl        = $download->ip;
+			$useragent_dl = $download->useragent;
+			$date_dl      = $download->start_date;
+			$id_file = $download->id_file;
+
+			#Récupération du nom du fichier
+			my $fileExpired =
+			  schema->resultset('File')->find( { id_file => $id_file } );
+			$name_file = $fileExpired->name;
+
+			$text_email = $text_email . "\nFichier : $name_file\n";
+			$text_email = $text_email . "Date de téléchargement : $date_dl\n";
+			$text_email = $text_email . "IP : $ip_dl\nUser-Agent : $useragent_dl\n";
+		}
+
+		email {
+			to      => $author_login . "\@mines-albi.fr",
+			from    => 'no_reply@Intrabox.com',
+			subject => "IntraBox : Rapport de téléchargement",
+			message => "$text_email",
+		};
+	}
 }
 
 # This sub is the edit route
@@ -163,12 +219,12 @@ sub processUploadFiles {
 		my $password;
 		if ( $password_protection eq "1" ) {
 			$password = param("password");
+
 			# Password cryptage
 			my $sha = Digest::SHA1->new;
 			$sha->add($password);
 			$password = $sha->hexdigest;
 		}
-		
 
 		# Option to set a comment
 		my $comment_option = param("comment_option");
