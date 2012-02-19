@@ -23,8 +23,8 @@
 			</br>
 			[% IF deposit.opt_comment %]<li>Vous avez laissé en commentaire : [% deposit.opt_comment %]</li>[% END %]
 	</div> 
-	
-			[% FOREACH file = deposit.files %]
+			
+			[% FOREACH file = deposit.files %][% IF file.on_server == 1 %]
 			<form method="POST" action="[% request.uri_base %]/file/downloadFile">
 			<fieldset>
 				<table>				
@@ -38,7 +38,7 @@
 				</table>
 			</fieldset>
 			</form>	
-			[% END %]
+			[% END %][% END %]
 
 		[% END %]
 			

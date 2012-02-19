@@ -180,7 +180,6 @@ sub donwload_file_user {
 				ip         => $IP_user,
 				useragent  => $user_agent,
 				start_date => $current_date,
-
 			}
 		);
 
@@ -188,23 +187,33 @@ sub donwload_file_user {
 			to      => 'antoine.bourganel@gmail.com',
 			from    => 'no_reply@Intrabox.com',
 			subject => "Avis de téléchargement pour le fichier $file_name",
-			msg     => "$file_name a été téléchargé 4 x on vous prévient",
-			headers => {	
-				"X-Mailer" => 'This fine Dancer application',
-				"X-Accept-Language" => 'en',
-			  }
+			message => "$file_name a été téléchargé 4 x on vous prévient",
 		};
-		template 'download',{};
+		template 'download', {};
 
-			  send_file( "/Upload/$file_name_disk", filename => "$file_name" );
+		send_file( "/Upload/$file_name_disk", filename => "$file_name" );
 
-		  } else {
-			IntraBox::push_error(
-				"Mauvais mot de passe ! Veuillez réessayer :");
-			download_file($download_code);
-		}
+	}
+	else {
+		IntraBox::push_error("Mauvais mot de passe ! Veuillez réessayer :");
+		download_file($download_code);
 	}
 
-	#--------- /ROUTEES -------
+	#Programme d'avertissement de l'utilisateur de son dépôt terminé
+	sub warn_user {
+		my $id_deposit = $_[0];
 
-	true;
+		my $depositJustExpired =
+		  schema->resultset('Deposit')->find( { id_deposit => $id_deposit, } );
+
+		if ( $depositJustExpired->opt_acknowledgement == 1 ) {
+			print "ouhhhh !";
+
+			#Envoi d'un email
+		}
+	}
+}
+
+#--------- /ROUTEES -------
+
+true;

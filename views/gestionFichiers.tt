@@ -33,7 +33,7 @@
 				modal: true,
 				buttons: {
 					"Supprimer ce dépôt": function() {
-						window.location.href = "[% request.uri_base %]/deposit/supprimerDepot/" + id;
+						window.location.href = "[% request.uri_base %]/deposit/deleteDeposit/" + id;
 					},
 					"Annuler": function() {
 						$( this ).dialog( "close" );
@@ -89,8 +89,8 @@
 						<td>
 								<a class="UIbutton ui-icon ui-icon-search viewButton" href="[% request.uri_base %]/deposit/[% deposit.download_code %]"></a> 
 							[% IF deposit.id_status.id_status == 1 %]
-								<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/deposit/modifierDepot/[% deposit.download_code %]"></a>
-								<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/deposit/supprimerDepot/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a> 
+								<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/deposit/modifyDeposit/[% deposit.download_code %]"></a>
+								<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/deposit/deleteDeposit/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a> 
 							[% END %]
 						</td>
 					</tr>
