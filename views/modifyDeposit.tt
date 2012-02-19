@@ -10,15 +10,7 @@
 		[% END %]
 		<fieldset>
 			<legend>Formulaire de modification de fichier</legend>
-			<p> Vous pouvez étendre la durée de validité de votre fichier de :
-				<select id="ext_expiration_days" name="ext_expiration_days">
-					<option value="0">Pas d'extension</option>
-					<option value="10">10 jours</option>
-					<option value="15">15 jours</option>
-					<option value="20">20 jours</option>
-					<option value="30">30 jours</option>
-				</select>
-			</p>
+
 
 			<p>
 				<input id="downloads_report" name="downloads_report" type="checkbox" value="1" [% IF liste_deposit.opt_downloads_report %]checked[% END %]>

@@ -76,12 +76,11 @@ post '/new' => sub {
 
 	#Expiration dans la base de données
 	foreach my $deposit (@depositsExpired) {
-		if ( $deposit->id_status == 1 ) { warn_user($id_deposit) }
+		if ( $deposit->id_status == 1 ) {IntraBox::depositController->warn_user($deposit->download_code) }
 		$deposit->id_status("2");
 		$deposit->update;
 		$id_deposit = $deposit->id_deposit;
 
-		#On averti l'utlisateur du dépôt expiré
 
 		#Recherche des fichiers associés aux dépôts expirés
 		my @fileExpired = schema->resultset('File')->search(

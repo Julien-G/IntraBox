@@ -178,6 +178,7 @@ use adminAdminController;
 use adminGroupController;
 use adminSearchController;
 use adminFileController;
+use purgeController;
 
 #------------------------------------------------------------
 # Routes

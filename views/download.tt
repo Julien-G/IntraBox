@@ -27,14 +27,19 @@
 [% USE format %]
 [% USE arrondi = format('%02.2f') %]	
 
-[% IF access %]
 [% IF display_password %]
+<form method="POST" action="[% request.uri_base %]/file/download/[% deposit_code %]">
 <h2>Mot de passe</h2>
 <p class="acenter">
 	<input type="password" name="password" id="password">
 </p>
-[% END %]
+<p class="acenter">
+	<button class="submit" type="submit">Valider</button>
+</p>
+</form>
 
+[% END %]
+[% IF access %]
 <h2 style="margin-top: 2.5em">Fichiers à télécharger</h2>
 [% FOREACH file IN liste_file %]
 <form method="POST" action="[% request.uri_base %]/file/downloadFile">
