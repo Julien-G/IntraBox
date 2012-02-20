@@ -155,6 +155,7 @@ sub donwload_file_user {
 	my $file_name_disk = $_[0];
 	my $file_name      = $_[1];
 
+my $path = config->{pathDownload};
 	#Initialization variables
 	my $IP_user;
 	my $user_agent;
@@ -190,12 +191,12 @@ sub donwload_file_user {
 			from    => config->{mailApp},
 			subject =>
 			  "IntraBox : Avis de téléchargement pour le fichier $file_name",
-			message =>
-"Le fichier $file_name vient d\'être téléchargé par l'utilisateur : $IP_user.\n
-Ceci est email automatique. Merci de ne pas y répondre.\n
-Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
-Vous pouvez à tout moment enlever cette option, en allant dans l'onglet \"gestion de vos fichier\" puis
-\"modifier le dépôt\".",
+			message => template 'mail/reportDownload', { }
+#"Le fichier $file_name vient d\'être téléchargé par l'utilisateur : $IP_user.\n
+#Ceci est email automatique. Merci de ne pas y répondre.\n
+#Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
+#Vous pouvez à tout moment enlever cette option, en allant dans l'onglet \"gestion de vos fichier\" puis
+#\"modifier le dépôt\".",
 		};
 
 		#Server send file to client

@@ -9,7 +9,7 @@ our $VERSION = '0.1';
 
 # Load plugins for Dancer
 use Dancer ':syntax';
-#use Dancer::Plugin::DBIC;
+use Dancer::Plugin::DBIC;
 
 # Load fonctional plugins
 use Digest::SHA1;
@@ -173,7 +173,6 @@ sub editDeposit {
 sub processUploadFiles {
 
 	my $path = config->{pathUpload};
-
 
 	my $number_files = count_files();
 
