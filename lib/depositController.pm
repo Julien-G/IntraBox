@@ -171,11 +171,9 @@ sub editDeposit {
 
 # This sub is the upload route
 sub processUploadFiles {
-<<<<<<< HEAD
+
 	my $path = config->{pathUpload};
-=======
-	my $path = "/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload";
->>>>>>> b79ec4d0223b010ddb522bece7385ec8302e609b
+
 
 	my $number_files = count_files();
 
