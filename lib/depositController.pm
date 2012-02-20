@@ -157,7 +157,7 @@ sub warn_user {
 
 		email {
 			to      => $author_login . "\@mines-albi.fr",
-			from    => 'no_reply@Intrabox.com',
+			from    => config->{mailApp},
 			subject => "IntraBox : Rapport de téléchargement",
 			message => "$text_email",
 		};
@@ -184,8 +184,7 @@ sub editDeposit {
 
 # This sub is the upload route
 sub processUploadFiles {
-	my $path =
-"/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload";
+	my $path = config->{pathUpload};
 
 	my $number_files = count_files();
 
@@ -223,9 +222,15 @@ sub processUploadFiles {
 			$password = param("password");
 
 			# Password cryptage
+			# Génération d'un salage
+			my $sel_pass = generateHash(2);
+			# Concaténation avec le sel
+			$password = $sel_pass.$password;
+			# Cryptage du password + sel
 			my $sha = Digest::SHA1->new;
 			$sha->add($password);
 			$password = $sha->hexdigest;
+			$password = $sel_pass.$password;
 		}
 
 		# Option to set a comment
