@@ -50,11 +50,17 @@ get '/' => sub {
 };
 
 get '/:deposit' => sub {
-	my @liste_deposit =
+	my $deposit =
 	  schema->resultset('Deposit')
-	  ->search( { download_code => param("deposit") } );
-
-	template 'seeDeposit', { liste_deposit => \@liste_deposit };
+	  ->find( { download_code => param("deposit") } );
+	 # Test : Utilisator must be Author
+	if ($deposit->id_user->id_user eq $sess->{id_user}) {
+		template 'seeDeposit', { liste_deposit => $deposit };
+	} else {
+		IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+		template 'avert',{};
+	}
+	
 };
 
 get '/deleteDeposit/:deposit' => sub {
@@ -63,15 +69,21 @@ get '/deleteDeposit/:deposit' => sub {
 };
 
 get '/modifyDeposit/:deposit' => sub {
-	my $liste_deposit =
+	my $deposit =
 	  schema->resultset('Deposit')
 	  ->find( { download_code => param("deposit") } );
-	template 'modifyDeposit', { liste_deposit => $liste_deposit };
+	  # Test : Utilisator must be Author
+	if ($deposit->id_user->id_user eq $sess->{id_user}) {
+		template 'modifyDeposit', { liste_deposit => $deposit };
+	} else {
+		IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+		template 'avert',{};
+	}
 };
 
 post '/modifyDeposit/:deposit' => sub {
 	editDeposit( param("deposit") );
-	redirect '/deposit/';
+	
 };
 
 #--------- /ROUTEES -------
@@ -91,10 +103,18 @@ sub deleteDeposit {
 	my $deposit       = $_[0];
 	my $liste_deposit =
 	  schema->resultset('Deposit')->find( { download_code => $deposit } );
-	$liste_deposit->id_status('2');
-	$liste_deposit->update;
-	warn_user($deposit);
-	showAllDeposits();
+	my $id_user = $liste_deposit->id_user->id_user;
+	# Test : Utilisator must be Author
+	if  ($id_user eq $sess->{id_user}){
+		$liste_deposit->id_status('2');
+		$liste_deposit->update;
+		warn_user($deposit);
+		showAllDeposits();
+	} else {
+		IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+		template 'avert',{};
+	}
+		
 }
 
 #Programme d'avertissement de l'utilisateur de son dépôt terminé
@@ -130,19 +150,36 @@ sub warn_user {
 # This sub is the edit route
 sub editDeposit {
 	my $deposit = $_[0];
+	
+	my $control_valid = 1;
 
 	# Get parameters
 	my $downloads_report = ( param("downloads_report") eq "1" ) ? true: false;
 	my $acknowlegdement  = ( param("acknowlegdement")  eq "1" ) ? true: false;
 	my $comment_option   = param("comment_option");
 	my $comment = ( $comment_option eq 1 ) ? param("comment") : undef;
+	if (IntraBox::has_specials_char($comment,"Commentaire") ) {$control_valid = 0;}
+	
+	if ($control_valid == 1) {
+		my $exist_deposit =
+		  schema->resultset('Deposit')->find( { download_code => $deposit } );
+		if ($exist_deposit->id_user->id_user eq $sess->{id_user}) {
+			# Test : Utilisator must be Author
+			$exist_deposit->opt_acknowledgement("$acknowlegdement");
+			$exist_deposit->opt_downloads_report("$downloads_report");
+			$exist_deposit->opt_comment("$comment");
+			$exist_deposit->update;
+			redirect '/deposit/';
+		
+		} else {
+			IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+			template 'avert',{};
+		}
+	} else { 
+		redirect "deposit/modifyDeposit/$deposit" ;
+	}
+	
 
-	my $exist_deposit =
-	  schema->resultset('Deposit')->find( { download_code => $deposit } );
-	$exist_deposit->opt_acknowledgement("$acknowlegdement");
-	$exist_deposit->opt_downloads_report("$downloads_report");
-	$exist_deposit->opt_comment("$comment");
-	$exist_deposit->update;
 }
 
 # This sub is the upload route
@@ -194,27 +231,25 @@ sub processUploadFiles {
 		my $comment = ( $comment_option eq "1" ) ? param("comment") : undef;
 		
 		# Test parameters		
-		if (IntraBox::avoid_specials_char($expiration_days,"Date d\'expiration")) {$control_valid = 0;}
+		if (IntraBox::has_specials_char($expiration_days,"Date d\'expiration") ) {$control_valid = 0;}
 		if (IntraBox::is_empty($expiration_days,"Date d\'expiration")) {$control_valid = 0;}
-		if (IntraBox::is_number($expiration_days,"Date d\'expiration")) {$control_valid = 0;}	
-		
-		if (IntraBox::avoid_specials_char(param("comment"),"Commentaire")) {$control_valid = 0;}
-		if (IntraBox::avoid_specials_char(param("password"),"Password")) {$control_valid = 0;}
-		
+		if (IntraBox::is_number($expiration_days,"Date d\'expiration")) {} else { $control_valid = 0;}	
+		if (IntraBox::has_specials_char(param("comment"),"Commentaire")) {$control_valid = 0;}
+		if (IntraBox::has_specials_char(param("password"),"Password")) {$control_valid = 0;}
 		for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
-			if (IntraBox::avoid_specials_char(param("file$i"),"Fichier$i")) {$control_valid = 0;}
+			if (IntraBox::has_specials_char(param("file$i"),"Fichier$i")) {$control_valid = 0;}
 		}
 		
 		if ($control_valid == 1) {
 			# Get dates
-			my $current_date    = DateTime->now;
-			my $expiration_date = DateTime->now;
+			$current_date    = DateTime->now;
+			$expiration_date = DateTime->now;
 			$expiration_date->add( days => $expiration_days );
 	
 			# Get user info
-			my $userIP    = request->remote_address;
-			my $userAgent = request->user_agent;
-			my $content_length = request->content_length;
+			$userIP    = request->remote_address;
+			$userAgent = request->user_agent;
+			$content_length = request->content_length;
 			
 			
 			if ( $content_length > $userFreeSpace ) {
@@ -222,7 +257,7 @@ sub processUploadFiles {
 				$control_valid = 0;
 			}
 		}
-		if ($control_valid eq 1) {
+		if ($control_valid == 1) {
 			
 		if ( $password_protection eq "1" ) {
 			$password = param("password");

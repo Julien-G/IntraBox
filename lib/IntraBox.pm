@@ -186,16 +186,16 @@ sub getSession {
 	}
 }
 
-sub avoid_specials_char {
+sub has_specials_char {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
 	
 	if ($test_string =~ m/[\\\;\:\"\'\]\[\^\<\>\n\r\t\&\|]/) {
 		IntraBox::push_error("Erreur sur le paramètre $name_param : pas de caractères spéciaux");
 		IntraBox::push_error("Les caractères suivants sont prohibés : \" \ ; : \' [ ] ^ \> \< & |");
-		return false;
-	} else { 
 		return true;
+	} else { 
+		return false;
 	}	
 }
 
@@ -203,11 +203,11 @@ sub is_checkbox {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
 		
-	if ($test_string =~ m/^[01]?$/) {
+	if (not $test_string =~ m/^[1]?$/) {
 		IntraBox::push_error("Erreur sur le paramètre $name_param : les options doivent être égales à 1 ou 0");
-		return false;
-	} else { 
 		return true;
+	} else { 
+		return false;
 	}		
 }
 
@@ -217,9 +217,9 @@ sub is_empty {
 		
 	if ($test_string eq "") {
 		IntraBox::push_error("Erreur sur le paramètre $name_param : Veuillez donner une valeur");
-		return false;
-	} else { 
 		return true;
+	} else { 
+		return false;
 	}		
 }
 
@@ -227,13 +227,26 @@ sub is_number {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
 		
-	if ($test_string =~ m/^[0-9]+$/) {
+	if ($test_string =~ m/^\d+$/) {	
+		return true;
+	} else { 
 		IntraBox::push_error("Erreur sur le paramètre $name_param : Ce paramètre doit être un nombre");
 		return false;
-	} else { 
-		return true;
 	}		
 }
+
+sub is_decimal {
+	my $test_string = $_[0];
+	my $name_param = $_[1];
+		
+	if ($test_string =~ m/^\d+(\.\d+)?$/) {	
+		return true;
+	} else { 
+		IntraBox::push_error("Erreur sur le paramètre $name_param : Ce paramètre doit être un décimal (Utiliser le . pour la virgule");
+		return false;
+	}		
+}
+
 #------------------------------------------------------------
 # Controllers
 #------------------------------------------------------------
