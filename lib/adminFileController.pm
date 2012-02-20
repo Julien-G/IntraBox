@@ -29,14 +29,13 @@ prefix '/admin/file';
 get '/' => sub {
 	
 	my $current_date = DateTime->now;
-	my $methode_tri      = "created_date";
 
 	my @liste_deposit = schema->resultset('Deposit')->search(
 			{
 					id_status        => "1",
 					expiration_date  => { '>', $current_date }
 			},
-			{ order_by => "$methode_tri" },
+			{ order_by => "created_date" },
 		);
 	my $id_deposit;
 	for my $deposit_liste (@liste_deposit) {
