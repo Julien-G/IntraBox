@@ -37,7 +37,7 @@ $(function() {
 	</div>
 [% END %]
 
-		<form name="deposit" method="POST" action="[% request.uri_base %]/deposit/new" enctype="multipart/form-data">
+		<form method="POST" action="[% request.uri_base %]/deposit/new" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Formulaire d'envoi de fichier</legend>
 			<p class="acenter" style="background-color: #f0f0f0; padding: 2px; width: 70%; margin-left: auto; margin-right: auto; text-align: center;">
