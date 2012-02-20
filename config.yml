@@ -5,6 +5,18 @@
 # Your application's name
 appname: "IntraBox"
 
+# ldap server address
+ldapserver: "ldap.enstimac.fr"
+
+# Alias for send message
+mailApp: "no_reply@Intrabox.com"
+
+# Path of Upload Files
+pathUpload: "/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload"
+
+# Path of Download Files (relative to fileController)
+pathDownload: "/Upload"
+
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
 layout: "main"
@@ -36,8 +48,12 @@ plugins:
         schema_class: DB::intrabox
         dsn: dbi:mysql:intrabox
         user: root
-        pass: 
+        pass: Musique12
         options:
           RaiseError: 1
           PrintError: 1
           mysql_enable_utf8: 1
+    Email:
+      driver: smtp
+      host: smtp.mines-albi.fr
+
