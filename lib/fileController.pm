@@ -55,6 +55,8 @@ sub download_file {
 	my $download_code = $_[0];
 
 	#Initatilisation variables
+	my $path = config->{pathDownload};
+	
 	my $password;
 	my $id_deposit;
 	my $id_user;
@@ -101,11 +103,17 @@ sub download_file {
 			my $password_template = param("password");
 			if ( defined $password_template ) {
 				#Cas 2 - password envoyé
+				#Récupération du salage de password
+				my $sel_pass = substr($password,0,1);
+				$password_template = $sel_pass.$password_template;
+				
+				#Cryptage
 				my $sha = Digest::SHA1->new;
 				$sha->add($password_template);
-				my $digest = $sha->hexdigest;
+				my $password_template = $sha->hexdigest;
+				$password_template = $sel_pass.$password_template;
 
-				if ( $password eq $digest ) {
+				if ( $password eq $password_template ) {
 					$access           = true;
 					$display_password = false;
 				}
@@ -179,7 +187,7 @@ sub donwload_file_user {
 
 		email {
 			to      => $author_login . "\@mines-albi.fr",
-			from    => 'no_reply@Intrabox.com',
+			from    => config->{mailApp},
 			subject =>
 			  "IntraBox : Avis de téléchargement pour le fichier $file_name",
 			message =>
@@ -191,7 +199,7 @@ Vous pouvez à tout moment enlever cette option, en allant dans l'onglet \"gesti
 		};
 
 		#Server send file to client
-		send_file("/Upload/$file_name_disk", filename => "$file_name" );
+		send_file("$path/$file_name_disk", filename => "$file_name" );
 }
 
 #--------- /ROUTEES -------
