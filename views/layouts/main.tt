@@ -9,6 +9,8 @@
 	<script src="[% request.uri_base %]/javascripts/jquery-1.7.1.min.js" type="text/javascript"></script>
 	<script src="[% request.uri_base %]/javascripts/jquery-ui-1.8.17.custom.min.js" type="text/javascript"></script>
 	<script src="[% request.uri_base %]/javascripts/jquery.tablesorter.min.js.rb.js" type="text/javascript"></script>
+</head>
+<body>
 	<script>
 	$(function() {
 		$( "#progressbar" ).progressbar({
@@ -19,11 +21,9 @@
 		$( ".UIdate" ).datepicker();
 	});
 	</script>
-</head>
-<body
-<noscript>
-<p style="font-weight: bold;">Attention. Vous avez désactivé le JavaScript. Pour profitez pleinement des fonctionnalités de l'application, nous vous conseillons de l'activer dans les paramètres de votre navigateur.</p>
-</noscript>
+	<noscript>
+	<p class="acenter" style="font-weight: bold;">Attention. Vous avez désactivé le JavaScript. Pour profitez pleinement des fonctionnalités de l'application, nous vous conseillons de l'activer dans les paramètres de votre navigateur.</p>
+	</noscript>
 [% if not session.login %]
 <div id="topbar">
 		<h1>IntraBox</h1>
@@ -77,6 +77,5 @@
 	<div id="corps">
 		[% content %]
 	</div>
-	
 </body>
 </html>
