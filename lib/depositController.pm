@@ -341,16 +341,6 @@ sub processUploadFiles {
 						opt_password         => $password,
 					}
 				);
-				IntraBox::push_info(
-"Upload terminé des fichiers : $infoMsg"
-				);
-				
-				IntraBox::push_info("Le lien de téléchargement pour 
-accéder à vos fichiers est le suivant : <a href=\"http://localhost/cgi-bin
-/IntraBox/public/dispatch.cgi/file/download/$depositHash\">http://localhost
-/cgi-bin/IntraBox/public/dispatch.cgi/file/download/$depositHash</a>"
-);
-
 				# Find the id_deposit
 				my $deposit =
 				  schema->resultset('Deposit')
@@ -368,7 +358,7 @@ accéder à vos fichiers est le suivant : <a href=\"http://localhost/cgi-bin
 						}
 					);
 				}
-
+				redirect "deposit/$depositHash";
 			}
 		}
 	}

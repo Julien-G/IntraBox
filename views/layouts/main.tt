@@ -27,6 +27,7 @@
 		$( ".UIbutton" ).button();
 		$( ".UIradio" ).buttonset();
 		$( ".UIdate" ).datepicker();
+		$('body').height( $(document).height() );
 	});
 	</script>
 	<noscript>

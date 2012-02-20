@@ -65,7 +65,7 @@ $(function() {
 			<div style="margin: 1em auto 0; width: 10em;" id="slider-expiration_days"></div>
 			<p class="acenter">
 				<label for="expiration_days">Expiration du fichier:</label>
-				<input type="text" id="expiration_days" name="expiration_days" style="width: 2em; border:0; color:#f6931f; font-weight:bold;" /> jours <em>(max: [% session.expiration_max %] jours)</em>
+				<input type="text" value="[% session.expiration_max %]" id="expiration_days" name="expiration_days" style="width: 2em; border:0; color:#f6931f; font-weight:bold;" /> jours <em>(max: [% session.expiration_max %] jours)</em>
 			</p>
 
 			<p>
