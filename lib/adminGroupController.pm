@@ -149,9 +149,9 @@ post '/update' => sub {
 	my $description        = param("description");
 	my $duration_max       = param("duration_max");
 
-	my $file_size_max      = ( param("unit_file_size_max") eq "Mo" ) ? param("file_size_max") * $OneGo : param("file_size_max") * $OneMo;
+	my $file_size_max      = ( param("unit_file_size_max") eq "Mo" ) ? param("file_size_max") * $OneMo : param("file_size_max") * $OneGo;
 
-	my $space_size_max      = ( param("unit_space_size_max") eq "Mo" ) ? param("space_size_max") * $OneGo : param("space_size_max") * $OneMo;
+	my $space_size_max      = ( param("unit_space_size_max") eq "Mo" ) ? param("space_size_max") * $OneMo : param("space_size_max") * $OneGo;
 
 	my $current_date = DateTime->now;
 

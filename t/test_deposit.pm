@@ -7,9 +7,11 @@ my $url  = "http://localhost/cgi-bin/Intrabox/public/dispatch.cgi";
 
 $mech->get($url);
 
+#On teste la présence d'IntraBox sur la page
 like( $mech->content, qr/IntraBox/,
 	"test: Appel $url, le résultat contient IntraBox" );
 
+#On dépose un fichier pour le test
 $mech->submit_form(
 	fields => {
 		file1 =>
@@ -20,10 +22,21 @@ $mech->submit_form(
 	}
 );
 
+#On vérifie que le dépôt a fonctionné
 like(
 	$mech->content,
 	qr/Upload terminé des fichiers/,
 	"test : Ajout d'un dépôt"
+);
+
+#On suit le lien vers le download du fichier
+$mech->follow_link( n => 20 );
+
+#On vérifie qu'on arrive bien sur la bonne vue
+like(
+	$mech->content,
+	qr/Les fichiers sont disponibles/,
+	"test : Téléchargement du dépôt"
 );
 
 #On vérifie que le lien pour aller aux fichiers non expirés existe
@@ -53,20 +66,20 @@ like(
 	"test: La page contient Voici la liste des dépôts non expirés"
 );
 
-#On va à la page des fichiers non expirés
-$mech->follow_link( text_regex => qr/IntraBox/ );
-
-$mech->submit_form(
-	fields => {
-		file1            => 'C:\Users\lfoucher\Documents\Web service\VB.z01',
-		expiration_days  => '10',
-		downloads_report => '0',
-		acknowlegdement  => '0'
-	}
-);
-
-like(
-	$mech->content,
-	qr/Le fichier $VB.z01 est trop volumineux/,
-	"test : La taille du fichier est trop grande"
-);
+##On va à la page des fichiers non expirés
+#$mech->follow_link( text_regex => qr/IntraBox/ );
+#
+#$mech->submit_form(
+#	fields => {
+#		file1            => 'C:\Users\lfoucher\Documents\Web service\VB.z01',
+#		expiration_days  => '10',
+#		downloads_report => '0',
+#		acknowlegdement  => '0'
+#	}
+#);
+#
+#like(
+#	$mech->content,
+#	qr/Le fichier $VB.z01 est trop volumineux/,
+#	"test : La taille du fichier est trop grande"
+#);

@@ -20,7 +20,10 @@
 	});
 	</script>
 </head>
-<body>
+<body
+<noscript>
+<p style="font-weight: bold;">Attention. Vous avez désactivé le JavaScript. Pour profitez pleinement des fonctionnalités de l'application, nous vous conseillons de l'activer dans les paramètres de votre navigateur.</p>
+</noscript>
 [% if not session.login %]
 <div id="topbar">
 		<h1>IntraBox</h1>
@@ -48,12 +51,6 @@
 		</menu>
 	</div>
 [% END %]
-<!--
-<h1>Variables de session</h1>
-[% FOREACH key IN session.keys %]
-[% key %] => [% session.$key %]<br>
-[% END %]
--->
 	<div id="topbar">
 		<h1><a href="[% request.uri_base %]/">IntraBox</a></h1>
 

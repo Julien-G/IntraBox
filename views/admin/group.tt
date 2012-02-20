@@ -79,7 +79,7 @@
 			</p>
 			<h1>2. Definir la règle</h1>
 			<p class="aleft" style="margin-left: 3em;">
-				<label for="rule">Règle :</label>
+				<label for="rule" class="obligatoire">Règle :</label>
 				<input id="rule" name="rule" type="text" value="[% group.rule %]">
 			</p>
 			<h1>3. Informations sur la règle</h1>
@@ -93,11 +93,11 @@
 			</p>
 			<h1>4. Paramètres pour les utilisateurs de cette règle</h1>
 			<p class="aleft" style="margin-left: 3em;">
-				<label for="duration_max">Durée de validité maximale de fichier :</label>
+				<label class="obligatoire" for="duration_max">Durée de validité maximale de fichier :</label>
 				<input id="duration_max" name="duration_max" type="text" value="[% group.expiration_max %]"> jours
 			</p>
 			<p class="aleft" style="clear: both; margin-left: 3em;">
-				<label for="file_size_max">Taille maximale de fichier :</label>
+				<label class="obligatoire" for="file_size_max">Taille maximale de fichier :</label>
 				<input id="file_size_max" name="file_size_max" type="text" value="[% IF group.size_max >= 1073741824 %][% arrondi( group.size_max / 1073741824 ); %][% ELSE %][% arrondi( group.size_max / 1048576 ); %][% END %]">
 				<select id="unit_file_size_max" name="unit_file_size_max">
 					<option value="Mo"[% IF group.size_max < 1073741824 %] selected[% END %]>Mo</option>
@@ -105,25 +105,24 @@
 				</select>
 			</p>
 			<p class="aleft" style="margin-left: 3em;">
-				<label for="space_size_max">Taille totale utilisée :</label>
+				<label class="obligatoire" for="space_size_max">Taille totale utilisée :</label>
 				<input id="space_size_max" name="space_size_max" type="text" value="[% IF group.quota >= 1073741824 %][% arrondi( group.quota / 1073741824 ); %][% ELSE %][% arrondi( group.quota / 1048576 ); %][% END %]">
 				<select id="unit_space_size_max" name="unit_space_size_max">
 					<option value="Mo"[% IF group.quota < 1073741824 %] selected[% END %]>Mo</option>
 					<option value="Go"[% IF group.quota >= 1073741824 %] selected[% END %]>Go</option>
 				</select>
 			</p>
+			<p class="info-obligatoire">Ces champs sont obligatoires</p>
 			<p class="acenter">
 				<button class="submit" type="submit">Envoyer</button>
 			</p>
 		</fieldset>
 </form>
-		</br>
-		</br>
 [% USE date %]
 [% USE String %]
 [% USE Math %]
 [% IF !isEditGroup %]		
-		<table class="tablesorter" cellspacing="1">
+		<table class="tablesorter" cellspacing="1" style="margin-top: 2em;">
 			<thead>
 			<tr>
 				<th>Identifiant</th>

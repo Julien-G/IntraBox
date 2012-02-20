@@ -9,6 +9,7 @@ my $url  = "http://localhost/cgi-bin/Intrabox/public/dispatch.cgi";
 
 $mech->get($url);
 
+#On dépose un fichier pour le test
 $mech->submit_form(
 	fields => {
 		file1            => 'C:\Users\lfoucher\Documents\Java\chapitre02 - Definition des classes.pdf',

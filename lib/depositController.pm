@@ -9,13 +9,13 @@ our $VERSION = '0.1';
 
 # Load plugins for Dancer
 use Dancer ':syntax';
-use Dancer::Plugin::DBIC;
+#use Dancer::Plugin::DBIC;
 
 # Load fonctional plugins
 use Digest::SHA1;
 use DateTime;
 use Data::FormValidator;
-use DBIx::Class::FromValidators;
+#use DBIx::Class::FromValidators;
 
 use Dancer::Plugin::Email;
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
@@ -75,19 +75,6 @@ post '/modifyDeposit/:deposit' => sub {
 };
 
 #--------- /ROUTEES -------
-
-#my $downloads_report;
-#my $acknowlegdement;
-#my $password;
-#my $comment;
-#my $created_date;
-#my $expiration_date;
-#
-#my $deposit_liste;
-#my $files_liste;
-#
-#my $status;
-#my $download_code;
 
 # This sub is the default route
 sub showAllDeposits {
@@ -184,7 +171,11 @@ sub editDeposit {
 
 # This sub is the upload route
 sub processUploadFiles {
+<<<<<<< HEAD
 	my $path = config->{pathUpload};
+=======
+	my $path = "/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload";
+>>>>>>> b79ec4d0223b010ddb522bece7385ec8302e609b
 
 	my $number_files = count_files();
 
@@ -209,14 +200,13 @@ sub processUploadFiles {
 		}
 
 		# Option to have a downloads report
-		my $downloads_report =
-		  ( param("downloads_report") eq "1" ) ? true: false;
+		my $downloads_report = ( param("downloads_report") eq "1" ) ? true: false;
 
 		# Option to have an acknowlegdement
 		my $acknowlegdement = ( param("acknowlegdement") eq "1" ) ? true: false;
 
 		# Option to have a password protection
-		my $password_protection = param("password_protection");
+		my $password_protection = ( param("password_protection") ) ? param("password_protection") : undef;
 		my $password;
 		if ( $password_protection eq "1" ) {
 			$password = param("password");
@@ -245,43 +235,44 @@ sub processUploadFiles {
 		# Get user info
 		my $userIP    = request->remote_address;
 		my $userAgent = request->user_agent;
-
-		if ( $controle_valid == 1 ) {
-
+		my $content_length = request->content_length;
+		
+		if ( $content_length > $userFreeSpace ) {
+			IntraBox::push_error("Vous n'avez pas assez d'espace libre. Il vous reste " . sprintf("%02.2f", $userFreeSpace/1048576) ." Mo. Veuillez supprimer des fichiers.");
+			$controle_valid = 0;
+		}
+		if ($controle_valid eq 1) {
 			#------- Browse and validate each file -------
 			for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
-
+	
 				$filesToUpload[$i] = upload("file$i");
-
+	
 				# Verify each file validity
 				if ( not defined $filesToUpload[$i] ) {
 					my $fileName = param("file$i");
-					IntraBox::push_alert(
-						"Le fichier $fileName n'est pas valide ou n'existe pas"
-					);
+					IntraBox::push_alert("Le fichier $fileName n'est pas valide ou n'existe pas");
 					$controle_valid = 0;
-
+	
 					# End of loop is a file is invalid ($controle_valid=0)
 					last;
 				}
-
+	
 				# Valid files
 				else {
-
+	
 					# Verify the file size
 					if ( $filesToUpload[$i]->size >= $sess->{size_max} ) {
 						my $fileName = param("file$i");
-						IntraBox::push_error(
-							"Le fichier $fileName est trop volumineux");
+						IntraBox::push_error("Le fichier $fileName est trop volumineux");
 						$controle_valid = 0;
-
+	
 						# End of loop is a file is too big
 						last;
 					}
-
+	
 					# Generates a hash for each file
 					$hash_names[$i] = generateHash(15);
-
+	
 					# Verify that the hash is unique
 					my @filesWithSameHash =
 					  schema->resultset('File')
@@ -292,13 +283,12 @@ sub processUploadFiles {
 						  schema->resultset('File')
 						  ->search( { name_on_disk => $hash_names[$i] } );
 					}
-
 					# Increase the deposit size
 					$depositSize += $filesToUpload[$i]->size;
 				}
 			}
 		}
-		     #------- Process the upload -------
+		#------- Process the upload -------
 		if ( $controle_valid == 1 ) {
 
 			# if the user does not have enough free space
