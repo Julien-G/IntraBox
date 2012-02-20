@@ -86,7 +86,8 @@ sub getSession {
 
 	if ( not defined $login ) { }
 	else {
-		      #if there is no session, log the user
+
+		#if there is no session, log the user
 		if ( not session 'id_user' ) {
 
 			#try to find user in DB, else create it
@@ -137,17 +138,36 @@ sub getSession {
 				$userGroup = "default";
 			}
 
+#			$mesg = $ldap->search(
+#				base   => "ou=Groups,dc=enstimac,dc=fr",
+#				filter => "(uid=$login)",
+#				attrs  => ['mail'],
+#			);
+#			
+#			my $result;
+#			foreach my $entry ( $mesg->all_entries ) {
+#				foreach my $attr ( $entry->attributes ) {
+#					foreach my $value ( $entry->get_value($attr) ) {
+#						 $result = $value;
+#					}
+#				}
+#			}
+
+			#			my $result = $mesg->attributes;
+			#			my $result2 = $result->get_value('attr');
+
 			my $group =
 			  schema->resultset('Usergroup')->find( { rule => $userGroup } );
 
-				#store the session
-				session id_user        => $usr->id_user;
-				session login          => $usr->login;
-				session isAdmin        => $usr->admin;
-				session group          => $group->name;
-				session size_max       => $group->size_max;
-				session quota          => $group->quota;
-				session expiration_max => $group->expiration_max;
+			#store the session
+			session id_user        => $usr->id_user;
+			session login          => $usr->login;
+			session isAdmin        => $usr->admin;
+			session group          => $group->name;
+			session size_max       => $group->size_max;
+			session quota          => $group->quota;
+			session expiration_max => $group->expiration_max;
+
 		}
 
 		#calculate the space used by the user
@@ -166,6 +186,54 @@ sub getSession {
 	}
 }
 
+sub avoid_specials_char {
+	my $test_string = $_[0];
+	my $name_param = $_[1];
+	
+	if ($test_string =~ m/[\\\;\:\"\'\]\[\^\<\>\n\r\t\&\|]/) {
+		IntraBox::push_error("Erreur sur le paramètre $name_param : pas de caractères spéciaux");
+		IntraBox::push_error("Les caractères suivants sont prohibés : \" \ ; : \' [ ] ^ \> \< & |");
+		return false;
+	} else { 
+		return true;
+	}	
+}
+
+sub is_checkbox {
+	my $test_string = $_[0];
+	my $name_param = $_[1];
+		
+	if ($test_string =~ m/^[01]?$/) {
+		IntraBox::push_error("Erreur sur le paramètre $name_param : les options doivent être égales à 1 ou 0");
+		return false;
+	} else { 
+		return true;
+	}		
+}
+
+sub is_empty {
+	my $test_string = $_[0];
+	my $name_param = $_[1];
+		
+	if ($test_string eq "") {
+		IntraBox::push_error("Erreur sur le paramètre $name_param : Veuillez donner une valeur");
+		return false;
+	} else { 
+		return true;
+	}		
+}
+
+sub is_number {
+	my $test_string = $_[0];
+	my $name_param = $_[1];
+		
+	if ($test_string =~ m/^[0-9]+$/) {
+		IntraBox::push_error("Erreur sur le paramètre $name_param : Ce paramètre doit être un nombre");
+		return false;
+	} else { 
+		return true;
+	}		
+}
 #------------------------------------------------------------
 # Controllers
 #------------------------------------------------------------
@@ -178,6 +246,7 @@ use adminAdminController;
 use adminGroupController;
 use adminSearchController;
 use adminFileController;
+use adminStatsController;
 use purgeController;
 
 #------------------------------------------------------------
