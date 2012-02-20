@@ -218,3 +218,17 @@ button.submit_upload:hover {
 	cursor: pointer;
 	background-color: #FFFFFF;
 }
+
+label.obligatoire:after {
+	color: red;
+	content: " *";
+}
+p.info-obligatoire {
+	font-size: 0.8em;
+	font-style: italic;
+	text-align: right;
+}
+p.info-obligatoire:before {
+	color: red;
+	content: "* ";
+}
