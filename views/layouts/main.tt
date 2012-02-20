@@ -22,7 +22,10 @@
 </head>
 <body>
 [% if not session.login %]
-
+<div id="topbar">
+		<h1>IntraBox</h1>
+		<h2>Système d'échange de fichiers</h2>
+</div>
 [% else %]
 [% USE format %]
 [% USE arrondi = format('%02.2f') %]

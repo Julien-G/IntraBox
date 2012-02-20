@@ -81,7 +81,7 @@ sub getSession {
 
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
 	# request->env->{REMOTE_USER}
-	my $login = "abourgan";
+	my $login = $ENV{'REMOTE_USER'};
 	my $usr;
 
 	if ( not defined $login ) { }

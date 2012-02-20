@@ -306,6 +306,7 @@ sub processUploadFiles {
 			}
 			else {
 
+				
 				# Upload each file
 				my $infoMsg;
 				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
@@ -314,7 +315,7 @@ sub processUploadFiles {
 					$filesToUpload[$i]->copy_to("$path/$hash_names[$i]");
 
 					# Generate the info message
-					$infoMsg = $infoMsg . ", " . $filesToUpload[$i]->basename;
+					$infoMsg = $infoMsg . $filesToUpload[$i]->basename.", ";
 				}
 
 				# Generate a hash for the deposit
@@ -349,11 +350,14 @@ sub processUploadFiles {
 					}
 				);
 				IntraBox::push_info(
-"Upload terminé des fichiers : $infoMsg \n\n\n Le lien de téléchargement pour 
+"Upload terminé des fichiers : $infoMsg"
+				);
+				
+				IntraBox::push_info("Le lien de téléchargement pour 
 accéder à vos fichiers est le suivant : <a href=\"http://localhost/cgi-bin
 /IntraBox/public/dispatch.cgi/file/download/$depositHash\">http://localhost
 /cgi-bin/IntraBox/public/dispatch.cgi/file/download/$depositHash</a>"
-				);
+);
 
 				# Find the id_deposit
 				my $deposit =
