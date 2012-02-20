@@ -186,18 +186,22 @@ my $path = config->{pathDownload};
 			}
 		);
 
+		
 		email {
 			to      => $author_login . "\@mines-albi.fr",
 			from    => config->{mailApp},
-			subject =>
-			  "IntraBox : Avis de téléchargement pour le fichier $file_name",
-			message => template 'mail/reportDownload', { }
+			subject => "IntraBox : Avis de téléchargement pour le fichier $file_name",
+			type => 'html',
+			message => template 'mail/reportDownload', {
+				mail => true,
+				file_name => $file_name, },
+			 };
 #"Le fichier $file_name vient d\'être téléchargé par l'utilisateur : $IP_user.\n
 #Ceci est email automatique. Merci de ne pas y répondre.\n
 #Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
 #Vous pouvez à tout moment enlever cette option, en allant dans l'onglet \"gestion de vos fichier\" puis
 #\"modifier le dépôt\".",
-		};
+		
 
 		#Server send file to client
 		send_file("$path/$file_name_disk", filename => "$file_name" );
