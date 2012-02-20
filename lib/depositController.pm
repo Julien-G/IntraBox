@@ -157,9 +157,9 @@ sub editDeposit {
 
 	# Get parameters
 	my $downloads_report = ( param("downloads_report") eq "1" ) ? true: false;
-	my $acknowlegdement  = ( param("acknowlegdement") eq "1" ) ? true: false;
+	my $acknowlegdement  = ( param("acknowlegdement")  eq "1" ) ? true: false;
 	my $comment_option   = param("comment_option");
-	my $comment          = ( $comment_option eq 1 ) ? param("comment") : undef;
+	my $comment = ( $comment_option eq 1 ) ? param("comment") : undef;
 
 	my $exist_deposit =
 	  schema->resultset('Deposit')->find( { download_code => $deposit } );
@@ -171,8 +171,7 @@ sub editDeposit {
 
 # This sub is the upload route
 sub processUploadFiles {
-	my $path =
-"/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload";
+	my $path = "/Program Files (x86)/Apache Software Foundation/Apache2.2/cgi-bin/IntraBox/public/Upload";
 
 	my $number_files = count_files();
 
@@ -190,6 +189,11 @@ sub processUploadFiles {
 
 		#------- Get all parameters -------
 		my $expiration_days = param("expiration_days");
+		if ( $expiration_days > $sess->{expiration_max} ) {
+			$controle_valid = 0;
+			IntraBox::push_error(
+				"La valeur entrée pour la date d'expiration est trop grande");
+		}
 
 		# Option to have a downloads report
 		my $downloads_report = ( param("downloads_report") eq "1" ) ? true: false;
@@ -236,8 +240,7 @@ sub processUploadFiles {
 				# Verify each file validity
 				if ( not defined $filesToUpload[$i] ) {
 					my $fileName = param("file$i");
-					IntraBox::push_alert(
-						"Le fichier $fileName n'est pas valide ou n'existe pas");
+					IntraBox::push_alert("Le fichier $fileName n'est pas valide ou n'existe pas");
 					$controle_valid = 0;
 	
 					# End of loop is a file is invalid ($controle_valid=0)
@@ -250,8 +253,7 @@ sub processUploadFiles {
 					# Verify the file size
 					if ( $filesToUpload[$i]->size >= $sess->{size_max} ) {
 						my $fileName = param("file$i");
-						IntraBox::push_error(
-							"Le fichier $fileName est trop volumineux");
+						IntraBox::push_error("Le fichier $fileName est trop volumineux");
 						$controle_valid = 0;
 	
 						# End of loop is a file is too big
@@ -271,7 +273,6 @@ sub processUploadFiles {
 						  schema->resultset('File')
 						  ->search( { name_on_disk => $hash_names[$i] } );
 					}
-	
 					# Increase the deposit size
 					$depositSize += $filesToUpload[$i]->size;
 				}
@@ -290,6 +291,7 @@ sub processUploadFiles {
 			}
 			else {
 
+				
 				# Upload each file
 				my $infoMsg;
 				for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
@@ -298,7 +300,7 @@ sub processUploadFiles {
 					$filesToUpload[$i]->copy_to("$path/$hash_names[$i]");
 
 					# Generate the info message
-					$infoMsg = $infoMsg . ", " . $filesToUpload[$i]->basename;
+					$infoMsg = $infoMsg . $filesToUpload[$i]->basename.", ";
 				}
 
 				# Generate a hash for the deposit
@@ -333,16 +335,20 @@ sub processUploadFiles {
 					}
 				);
 				IntraBox::push_info(
-"Upload terminé des fichiers : $infoMsg \n\n\n Le lien de téléchargement pour 
+"Upload terminé des fichiers : $infoMsg"
+				);
+				
+				IntraBox::push_info("Le lien de téléchargement pour 
 accéder à vos fichiers est le suivant : <a href=\"http://localhost/cgi-bin
 /IntraBox/public/dispatch.cgi/file/download/$depositHash\">http://localhost
 /cgi-bin/IntraBox/public/dispatch.cgi/file/download/$depositHash</a>"
-				);
+);
 
 				# Find the id_deposit
 				my $deposit =
 				  schema->resultset('Deposit')
 				  ->find( { download_code => $depositHash } );
+
 				# Insert files in the DB
 				for ( my $k = 1 ; $k <= $number_files ; $k++ ) {
 					my $newFile = schema->resultset('File')->create(
