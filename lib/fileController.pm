@@ -172,6 +172,7 @@ my $path = config->{pathDownload};
 	  schema->resultset('File')->find( { name_on_disk => $file_name_disk } );
 	my $id_file = $search->id_file;
 	my $id_deposit    = $search->id_deposit;
+	my $acknowledgement = $id_deposit->opt_acknowledgement;
 	my $id_user       = $id_deposit->id_user;
 	my $author_login  = $id_user->login;
 	my $download_code = $id_deposit->download_code;
@@ -186,21 +187,19 @@ my $path = config->{pathDownload};
 			}
 		);
 
-		
+		if ($acknowledgement == 1) {
 		email {
 			to      => $author_login . "\@mines-albi.fr",
 			from    => config->{mailApp},
-			subject => "IntraBox : Avis de téléchargement pour le fichier $file_name",
+			subject => "IntraBox : Avis de 	téléchargement pour le fichier $file_name",
 			type => 'html',
 			message => template 'mail/reportDownload', {
 				mail => true,
-				file_name => $file_name, },
+				file_name => $file_name,
+				pathApp => config->{pathApp},
+				IP_user => $IP_user },
 			 };
-#"Le fichier $file_name vient d\'être téléchargé par l'utilisateur : $IP_user.\n
-#Ceci est email automatique. Merci de ne pas y répondre.\n
-#Ce mail vous est envoyé car vous avez choisi l'option \"Vous avertir lors d'un téléchargement\".\n
-#Vous pouvez à tout moment enlever cette option, en allant dans l'onglet \"gestion de vos fichier\" puis
-#\"modifier le dépôt\".",
+		}
 		
 
 		#Server send file to client

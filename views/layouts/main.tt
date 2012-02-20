@@ -1,5 +1,9 @@
 [% IF mail %]
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<head>
+<title>IntraBox</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=[% settings.charset %]" />
+</head>
 <body>
 [% else %]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -51,7 +55,7 @@
 			<li><a href="[% request.uri_base %]/admin/admin">Gestion des administrateurs</a></li>
 			<li><a href="[% request.uri_base %]/admin/stats">Statistiques</a></li>
 			<li><a href="[% request.uri_base %]/admin/search">Recherche</a></li>
-			<li><a href="[% request.uri_base %]/admin/purge">Purge automatique</a></li>
+			<li><a href="[% request.uri_base %]/admin/purge">Purge</a></li>
 		</menu>
 	</div>
 [% END %]
@@ -78,9 +82,11 @@
 
 	</div>
 	[% END %]
+	
+[% END %]
 	<div id="corps">
 		[% content %]
 	</div>
-[% END %]
+
 </body>
 </html>

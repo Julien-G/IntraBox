@@ -1,1 +1,14 @@
-Bonjour, ceci est un mail automatique d'envoi
+<div id="corps">
+
+<p>-----------------------------------------------------------------</p>
+<p>Bonjour, ceci est un mail automatique de l'application IntraBox</p>
+<p>Merci de ne pas répondre à ce mail.</p>
+
+<p><em>Le fichier [% file_name %] vient d'être téléchargé par l'utilisateur : [% IP_user %].</em><p>
+
+<p>Ce mail vous est envoyé car vous avez choisi l'option "Recevoir un accusé de réception à chaque téléchargement".<p>
+
+<p>Vous pouvez à tout moment modifier cette option, en allant dans <a href="[% pathApp %]/deposit">l'onglet de gestion des fichiers</a>
+, puis modifier les options de votre dépôt et décocher l'option "Recevoir un accusé de réception à chaque téléchargement".</p>
+<p>------------------------------------------------------------------</p>
+</div>

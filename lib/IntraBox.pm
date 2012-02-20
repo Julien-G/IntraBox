@@ -140,14 +140,14 @@ sub getSession {
 			my $group =
 			  schema->resultset('Usergroup')->find( { rule => $userGroup } );
 
-			#store the session
-			session id_user        => $usr->id_user;
-			session login          => $usr->login;
-			session isAdmin        => $usr->admin;
-			session group          => $group->name;
-			session size_max       => $group->size_max;
-			session quota          => $group->quota;
-			session expiration_max => $group->expiration_max;
+				#store the session
+				session id_user        => $usr->id_user;
+				session login          => $usr->login;
+				session isAdmin        => $usr->admin;
+				session group          => $group->name;
+				session size_max       => $group->size_max;
+				session quota          => $group->quota;
+				session expiration_max => $group->expiration_max;
 		}
 
 		#calculate the space used by the user

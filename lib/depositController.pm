@@ -107,47 +107,23 @@ sub warn_user {
 	my $author_login = $id_user->login;
 
 	if ( $depositJustExpired->opt_downloads_report == 1 ) {
-		my $text_email = "Rapport de téléchargement des fichiers\n";
 		my $id_deposit = $depositJustExpired->id_deposit;
-
-		#Initialization Variables
-		my $id_file;
-		my $name_file;
-
-		my $ip_dl;
-		my $useragent_dl;
-		my $date_dl;
 
 		#Recuperation des téléchargements effectués
 		my @downloads =
 		  schema->resultset('Download')
 		  ->search( { id_deposit => $id_deposit, } );
 
-		foreach my $download (@downloads) {
-
-			#Récupération dans la base de données des infos
-			$ip_dl        = $download->ip;
-			$useragent_dl = $download->useragent;
-			$date_dl      = $download->start_date;
-			$id_file      = $download->id_file;
-
-			#Récupération du nom du fichier
-			my $fileExpired =
-			  schema->resultset('File')->find( { id_file => $id_file } );
-			$name_file = $fileExpired->name;
-
-			$text_email = $text_email . "\nFichier : $name_file\n";
-			$text_email = $text_email . "Date de téléchargement : $date_dl\n";
-			$text_email =
-			  $text_email . "IP : $ip_dl\nUser-Agent : $useragent_dl\n";
-		}
-
 		email {
 			to      => $author_login . "\@mines-albi.fr",
 			from    => config->{mailApp},
 			subject => "IntraBox : Rapport de téléchargement",
-			message => "$text_email",
-		};
+			type => 'html',
+			message => template 'mail/reportDeposit', {
+				mail => true,
+				pathApp => config->{pathApp},
+				downloads => \@downloads,},
+			 };
 	}
 }
 

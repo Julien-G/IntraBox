@@ -1,0 +1,34 @@
+<div id="corps">
+
+<p>-----------------------------------------------------------------</p>
+<p>Bonjour, ceci est un mail automatique de l'application IntraBox</p>
+<p>Merci de ne pas répondre à ce mail.</p>
+<p>Voici le bilan des téléchargements effectués sur un dépôt qui vient d'expirer</p>
+
+<table>
+	<tr>
+		<td>Nom du fichier</td>
+		<td>Date de téléchargement</td>
+		<td>IP du user</td>
+		<td>Outil de navigation du user</td>
+	</tr>
+[% FOREACH download IN downloads %]
+
+[% FOREACH file IN download.file %]
+	<tr>
+		<td>[% file.name %]</td>
+		<td>[% download.start_date %]</td>
+		<td>[% download.ip %]</td>
+		<td>[% download.useragent %]</td>
+	</tr>
+[% END %]
+
+[% END %]
+</table>
+<p>Ce mail vous est envoyé car vous avez choisi l'option "Recevoir un accusé de récapitulatif des téléchargements".<p>
+
+<p>Vous pouvez à tout moment modifier cette option, en allant dans <a href="[% pathApp %]/deposit">l'onglet de gestion des fichiers</a>
+, puis modifier les options de votre dépôt et décocher l'option "Recevoir un accusé de réception à chaque 
+téléchargement".</p>
+<p>------------------------------------------------------------------</p>
+</div>
