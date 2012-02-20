@@ -162,16 +162,23 @@ sub processUploadFiles {
 		my @filesToUpload;
 		my @hash_names;
 		my $depositSize;
-		my $controle_valid = 1;
+		my $control_valid = 1;
+		
+		my $current_date;
+		my $expiration_date;
+
+		my $userIP;
+		my $userAgent;
+		my $content_length;
 
 		#------- Get all parameters -------
 		my $expiration_days = param("expiration_days");
 		if ( $expiration_days > $sess->{expiration_max} ) {
-			$controle_valid = 0;
+			$control_valid = 0;
 			IntraBox::push_error(
 				"La valeur entrée pour la date d'expiration est trop grande");
 		}
-
+		
 		# Option to have a downloads report
 		my $downloads_report = ( param("downloads_report") eq "1" ) ? true: false;
 
@@ -181,6 +188,42 @@ sub processUploadFiles {
 		# Option to have a password protection
 		my $password_protection = ( param("password_protection") ) ? param("password_protection") : undef;
 		my $password;
+
+		# Option to set a comment
+		my $comment_option = param("comment_option");
+		my $comment = ( $comment_option eq "1" ) ? param("comment") : undef;
+		
+		# Test parameters		
+		if (IntraBox::avoid_specials_char($expiration_days,"Date d\'expiration")) {$control_valid = 0;}
+		if (IntraBox::is_empty($expiration_days,"Date d\'expiration")) {$control_valid = 0;}
+		if (IntraBox::is_number($expiration_days,"Date d\'expiration")) {$control_valid = 0;}	
+		
+		if (IntraBox::avoid_specials_char(param("comment"),"Commentaire")) {$control_valid = 0;}
+		if (IntraBox::avoid_specials_char(param("password"),"Password")) {$control_valid = 0;}
+		
+		for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
+			if (IntraBox::avoid_specials_char(param("file$i"),"Fichier$i")) {$control_valid = 0;}
+		}
+		
+		if ($control_valid == 1) {
+			# Get dates
+			my $current_date    = DateTime->now;
+			my $expiration_date = DateTime->now;
+			$expiration_date->add( days => $expiration_days );
+	
+			# Get user info
+			my $userIP    = request->remote_address;
+			my $userAgent = request->user_agent;
+			my $content_length = request->content_length;
+			
+			
+			if ( $content_length > $userFreeSpace ) {
+				IntraBox::push_error("Vous n'avez pas assez d'espace libre. Il vous reste " . sprintf("%02.2f", $userFreeSpace/1048576) ." Mo. Veuillez supprimer des fichiers.");
+				$control_valid = 0;
+			}
+		}
+		if ($control_valid eq 1) {
+			
 		if ( $password_protection eq "1" ) {
 			$password = param("password");
 
@@ -195,26 +238,7 @@ sub processUploadFiles {
 			$password = $sha->hexdigest;
 			$password = $sel_pass.$password;
 		}
-
-		# Option to set a comment
-		my $comment_option = param("comment_option");
-		my $comment = ( $comment_option eq "1" ) ? param("comment") : undef;
-
-		# Get dates
-		my $current_date    = DateTime->now;
-		my $expiration_date = DateTime->now;
-		$expiration_date->add( days => $expiration_days );
-
-		# Get user info
-		my $userIP    = request->remote_address;
-		my $userAgent = request->user_agent;
-		my $content_length = request->content_length;
-		
-		if ( $content_length > $userFreeSpace ) {
-			IntraBox::push_error("Vous n'avez pas assez d'espace libre. Il vous reste " . sprintf("%02.2f", $userFreeSpace/1048576) ." Mo. Veuillez supprimer des fichiers.");
-			$controle_valid = 0;
-		}
-		if ($controle_valid eq 1) {
+			
 			#------- Browse and validate each file -------
 			for ( my $i = 1 ; $i <= $number_files ; $i++ ) {
 	
@@ -224,9 +248,9 @@ sub processUploadFiles {
 				if ( not defined $filesToUpload[$i] ) {
 					my $fileName = param("file$i");
 					IntraBox::push_alert("Le fichier $fileName n'est pas valide ou n'existe pas");
-					$controle_valid = 0;
+					$control_valid = 0;
 	
-					# End of loop is a file is invalid ($controle_valid=0)
+					# End of loop is a file is invalid ($control_valid=0)
 					last;
 				}
 	
@@ -237,7 +261,7 @@ sub processUploadFiles {
 					if ( $filesToUpload[$i]->size >= $sess->{size_max} ) {
 						my $fileName = param("file$i");
 						IntraBox::push_error("Le fichier $fileName est trop volumineux");
-						$controle_valid = 0;
+						$control_valid = 0;
 	
 						# End of loop is a file is too big
 						last;
@@ -262,7 +286,7 @@ sub processUploadFiles {
 			}
 		}
 		#------- Process the upload -------
-		if ( $controle_valid == 1 ) {
+		if ( $control_valid == 1 ) {
 
 			# if the user does not have enough free space
 			if ( $depositSize > $userFreeSpace ) {

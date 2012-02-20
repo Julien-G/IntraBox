@@ -48,34 +48,51 @@ post '/new' => sub {
 	my $type_group         = param("type_group");
 	my $rule               = param("rule");
 	my $description        = param("description");
-	my $duration_max       = param("duration_max");
+	my $duration_max       = param("duration_max");	
+	my $file_size_max      = ( param("unit_file_size_max") eq "Mo" ) ? param("file_size_max") * $OneMo : param("file_size_max") * $OneGo;
+	my $space_size_max      = ( param("unit_space_size_max") eq "Mo" ) ? param("space_size_max") * $OneMo : param("space_size_max") * $OneGo;
 	
-	my $file_size_max      = ( param("unit_file_size_max") eq "Mo" ) ? param("file_size_max") * $OneGo : param("file_size_max") * $OneMo;
+	# Test parameters
+	my $control_valid = 1;
+	
+	# No specials chars in parameters
+	if (IntraBox::avoid_specials_char($rule,"règle")) {$control_valid = 0;}
+	if (IntraBox::avoid_specials_char($duration_max,"Durée d\'expiration")) {$control_valid = 0;}
+	if (IntraBox::avoid_specials_char($file_size_max,"Taille maximum de fichier")) {$control_valid = 0;}
+	if (IntraBox::avoid_specials_char($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
+	if (IntraBox::avoid_specials_char($name_group,"Nom du groupe")) {$control_valid = 0;}
+	if (IntraBox::avoid_specials_char($type_group,"Type de groupe")) {$control_valid = 0;}
+	if (IntraBox::avoid_specials_char($description,"Description")) {$control_valid = 0;}
 
-	my $space_size_max      = ( param("unit_space_size_max") eq "Mo" ) ? param("space_size_max") * $OneGo : param("space_size_max") * $OneMo;
+	# Parameters must not be empty 
+	if (IntraBox::is_empty($rule,"règle")) {$control_valid = 0;}
+	if (IntraBox::is_empty($duration_max,"Durée d\'expiration")) {$control_valid = 0;}
+	if (IntraBox::is_empty($file_size_max,"Taille maximum de fichier")) {$control_valid = 0;}
+	if (IntraBox::is_empty($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
+	
+	# Parameters must number
+	if (IntraBox::is_number($duration_max,"Durée d\'expiration")) {$control_valid = 0;}
+	if (IntraBox::is_number($file_size_max,"Taille maximum de fichier")) {$control_valid = 0;}
+	if (IntraBox::is_number($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
 
+	if ($control_valid == 1) {
 	my $current_date = DateTime->now;
 
 	# try to find the group
-	my $usergroups = schema->resultset('Usergroup')->find(
+	my $usergroups_search = schema->resultset('Usergroup')->find(
 		{
-			rule_type      => param("type_group"),
 			rule           => $rule,
-			name           => $name_group,
-			quota          => $space_size_max,
-			size_max       => $file_size_max,
-			expiration_max => $duration_max,
 		}
 	);
 
 	# return error if the group already exists
-	if ( defined $usergroups ) {
+	if ( defined $usergroups_search ) {
 		IntraBox::push_error("Ce groupe existe déjà : <strong>$rule</strong>.");
 	}
 	# else, add it
 	else {
 		my $stopProcess = 0;
-		if ($type_group == 'LDAP') {  # check LDAP
+		if ($type_group eq 'LDAP') {  # check LDAP
 			my $info = '';
 			# search all users in a group
 			my $mesg = $ldap->search(
@@ -105,8 +122,12 @@ post '/new' => sub {
 			);
 		}
 	}
+	
+	}
+	
 	my @usergroups = schema->resultset('Usergroup')->search( {} )->all;
 
+	
 	template 'admin/group',
 	  {
 		user_group  => $user_group,
