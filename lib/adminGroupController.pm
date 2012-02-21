@@ -74,7 +74,24 @@ post '/new' => sub {
 	if (IntraBox::is_number($duration_max,"Durée d\'expiration")) {} else {$control_valid = 0;}
 	if (IntraBox::is_decimal($file_size_max,"Taille maximum de fichier")) {} else  {$control_valid = 0;}
 	if (IntraBox::is_decimal($space_size_max,"Taille maximum de dépôt")) {} else  {$control_valid = 0;}
-
+	
+	# Parameters must be under the limit possible
+	if ($duration_max > config->{maxExpirationDays}) {
+		$control_valid = 0;
+		my $limit_expiration = config->{maxExpirationDays};
+		IntraBox::push_error("Durée de validité pour un fichier trop importante. Limite : $limit_expiration jours");
+	}
+	if ($space_size_max > config->{maxQuota}) {
+		$control_valid = 0;
+		my $limit_quota = config->{maxQuota} / $OneGo;
+		IntraBox::push_error("Taille de l'espace de stockage trop importante. Limite : $limit_quota Go");
+	}	
+	if ($space_size_max < $file_size_max) {
+		$control_valid = 0;
+		my $limit_file = $space_size_max / $OneGo;
+		IntraBox::push_error("Taille de fichier trop importante. Limite : Taille de l'espace de stockage");
+	}	
+	
 	if ($control_valid == 1) {
 	my $current_date = DateTime->now;
 
