@@ -1,5 +1,5 @@
 use WWW::Mechanize;
-use Test::More tests => 10;
+use Test::More tests => 7;
 use utf8;
 
 # Test de la vue des fichiers non expirés
@@ -8,16 +8,6 @@ my $mech = WWW::Mechanize->new();
 my $url  = "http://localhost/cgi-bin/Intrabox/public/dispatch.cgi";
 
 $mech->get($url);
-
-#On dépose un fichier pour le test
-$mech->submit_form(
-	fields => {
-		file1            => 'C:\Users\lfoucher\Documents\Java\chapitre02 - Definition des classes.pdf',
-		expiration_days  => '10',
-		downloads_report => '0',
-		acknowlegdement  => '0'
-	}
-);
 
 #On part de la page d'accueil/de dépôt et on vérifie que le lien pour aller aux fichiers non expirés existe
 like(
@@ -37,7 +27,7 @@ like(
 );
 
 #On suit le premier lien du contenu de la page qui ne peut être que un lien "voir le dépôt"
-$mech->follow_link( n => 20 );
+$mech->follow_link( n => 16 );
 
 #On vérifie qu'on est sur un page de visualisation d'un dépôt
 like(
@@ -57,7 +47,7 @@ like(
 );
 
 #On suit le deuxième lien qui ne peut être qu'un lien de modification de dépôt
-$mech->follow_link( n => 21 );
+$mech->follow_link( n => 17 );
 
 #On vérifie qu'on arrive bien où on le voulait
 like(
@@ -77,7 +67,7 @@ like(
 );
 
 #On suit le troisième lien qui ne peut être qu'un lien de suppression de dépôt
-$mech->follow_link( n => 22 );
+$mech->follow_link( n => 18 );
 
 #On vérifie qu'on retourne bien à la page principale des dépôts non expirés
 like(

@@ -1,5 +1,5 @@
 use WWW::Mechanize;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use utf8;
 
 my $mech = WWW::Mechanize->new();
