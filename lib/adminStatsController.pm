@@ -30,7 +30,7 @@ get '/' => sub {
 	my $lastYear = DateTime->now;
 	$lastYear->subtract( years => 1 );
 	my @depositsLastYear = schema->resultset('Deposit')->search( { created_date => { '>=', $lastYear } } )->all;
-	my @downloadsLastYear = schema->resultset('Download')->search( { start_date => { '>=', $lastYear } } )->all;
+	my @downloadsLastYear = schema->resultset('Download')->search( { date => { '>=', $lastYear } } )->all;
 	template 'admin/stats',
 	  {
 	  	depositsLastYear => \@depositsLastYear,
