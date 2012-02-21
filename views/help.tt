@@ -52,7 +52,7 @@
 <div id="help-sommaire">
       <ol>
 		<li id="help1-handler"><a href="#help1" title="allez à ...">IntraBox ?</a></li>
-		<li id="help2-handler"><a href="#help2" title="allez à ...">Déposer un ou plusieurs fichier</a></li>
+		<li id="help2-handler"><a href="#help2" title="allez à ...">Déposer un ou plusieurs fichiers</a></li>
 		<li id="help3-handler"><a href="#help3" title="allez à ...">Gérer ses fichiers</a></li>
 [% IF session.isAdmin %]
 		<li id="help-admin-handler"><a href="#help-admin" title="allez à ...">Administration</a></li>
