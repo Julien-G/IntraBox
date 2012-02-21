@@ -72,7 +72,7 @@
 		<menu>
 			<li><a href="[% request.uri_base %]/">Déposer un fichier</a></li>
 			<li><a href="[% request.uri_base %]/area/new">Créer une zone depôt</a></li>
-			<li><a href="[% request.uri_base %]/deposit">Gérer ses fichiers</a></li>
+			<li><a href="[% request.uri_base %]/deposit/">Gérer ses fichiers</a></li>
 			<li><a href="[% request.uri_base %]/area">Gérer ses zones de dépôt</a></li>
 			<li class="aide"><a href="[% request.uri_base %]/help">Aide</a></li>
 			[% IF session.isAdmin %]
