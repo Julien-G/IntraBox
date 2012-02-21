@@ -138,10 +138,11 @@ $(function() {
 					[% END %]
 					[% IF deposit_size >= 1048576 %][% arrondi(deposit_size / 1048576) %] Mo[% END %][% IF deposit_size < 1048576 %][% arrondi(deposit_size / 1024) %] ko[% END %]
 				</td>
-				<td>
+				<td><div style="overflow-x: auto; width: 7em;">
 					[% FOREACH file IN deposit.files %]
-						[% file.name %]
+						[% file.name %]<br>
 					[% END %]
+					</div>
 				</td>
 				<td>
 					<a class="UIbutton ui-icon ui-icon-search viewButton" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a> 

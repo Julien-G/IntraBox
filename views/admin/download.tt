@@ -54,7 +54,7 @@
 			</thead>
 			<tbody>
 			[% FOREACH download IN downloads %]
-			[% start_date = String.new(download.dl.start_date).replace('T', ' ') %]
+			[% start_date = String.new(download.dl.date).replace('T', ' ') %]
 			<tr>
 				<td>[% download.file.name %]</td>
 				<td class="acenter">[% download.user.login %]</td>

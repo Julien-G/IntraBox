@@ -126,7 +126,7 @@
 
 			[% series = { } %] 
 			[% FOR download IN downloadsLastYear %]
-				[% start_date = String.new(download.start_date).replace('T', ' ') %]
+				[% start_date = String.new(download.date).replace('T', ' ') %]
 				[% today = calc.Date_to_Time(date.format(start_date, '%Y'), date.format(start_date, '%m'), date.format(start_date, '%d'), 1, 1, 1) %]
 				[% IF series.$today %][% series.$today = series.$today + 1 %][% ELSE %][% series.$today = 1 %][% END %]
 			[% END %]
@@ -167,7 +167,7 @@
 			
 			[% series = { } %] 
 			[% FOR download IN downloadsLastYear %]
-				[% start_date = String.new(download.start_date).replace('T', ' ') %]
+				[% start_date = String.new(download.date).replace('T', ' ') %]
 				[% today = calc.Date_to_Time(date.format(start_date, '%Y'), date.format(start_date, '%m'), date.format(start_date, '%d'), 1, 1, 1) %]
 				[% file_size = arrondi(download.file.size / 1048576) %]
 				[% IF series.$today %][% series.$today = series.$today + file_size %][% ELSE %][% series.$today = file_size %][% END %]

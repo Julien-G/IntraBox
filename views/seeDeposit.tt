@@ -2,6 +2,30 @@
 [% USE date %]
 [% USE String %]
 [% USE arrondi = format('%02.2f') %]
+[% IF infoMsgs.size > 0 %]
+	<div class="info info-vert">
+		<h1>Information</h1>
+	[% FOREACH msg IN infoMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
+[% IF alertMsgs.size > 0 %]
+	<div class="info info-orange">
+		<h1>Avertissement</h1>
+	[% FOREACH msg IN alertMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
+[% IF errorMsgs.size > 0 %]
+	<div class="info info-rouge">
+		<h1>Erreur</h1>
+	[% FOREACH msg IN errorMsgs %]
+		<p>[% msg %]</p>
+	[% END %]
+	</div>
+[% END %]
 
 <script type="text/javascript">
 $(function() {

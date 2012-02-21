@@ -56,7 +56,7 @@
 			<thead>
 					<tr>						
 						<th style="width: 3em;">N°</th>
-						<th class="aleft">Fichiers</th>
+						<th class="aleft" style="width: 25em;">Fichiers</th>
 						<th style="width: 5em;">Status</th>
 						<th style="width: 10em;">Date du dépôt</th>
 						<th style="width: 11em;">Date d'expiration</th>
@@ -71,7 +71,7 @@
 					<tr class="acenter[% IF deposit.id_status.id_status == 2 %] expiredFiles[% END %]">
 						<td>[% i %]</td>
 						<td class="aleft">
-							<ul style="margin: 0; padding: 0; list-style: none">
+							<ul style="margin: 0; padding: 0; list-style: none; overflow-x: auto; width: 25em;">
 							[% FOREACH file = deposit.files %]
 								<li style="margin: 0; padding: 0">[% file.name %]</li>
 							[% END %]

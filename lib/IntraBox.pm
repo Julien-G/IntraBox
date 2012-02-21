@@ -80,21 +80,37 @@ use Net::LDAP;
 sub getSession {
 
 	#get the remote user login - must be $ENV{'REMOTE_USER'}
-	# request->env->{REMOTE_USER}
 	my $login = $ENV{'REMOTE_USER'};
 	my $usr;
 
 	if ( not defined $login ) { }
 	else {
-
+		# Connection to LDAP
+		my $ldap = Net::LDAP->new( config->{ldapserver} )  or die "Can't bind to ldap: $!\n";
+		my $mesg = $ldap->bind();
+		if ( $mesg->code ) {
+			print $mesg->error;
+		}
 		#if there is no session, log the user
 		if ( not session 'id_user' ) {
 
+			# find the user email
+			my $user_email;
+			$mesg = $ldap->search(
+				base   => "ou=People,dc=enstimac,dc=fr",
+				scope  => "sub",
+				filter => "(uid=$login)"
+			);
+			foreach my $entry ( $mesg->entries ) {
+				$user_email = $entry->get_value('mail');
+			}
+			
 			#try to find user in DB, else create it
 			$usr = schema->resultset('User')->find_or_create(
 				{
 					login => $login,
 					admin => false,
+					email => $user_email
 				},
 				{ key => 'login_UNIQUE' }
 			);
@@ -103,13 +119,6 @@ sub getSession {
 			my $userGroup;
 			my $quotaMax = 0;
 			my @userGroups;
-
-			my $ldap = Net::LDAP->new( config->{ldapserver} )
-			  or die "Can't bind to ldap: $!\n";
-			my $mesg = $ldap->bind();
-			if ( $mesg->code ) {
-				print $mesg->error;
-			}
 
 			#Find all groups for a user
 			$mesg = $ldap->search(
@@ -121,7 +130,6 @@ sub getSession {
 				my $cn = $entry->get_value('cn');
 				push( @userGroups, $cn );
 			}
-
 			foreach my $grp (@userGroups) {
 				my $search =
 				  schema->resultset('Usergroup')->find( { rule => $grp } );
@@ -133,31 +141,13 @@ sub getSession {
 					}
 				}
 			}
-
+			# if no user group
 			if ( not defined $userGroup ) {
 				$userGroup = "default";
 			}
 
-#			$mesg = $ldap->search(
-#				base   => "ou=Groups,dc=enstimac,dc=fr",
-#				filter => "(uid=$login)",
-#				attrs  => ['mail'],
-#			);
-#			
-#			my $result;
-#			foreach my $entry ( $mesg->all_entries ) {
-#				foreach my $attr ( $entry->attributes ) {
-#					foreach my $value ( $entry->get_value($attr) ) {
-#						 $result = $value;
-#					}
-#				}
-#			}
-
-			#			my $result = $mesg->attributes;
-			#			my $result2 = $result->get_value('attr');
-
-			my $group =
-			  schema->resultset('Usergroup')->find( { rule => $userGroup } );
+			# find the group params
+			my $group = schema->resultset('Usergroup')->find( { rule => $userGroup } );
 
 			#store the session
 			session id_user        => $usr->id_user;
@@ -167,6 +157,7 @@ sub getSession {
 			session size_max       => $group->size_max;
 			session quota          => $group->quota;
 			session expiration_max => $group->expiration_max;
+			session user_email 	   => $user_email;
 
 		}
 
@@ -186,16 +177,16 @@ sub getSession {
 	}
 }
 
-sub avoid_specials_char {
+sub has_specials_char {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
 	
 	if ($test_string =~ m/[\\\;\:\"\'\]\[\^\<\>\n\r\t\&\|]/) {
 		IntraBox::push_error("Erreur sur le paramètre $name_param : pas de caractères spéciaux");
 		IntraBox::push_error("Les caractères suivants sont prohibés : \" \ ; : \' [ ] ^ \> \< & |");
-		return false;
-	} else { 
 		return true;
+	} else { 
+		return false;
 	}	
 }
 
@@ -203,11 +194,11 @@ sub is_checkbox {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
 		
-	if ($test_string =~ m/^[01]?$/) {
+	if (not $test_string =~ m/^[1]?$/) {
 		IntraBox::push_error("Erreur sur le paramètre $name_param : les options doivent être égales à 1 ou 0");
-		return false;
-	} else { 
 		return true;
+	} else { 
+		return false;
 	}		
 }
 
@@ -217,9 +208,9 @@ sub is_empty {
 		
 	if ($test_string eq "") {
 		IntraBox::push_error("Erreur sur le paramètre $name_param : Veuillez donner une valeur");
-		return false;
-	} else { 
 		return true;
+	} else { 
+		return false;
 	}		
 }
 
@@ -227,13 +218,26 @@ sub is_number {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
 		
-	if ($test_string =~ m/^[0-9]+$/) {
+	if ($test_string =~ m/^\d+$/) {	
+		return true;
+	} else { 
 		IntraBox::push_error("Erreur sur le paramètre $name_param : Ce paramètre doit être un nombre");
 		return false;
-	} else { 
-		return true;
 	}		
 }
+
+sub is_decimal {
+	my $test_string = $_[0];
+	my $name_param = $_[1];
+		
+	if ($test_string =~ m/^\d+(\.\d+)?$/) {	
+		return true;
+	} else { 
+		IntraBox::push_error("Erreur sur le paramètre $name_param : Ce paramètre doit être un décimal (Utiliser le . pour la virgule");
+		return false;
+	}		
+}
+
 #------------------------------------------------------------
 # Controllers
 #------------------------------------------------------------
@@ -241,7 +245,6 @@ sub is_number {
 use depositController;
 use fileController;
 use helpController;
-use adminDownloadController;
 use adminAdminController;
 use adminGroupController;
 use adminSearchController;

@@ -52,7 +52,7 @@ __PACKAGE__->table("deposit");
 
 =head2 area_size
 
-  data_type: 'tinyint'
+  data_type: 'bigint'
   is_nullable: 1
 
 =head2 opt_acknowledgement
@@ -76,7 +76,7 @@ __PACKAGE__->table("deposit");
 
   data_type: 'varchar'
   is_nullable: 1
-  size: 20
+  size: 64
 
 =head2 id_status
 
@@ -86,7 +86,7 @@ __PACKAGE__->table("deposit");
 
 =head2 expiration_days
 
-  data_type: 'tinyint'
+  data_type: 'smallint'
   is_nullable: 0
 
 =head2 expiration_date
@@ -127,7 +127,7 @@ __PACKAGE__->add_columns(
   "area_to_email",
   { data_type => "varchar", is_nullable => 1, size => 45 },
   "area_size",
-  { data_type => "tinyint", is_nullable => 1 },
+  { data_type => "bigint", is_nullable => 1 },
   "opt_acknowledgement",
   { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "opt_downloads_report",
@@ -135,11 +135,11 @@ __PACKAGE__->add_columns(
   "opt_comment",
   { data_type => "tinytext", is_nullable => 1 },
   "opt_password",
-  { data_type => "varchar", is_nullable => 1, size => 20 },
+  { data_type => "varchar", is_nullable => 1, size => 64 },
   "id_status",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "expiration_days",
-  { data_type => "tinyint", is_nullable => 0 },
+  { data_type => "smallint", is_nullable => 0 },
   "expiration_date",
   {
     data_type => "datetime",
@@ -207,8 +207,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-14 16:45:05
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DCqiBg9uyi+D5sh02aD5MA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-21 01:02:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/dTnsjD00CvLCOjaKH2fNA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

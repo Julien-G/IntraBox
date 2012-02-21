@@ -203,21 +203,6 @@ button.submit_upload:hover {
 }
 
 #adminbar menu li a { text-decoration: none; color: #000000; }
-#adminbar #closebutton {
-	display: block;
-	position: absolute;
-	text-decoration: none;
-	top: 0;
-	right: 0;
-	padding: 0em 0.2em 0.2em;
-	line-height: 1em;
-	border: 1px solid black;
-}
-#adminbar #closebutton:hover {
-	text-decoration: none;
-	cursor: pointer;
-	background-color: #FFFFFF;
-}
 
 label.obligatoire:after {
 	color: red;

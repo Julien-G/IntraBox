@@ -47,10 +47,8 @@
 	body { margin: 0 auto 0 10em; }
 	</style>
 	<div id="adminbar">
-		<a id="closebutton" href="[% request.uri_base %]/">x</a>
 		<h1>Vous êtes dans l'interface d'administration!</h1>
 		<menu>
-			<li><a href="[% request.uri_base %]/admin/download">Téléchargements en cours</a></li>
 			<li><a href="[% request.uri_base %]/admin/file">Gestion des fichiers non expirés</a></li>
 			<li><a href="[% request.uri_base %]/admin/group">Gestion des groupes</a></li>
 
@@ -65,7 +63,7 @@
 		<h1><a href="[% request.uri_base %]/">IntraBox</a></h1>
 
 		<h2>Système d'échange de fichiers</h2>
-		<div id="profile">Connecté sous:<br><em>[% session.mail_user %]</em> (<a href="">Se déconnecter</a>)<br>
+		<div id="profile">Connecté sous:<br><em>[% session.user_email %]</em><br>
 		Espace disque utilisé: [% arrondi(session.usedSpace / 1048576) %]Mo/[% arrondi(session.quota / 1048576) %]Mo
 		<div id="progressbar" style="position: static; margin: 0.1em auto 0; padding: 0;  bottom: 0.2em; width: 100%; height: 8px;"></div>
 		</div>
