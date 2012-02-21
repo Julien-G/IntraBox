@@ -245,7 +245,6 @@ sub is_decimal {
 use depositController;
 use fileController;
 use helpController;
-use adminDownloadController;
 use adminAdminController;
 use adminGroupController;
 use adminSearchController;
