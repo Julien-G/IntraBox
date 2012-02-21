@@ -104,13 +104,14 @@
       <div>
 	      <p>
 	      Pour déposer un fichier : sélectionner un fichier depuis votre disque dur en utilisant le bouton <em>Parcourir</em>. 
-	      Vous pouvez déposer jusqu'à quatres fichiers en un seul dépôt, vous n'êtes bien sûr pas obligé de remplir les quatres champs.
+	      Vous pouvez déposer plusieurs fichiers en un seul dépôt, pour ajouter un champ de choix de fichier il suffit d'appuyer sur le bouton <em>Ajouter un champ</em>.
+	      De même, vous pouvez supprimer des champs en appuyant sur le bouton <em>Supprimer un champ</em>.
 	      Finalement, appuyez sur le bouton <em>Envoyer</em>.<br>
 		  
 	      Lorsque le dépôt est terminé, un message vous indiquera l'adresse à laquelle le fichier pourra être téléchargé durant sa
 	      période de validité. Vous recevrez également une confirmation de dépôt de fichier par courrier électronique.<br>
 	
-	      Pour qu'une personne récupère votre fichier, remplissez le champ des destinataires ou vous pouvez aussi lui transmettre
+	      Pour qu'une personne récupère votre fichier, vous pouvez aussi lui transmettre
 	      cette adresse par courrier électronique ou tout autre moyen de communication.<br><br>
 	      
 	      <a href="#up" title="Retour en haut de page" class="linkup">[haut]</a>
@@ -122,8 +123,7 @@
 	      <p>
 	      Vous pouvez voir en haut à droite de votre page votre identifiant de compte ainsi que la place que vous utilisez par rapport à votre place totale disponible sur votre compte. 
 	      La barre en-dessous vous indique graphiquement ce rapport place utilisée/place totale disponible.<br>
-	      
-	      Vous pouvez également vous déconnectez de l'application en appuyant sur le lien <span class="underline">Se Déconnecter</span>.<br><br>
+	      <br><br>
 	      
 	      <a href="#up" title="Retour en haut de page" class="linkup">[haut]</a>
 	      </p>
