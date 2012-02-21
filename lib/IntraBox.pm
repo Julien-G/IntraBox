@@ -157,7 +157,7 @@ sub getSession {
 			session size_max       => $group->size_max;
 			session quota          => $group->quota;
 			session expiration_max => $group->expiration_max;
-			session user_email 	   => $user_email;
+			session user_email 	   => $usr->email;
 
 		}
 
