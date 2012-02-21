@@ -17,9 +17,11 @@ use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
-
+#------------------------------------------------------------
+# Session
+#------------------------------------------------------------
+my $sess = IntraBox::getSession();
 #------------------------------------------------------------
 # Routes
 #------------------------------------------------------------
@@ -27,15 +29,27 @@ prefix '/admin/stats';
 
 # returns the stats
 get '/' => sub {
-	my $lastYear = DateTime->now;
-	$lastYear->subtract( years => 1 );
-	my @depositsLastYear = schema->resultset('Deposit')->search( { created_date => { '>=', $lastYear } } )->all;
-	my @downloadsLastYear = schema->resultset('Download')->search( { date => { '>=', $lastYear } } )->all;
-	template 'admin/stats',
-	  {
-	  	depositsLastYear => \@depositsLastYear,
-	  	downloadsLastYear => \@downloadsLastYear
-	  };
+	if ( $sess->{isAdmin} == 0 ) {
+		IntraBox::push_error(
+"Cette section est réservée aux administrateurs. <a href=\"config->{pathApp}\">Cliquez-ici</a> pour retourner à l'application."
+		);
+		template 'avert', {};
+	}
+	else {
+		my $lastYear = DateTime->now;
+		$lastYear->subtract( years => 1 );
+		my @depositsLastYear =
+		  schema->resultset('Deposit')
+		  ->search( { created_date => { '>=', $lastYear } } )->all;
+		my @downloadsLastYear =
+		  schema->resultset('Download')
+		  ->search( { date => { '>=', $lastYear } } )->all;
+		template 'admin/stats',
+		  {
+			depositsLastYear  => \@depositsLastYear,
+			downloadsLastYear => \@downloadsLastYear
+		  };
+	}
 };
 
 return 1;

@@ -17,8 +17,11 @@ use DateTime;
 use Data::FormValidator;
 use DBIx::Class::FromValidators;
 
-
 ## end THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
+#------------------------------------------------------------
+# Session
+#------------------------------------------------------------
+my $sess = IntraBox::getSession();
 
 #------------------------------------------------------------
 # Routes
@@ -26,28 +29,40 @@ use DBIx::Class::FromValidators;
 prefix '/admin/download';
 
 get '/' => sub {
-	my @downloadsInProgress = schema->resultset('Download')->search( { end_date => undef } )->all;
-	my @downloads;
-	
-	for my $dl (@downloadsInProgress) {
-		my $file = $dl->file;
-		my $deposit = $file->id_deposit;
-		my $user = $deposit->id_user;
-		my @dls = $file->downloads;
-		my $dls_count = 0;
-		for my $each_dl (@dls) {
-			$dls_count++;
-		}
-		push (@downloads, { 
-			file => $file,
-			deposit => $deposit,
-			user => $user,
-			dl => $dl,
-			dls_count => $dls_count
-		});
+	if ( $sess->{isAdmin} == 0 ) {
+		IntraBox::push_error(
+"Cette section est réservée aux administrateurs. <a href=\"config->{pathApp}\">Cliquez-ici</a> pour retourner à l'application."
+		);
+		template 'avert', {};
 	}
-	IntraBox::push_info("Voici la liste des téléchargements en cours.");
-	template 'admin/download', { downloads => \@downloads };
+	else {
+		my @downloadsInProgress =
+		  schema->resultset('Download')->search( { end_date => undef } )->all;
+		my @downloads;
+
+		for my $dl (@downloadsInProgress) {
+			my $file      = $dl->file;
+			my $deposit   = $file->id_deposit;
+			my $user      = $deposit->id_user;
+			my @dls       = $file->downloads;
+			my $dls_count = 0;
+			for my $each_dl (@dls) {
+				$dls_count++;
+			}
+			push(
+				@downloads,
+				{
+					file      => $file,
+					deposit   => $deposit,
+					user      => $user,
+					dl        => $dl,
+					dls_count => $dls_count
+				}
+			);
+		}
+		IntraBox::push_info("Voici la liste des téléchargements en cours.");
+		template 'admin/download', { downloads => \@downloads };
+	}
 };
 
 return 1;
