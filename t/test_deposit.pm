@@ -2,6 +2,7 @@ use WWW::Mechanize;
 use Test::More tests => 5;
 use utf8;
 
+my $mech = WWW::Mechanize->new();
 my $url  = "http://localhost/cgi-bin/Intrabox/public/dispatch.cgi/deposit/new";
 $mech->get($url);
 
@@ -12,8 +13,8 @@ like( $mech->content, qr/IntraBox/,
 #On dépose un fichier pour le test
 $mech->submit_form(
 	fields => {
-		file1 =>
-'C:\Users\lfoucher\Documents\Java\chapitre02 - Definition des classes.pdf',
+		file1 => 'IntroJava.pdf',
+		expiration_days  => '10',
 		downloads_report => '0',
 		acknowlegdement  => '0'
 	}
@@ -23,7 +24,7 @@ $mech->submit_form(
 like(
 	$mech->content,
 	qr/Le lien de téléchargement/,
-	"test: Ajout d'un dépôt et redirection vers la page de résumé du dépôt"
+"test: Ajout d'un dépôt et redirection vers la page de résumé du dépôt"
 );
 
 #On vérifie que le lien pour aller aux fichiers non expirés existe

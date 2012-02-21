@@ -43,7 +43,7 @@ like(
 	"test : Impossible de créer ce groupe d'utilisateur"
 );
 
-#On crée un groupe fictif qui n'existe pas dans LDAP
+#On crée un groupe LDAP
 $mech->submit_form(
 	fields => {
 		type_group          => 'LDAP',
@@ -73,7 +73,7 @@ like(
 );
 
 #On clique sur le lien modifier
-$mech->follow_link( n => 22 );
+$mech->follow_link( n => 18 );
 
 #On vérifie l'arrivée sur la page de modification
 like(
@@ -115,7 +115,7 @@ like(
 );
 
 #On suit le lien de suppression du groupe
-$mech->follow_link( n => 23 );
+$mech->follow_link( n => 19 );
 
 #On vérifie le message de suppression
 like(
