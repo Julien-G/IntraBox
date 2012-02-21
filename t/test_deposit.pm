@@ -1,10 +1,8 @@
 use WWW::Mechanize;
-use Test::More tests => 6;
+use Test::More tests => 5;
 use utf8;
 
-my $mech = WWW::Mechanize->new();
-my $url  = "http://localhost/cgi-bin/Intrabox/public/dispatch.cgi";
-
+my $url  = "http://localhost/cgi-bin/Intrabox/public/dispatch.cgi/deposit/new";
 $mech->get($url);
 
 #On teste la présence d'IntraBox sur la page
@@ -16,7 +14,6 @@ $mech->submit_form(
 	fields => {
 		file1 =>
 'C:\Users\lfoucher\Documents\Java\chapitre02 - Definition des classes.pdf',
-		expiration_days  => '10',
 		downloads_report => '0',
 		acknowlegdement  => '0'
 	}
@@ -25,18 +22,8 @@ $mech->submit_form(
 #On vérifie que le dépôt a fonctionné
 like(
 	$mech->content,
-	qr/Upload terminé des fichiers/,
-	"test : Ajout d'un dépôt"
-);
-
-#On suit le lien vers le download du fichier
-$mech->follow_link( n => 20 );
-
-#On vérifie qu'on arrive bien sur la bonne vue
-like(
-	$mech->content,
-	qr/Les fichiers sont disponibles/,
-	"test : Téléchargement du dépôt"
+	qr/Le lien de téléchargement/,
+	"test: Ajout d'un dépôt et redirection vers la page de résumé du dépôt"
 );
 
 #On vérifie que le lien pour aller aux fichiers non expirés existe
@@ -65,21 +52,3 @@ like(
 	qr/Voici la liste des dépôts non expirés/,
 	"test: La page contient Voici la liste des dépôts non expirés"
 );
-
-##On va à la page des fichiers non expirés
-#$mech->follow_link( text_regex => qr/IntraBox/ );
-#
-#$mech->submit_form(
-#	fields => {
-#		file1            => 'C:\Users\lfoucher\Documents\Web service\VB.z01',
-#		expiration_days  => '10',
-#		downloads_report => '0',
-#		acknowlegdement  => '0'
-#	}
-#);
-#
-#like(
-#	$mech->content,
-#	qr/Le fichier $VB.z01 est trop volumineux/,
-#	"test : La taille du fichier est trop grande"
-#);

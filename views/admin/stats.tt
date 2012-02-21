@@ -1,39 +1,309 @@
-[% IF !isAdmin %]
+[% USE date %]
+[% USE String %]
+[% calc = date.calc %]
+[% USE arrondi = format('%02.2f') %]
+[% IF !session.isAdmin %]
   		<div class="info info-rouge">
 			<h1>Accès refusé</h1>
 			<p>Cette section est réservée aux administrateurs. <a href="[% request.uri_base %]/">Cliquez-ici</a> pour retourner à l'application.</p>
 		</div>
 [% END %]
-[% IF isAdmin %]
+[% IF session.isAdmin %]
+	[% IF infoMsgs.size > 0 %]
  		<div class="info info-vert">
 			<h1>Information</h1>
-			<p>Voici la liste des téléchargements en cours</p>
+		[% FOREACH msg IN infoMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
 		</div>
+	[% END %]
+	[% IF alertMsgs.size > 0 %]
+ 		<div class="info info-orange">
+			<h1>Avertissement</h1>
+		[% FOREACH msg IN alertMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
+		</div>
+	[% END %]
+	[% IF errorMsgs.size > 0 %]
+ 		<div class="info info-rouge">
+			<h1>Erreur</h1>
+		[% FOREACH msg IN errorMsgs %]
+			<p>[% msg %]</p>
+		[% END %]
+		</div>
+	[% END %]
+			[% series = { } %] 
+			[% FOR deposit IN depositsLastYear %]
+				[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
+				[% today = calc.Date_to_Time(date.format(created_date, '%Y'), date.format(created_date, '%m'), date.format(created_date, '%d'), 1, 1, 1) %]
+				[% IF series.$today %][% series.$today = series.$today + 1 %][% ELSE %][% series.$today = 1 %][% END %]
+			[% END %]
+			<script>
+			$(function() {
+				new Highcharts.Chart({
+					chart : { renderTo : 'depositsLastYear', zoomType: 'x' },
+				    xAxis: {
+				         type: 'datetime',
+				         maxZoom: 1 * 24 * 3600000, // 1 day
+				         dateTimeLabelFormats: { // don't display the dummy year
+				            month: '%e. %b',
+				            year: '%b'
+				         }
+				    },
+				    yAxis: {
+				         title: {
+				            text: 'Nombre'
+				         },
+				         min: 0
+				    },
+					title : { text : 'Nombre de dépôts par jour' },
+					series : [{
+						name : 'Dépôts',
+						data : [
+							[% FOREACH key IN series.keys.sort %]
+								[[% key %]000,[% series.$key %]][% IF !loop.last %],[% END %]
+							[% END %]
+						],
+						tooltip: {
+							yDecimals: 0
+						}
+					}]
+				});
+			});
+			</script>
+			<div id="depositsLastYear" style="margin: 1em auto; width: 70%; height: 20em"></div>
+			
+			[% series = { } %] 
+			[% FOR deposit IN depositsLastYear %]
+				[% created_date = String.new(deposit.created_date).replace('T', ' ') %]
+				[% today = calc.Date_to_Time(date.format(created_date, '%Y'), date.format(created_date, '%m'), date.format(created_date, '%d'), 1, 1, 1) %]
+				[% deposit_size = 0 %]
+				[% FOREACH file IN deposit.files %]
+					[% deposit_size = deposit_size + file.size %]
+				[% END %]
+				[% file_size = arrondi(deposit_size / 1048576) %]
+				[% IF series.$today %][% series.$today = series.$today + file_size %][% ELSE %][% series.$today = file_size %][% END %]
+			[% END %]
+			<script>
+			$(function() {
+				new Highcharts.Chart({
+					chart : { renderTo : 'depositSizesLastYear', zoomType: 'x' },
+				    xAxis: {
+				         type: 'datetime',
+				         maxZoom: 1 * 24 * 3600000, // 1 day
+				         dateTimeLabelFormats: { // don't display the dummy year
+				            month: '%e. %b',
+				            year: '%b'
+				         }
+				    },
+				    yAxis: {
+				         title: {
+				            text: 'Taille (Mo)'
+				         },
+				         min: 0
+				    },
+					title : { text : 'Taille des dépôts par jour' },
+					series : [{
+						name : 'Dépôts',
+						data : [
+							[% FOREACH key IN series.keys.sort %]
+								[[% key %]000,[% series.$key %]][% IF !loop.last %],[% END %]
+							[% END %]
+						],
+						tooltip: {
+					         yDecimals: 3
+						}
+					}],
+					tooltip: {
+       					 pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+       					 valueSuffix: ' Mo'
+					}
+				});
+			});
+			</script>
+			<div id="depositSizesLastYear" style="margin: 3em auto; width: 70%; height: 20em"></div>
 
-		<table>
-			<tr>
-				<th>Nom</th>
-				<th>Taille</th>
-				<th>Commencé</th>
-				<th>Téléchargé</th>
-			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
-			<tr>
-				<td>bbzfiueihebe.zip</td>
-				<td class="acenter">532.65 MO</td>
-				<td class="acenter">07/12/2011 20:43:18</td>
-				<td class="acenter">6</td>
-			</tr>
-		</table>
+			[% series = { } %] 
+			[% FOR download IN downloadsLastYear %]
+				[% start_date = String.new(download.start_date).replace('T', ' ') %]
+				[% today = calc.Date_to_Time(date.format(start_date, '%Y'), date.format(start_date, '%m'), date.format(start_date, '%d'), 1, 1, 1) %]
+				[% IF series.$today %][% series.$today = series.$today + 1 %][% ELSE %][% series.$today = 1 %][% END %]
+			[% END %]
+			<script>
+			$(function() {
+				new Highcharts.Chart({
+					chart : { renderTo : 'downloadsLastYear', zoomType: 'x' },
+				    xAxis: {
+				         type: 'datetime',
+				         maxZoom: 1 * 24 * 3600000, // 1 day
+				         dateTimeLabelFormats: { // don't display the dummy year
+				            month: '%e. %b',
+				            year: '%b'
+				         }
+				    },
+				    yAxis: {
+				         title: {
+				            text: 'Nombre'
+				         },
+				         min: 0
+				    },
+					title : { text : 'Nombre de téléchargements par jour' },
+					series : [{
+						name : 'Téléchargements',
+						data : [
+							[% FOREACH key IN series.keys.sort %]
+								[[% key %]000,[% series.$key %]][% IF !loop.last %],[% END %]
+							[% END %]
+						],
+						tooltip: {
+							yDecimals: 0
+						}
+					}]
+				});
+			});
+			</script>
+			<div id="downloadsLastYear" style="margin: 3em auto; width: 70%; height: 20em"></div>
+			
+			[% series = { } %] 
+			[% FOR download IN downloadsLastYear %]
+				[% start_date = String.new(download.start_date).replace('T', ' ') %]
+				[% today = calc.Date_to_Time(date.format(start_date, '%Y'), date.format(start_date, '%m'), date.format(start_date, '%d'), 1, 1, 1) %]
+				[% file_size = arrondi(download.file.size / 1048576) %]
+				[% IF series.$today %][% series.$today = series.$today + file_size %][% ELSE %][% series.$today = file_size %][% END %]
+			[% END %]
+			<script>
+			$(function() {
+				new Highcharts.Chart({
+					chart : { renderTo : 'downloadSizesLastYear', zoomType: 'x' },
+				    xAxis: {
+				         type: 'datetime',
+				         maxZoom: 1 * 24 * 3600000, // 1 day
+				         dateTimeLabelFormats: { // don't display the dummy year
+				            month: '%e. %b',
+				            year: '%b'
+				         }
+				    },
+				    yAxis: {
+				         title: {
+				            text: 'Taille (Mo)'
+				         },
+				         min: 0
+				    },
+					title : { text : 'Taille des téléchargements par jour' },
+					series : [{
+						name : 'Téléchargements',
+						data : [
+							[% FOREACH key IN series.keys.sort %]
+								[[% key %]000,[% series.$key %]][% IF !loop.last %],[% END %]
+							[% END %]
+						],
+						tooltip: {
+	       					 pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+	       					 valueSuffix: ' Mo'
+						}
+					}]
+				});
+			});
+			</script>
+			<div id="downloadSizesLastYear" style="margin: 3em auto; width: 70%; height: 20em"></div>
+
+
 [% END %]
+
+<script>
+/**
+ * Grid theme for Highcharts JS
+ * @author Torstein Hønsi
+ */
+Highcharts.theme = {
+   colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+   chart: {
+      backgroundColor: {
+         linearGradient: [0, 0, 500, 500],
+         stops: [
+            [0, 'rgb(255, 255, 255)'],
+            [1, 'rgb(240, 240, 255)']
+         ]
+      },
+      borderWidth: 2,
+      plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+      plotShadow: true,
+      plotBorderWidth: 1
+   },
+   title: {
+      style: {
+         color: '#000',
+         font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+      }
+   },
+   subtitle: {
+      style: {
+         color: '#666666',
+         font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+      }
+   },
+   xAxis: {
+      gridLineWidth: 1,
+      lineColor: '#000',
+      tickColor: '#000',
+      labels: {
+         style: {
+            color: '#000',
+            font: '11px Trebuchet MS, Verdana, sans-serif'
+         }
+      },
+      title: {
+         style: {
+            color: '#333',
+            fontWeight: 'bold',
+            fontSize: '12px',
+            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+         }
+      }
+   },
+   yAxis: {
+      minorTickInterval: 'auto',
+      lineColor: '#000',
+      lineWidth: 1,
+      tickWidth: 1,
+      tickColor: '#000',
+      labels: {
+         style: {
+            color: '#000',
+            font: '11px Trebuchet MS, Verdana, sans-serif'
+         }
+      },
+      title: {
+         style: {
+            color: '#333',
+            fontWeight: 'bold',
+            fontSize: '12px',
+            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+         }
+      }
+   },
+   legend: {
+      itemStyle: {
+         font: '9pt Trebuchet MS, Verdana, sans-serif',
+         color: 'black'
+
+      },
+      itemHoverStyle: {
+         color: '#039'
+      },
+      itemHiddenStyle: {
+         color: 'gray'
+      }
+   },
+   labels: {
+      style: {
+         color: '#99b'
+      }
+   }
+};
+
+// Apply the theme
+var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+</script>

@@ -259,6 +259,7 @@ use adminAdminController;
 use adminGroupController;
 use adminSearchController;
 use adminFileController;
+use adminStatsController;
 use purgeController;
 
 #------------------------------------------------------------
