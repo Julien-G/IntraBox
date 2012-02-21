@@ -215,7 +215,7 @@
 	<div class="accordion">
 	  <h3><a id="id14" href="#">Comment accéder à l'administration ?</a></h3>
       <div>
-     	 <p>Cliquez sur l'onglet administration en haut à droite de votre page pour accéder au menu de l'administration.<br><br>
+     	 <p>Cliquez sur les différents onglets du panneau administration sur la droite de votre page pour accéder aux fonctions de l'administration.<br><br>
       	 Cliquez sur le nom de l'application <em>IntraBox</em> pour retourner à la partie non administrative.<br><br>
 	      <a href="#up" title="Retour en haut de page" class="linkup">[haut]</a>
 	      </p>
