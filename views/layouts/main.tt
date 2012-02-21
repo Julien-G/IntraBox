@@ -47,7 +47,6 @@
 	body { margin: 0 auto 0 10em; }
 	</style>
 	<div id="adminbar">
-		<a id="closebutton" href="[% request.uri_base %]/">x</a>
 		<h1>Vous êtes dans l'interface d'administration!</h1>
 		<menu>
 			<li><a href="[% request.uri_base %]/admin/download">Téléchargements en cours</a></li>
