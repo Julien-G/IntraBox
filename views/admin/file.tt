@@ -68,7 +68,7 @@
 				<td class="acenter">
 					[% IF deposit.id_status.id_status == 1 %]
 					<a class="UIbutton ui-icon ui-icon-search viewButton" href="[% request.uri_base %]/admin/file/[% deposit.download_code %]"></a>
-					<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/admin/file/modifyDeposit/[% deposit.download_code %]"></a> 
+					<a class="UIbutton ui-icon ui-icon-pencil editButton" href="[% request.uri_base %]/admin/file/modifyAdminDeposit/[% deposit.download_code %]"></a> 
 					<a class="UIbutton ui-icon ui-icon-trash deleteButton" href="[% request.uri_base %]/admin/file/deleteDeposit/[% deposit.download_code %]"><span style="display: none;">[% deposit.download_code %]</span></a> 
 					[% END %]
 				</td>

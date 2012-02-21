@@ -51,15 +51,15 @@ get '/' => sub {
 get '/:deposit' => sub {
 	my @liste_deposit = schema->resultset('Deposit')->search( { download_code => param("deposit") } );
 	
-	template 'seeDeposit', { isAdminView => 1, liste_deposit => \@liste_deposit };
+	template 'seeDeposit', { liste_deposit => \@liste_deposit };
 };
 
-get '/modifyDeposit/:deposit' => sub {
+get '/modifyAdminDeposit/:deposit' => sub {
 	my $liste_deposit = schema->resultset('Deposit')->find( { download_code => param("deposit") } );
-	template 'modifyDeposit', { isAdminView => 1, liste_deposit => $liste_deposit };
+	template 'admin/modifyAdminDeposit', { liste_deposit => $liste_deposit };
 };
 
-post '/modifyDeposit/:deposit' => sub {
+post '/modifyAdminDeposit/:deposit' => sub {
 	editDeposit( param("deposit") );
 	redirect '/admin/file/';
 };
@@ -77,16 +77,12 @@ sub editDeposit {
 	my $deposit = $_[0];
 
 	# Get parameters
-	my $expiration_days  = param("ext_expiration_days");
 	my $downloads_report = ( param("downloads_report") eq "1" ) ? true : false;
 	my $acknowlegdement = ( param("acknowlegdement") eq "1" ) ? true : false;
 	my $comment_option = param("comment_option");
 	my $comment = ( $comment_option eq 1 ) ? param("comment") : undef;
 	
 	my $exist_deposit = schema->resultset('Deposit')->find( { download_code => $deposit } );
-	my $expiration_date = $exist_deposit->expiration_date;
-	$expiration_date->add( days => $expiration_days );
-	$exist_deposit->expiration_date("$expiration_date");
 	$exist_deposit->opt_acknowledgement("$acknowlegdement");
 	$exist_deposit->opt_downloads_report("$downloads_report");
 	$exist_deposit->opt_comment("$comment");

@@ -1,9 +1,20 @@
+[% IF !session.isAdmin %]
+  		<div class="info info-rouge">
+			<h1>Accès refusé</h1>
+			<p>Cette section est réservée aux administrateurs. <a href="[% request.uri_base %]/">Cliquez-ici</a> pour retourner à l'application.</p>
+		</div>
+[% END %]
+[% IF session.isAdmin %]
   		<div class="info info-orange">
 			<h1>Information</h1>
 			<p>Vous pouvez ici changer les informations du dépôt n°[% liste_deposit.download_code %]
 			</p>				
 		</div> 
-		<form method="POST" action="[% request.uri_base %]/deposit/modifyDeposit/[% liste_deposit.download_code %]">
+		[% IF adminSearch == 1 %]
+		<form method="POST" action="[% request.uri_base %]/admin/search/modifyAdminDeposit/[% liste_deposit.download_code %]">
+		[% ELSE %]
+		<form method="POST" action="[% request.uri_base %]/admin/file/modifyAdminDeposit/[% liste_deposit.download_code %]">
+		[% END %]
 		<fieldset>
 			<legend>Formulaire de modification de fichier</legend>
 
@@ -30,3 +41,4 @@
 			
 		</fielset>
 		</form>
+[% END %]
