@@ -1,3 +1,12 @@
+#----------------------------
+# INTRABOX version 1.0
+#
+# created by :
+# 		- bourganel antoine
+#		- foucher laure
+#		- girault julien
+#
+#----------------------------
 package IntraBox;
 ## THIS CODE MUST BE INCLUDED IN ALL CONTROLLERS
 use strict;
@@ -177,6 +186,9 @@ sub getSession {
 	}
 }
 
+
+# Security functions - test parameters
+
 sub has_specials_char {
 	my $test_string = $_[0];
 	my $name_param = $_[1];
@@ -237,6 +249,7 @@ sub is_decimal {
 		return false;
 	}		
 }
+
 
 #------------------------------------------------------------
 # Controllers

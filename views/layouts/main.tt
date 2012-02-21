@@ -51,7 +51,6 @@
 		<menu>
 			<li><a href="[% request.uri_base %]/admin/file">Gestion des fichiers non expirés</a></li>
 			<li><a href="[% request.uri_base %]/admin/group">Gestion des groupes</a></li>
-
 			<li><a href="[% request.uri_base %]/admin/admin">Gestion des administrateurs</a></li>
 			<li><a href="[% request.uri_base %]/admin/stats">Statistiques</a></li>
 			<li><a href="[% request.uri_base %]/admin/search">Recherche</a></li>
@@ -71,13 +70,10 @@
 	<div id="menubar">
 		<menu>
 			<li><a href="[% request.uri_base %]/">Déposer un fichier</a></li>
-			<li><a href="[% request.uri_base %]/area/new">Créer une zone depôt</a></li>
 			<li><a href="[% request.uri_base %]/deposit/">Gérer ses fichiers</a></li>
-			<li><a href="[% request.uri_base %]/area">Gérer ses zones de dépôt</a></li>
+			<li><a href="">Créer une zone depôt</a></li>
+			<li><a href="">Gérer ses zones de dépôt</a></li>
 			<li class="aide"><a href="[% request.uri_base %]/help">Aide</a></li>
-			[% IF session.isAdmin %]
-			<li class="admin"><a href="[% request.uri_base %]/admin">Administration</a></li>
-			[% END %]
 		</menu>
 
 	</div>
