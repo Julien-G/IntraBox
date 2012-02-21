@@ -50,35 +50,88 @@ get '/' => sub {
 };
 
 get '/:deposit' => sub {
-	my $deposit =
-	  schema->resultset('Deposit')
-	  ->find( { download_code => param("deposit") } );
-	 # Test : Utilisator must be Author
-	if ($deposit->id_user->id_user eq $sess->{id_user}) {
-		template 'seeDeposit', { liste_deposit => $deposit };
-	} else {
-		IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+	# Security test : no specials char in param(deposit)
+	if (IntraBox::has_specials_char(param("deposit"),"URL") ) {
+		IntraBox::push_error("Requête impossible");
 		template 'avert',{};
+	} else {
+		my $deposit =
+		  schema->resultset('Deposit')
+		  ->find( { download_code => param("deposit") } );
+		# Security test : inexistant deposit
+		if (not defined $deposit) {
+				IntraBox::push_error("Page inexistante !");
+				template 'avert',{};
+		} else {
+			# Security Test : Utilisator must be Author
+			if ($deposit->id_user->id_user eq $sess->{id_user}) {
+				# -- SUCESS --
+				template 'seeDeposit', { liste_deposit => $deposit };
+				#/ -- SUCESS --
+			} else {
+				IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+				template 'avert',{};
+			}
+		}
 	}
-	
 };
 
 get '/deleteDeposit/:deposit' => sub {
-	deleteDeposit( param("deposit") );
-	redirect '/deposit/';
+	# Security test : no specials char in param(deposit)
+	if (IntraBox::has_specials_char(param("deposit"),"URL") ) {
+		IntraBox::push_error("Requête impossible");
+		template 'avert',{};
+	} else {
+		my $deposit =
+		  schema->resultset('Deposit')
+		  ->find( { download_code => param("deposit") } );
+		# Security test : inexistant deposit
+		if (not defined $deposit) {
+				IntraBox::push_error("Page inexistante !");
+				template 'avert',{};
+		} else {
+			 # Test : Utilisator must be Author
+			if ($deposit->id_user->id_user eq $sess->{id_user}) {
+				# -- SUCESS --
+				deleteDeposit( param("deposit") );
+				redirect '/deposit/';
+				#/ -- SUCESS --
+			} else {
+				IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+				template 'avert',{};
+			}
+		}
+	}
+
 };
 
 get '/modifyDeposit/:deposit' => sub {
-	my $deposit =
-	  schema->resultset('Deposit')
-	  ->find( { download_code => param("deposit") } );
-	  # Test : Utilisator must be Author
-	if ($deposit->id_user->id_user eq $sess->{id_user}) {
-		template 'modifyDeposit', { liste_deposit => $deposit };
-	} else {
-		IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+		# Security test : no specials char in param(deposit)
+	if (IntraBox::has_specials_char(param("deposit"),"URL") ) {
+		IntraBox::push_error("Requête impossible");
 		template 'avert',{};
+	} else {
+		my $deposit =
+		  schema->resultset('Deposit')
+		  ->find( { download_code => param("deposit") } );
+		# Security test : inexistant deposit
+		if (not defined $deposit) {
+				IntraBox::push_error("Page inexistante !");
+				template 'avert',{};
+		} else {
+			 # Test : Utilisator must be Author
+			if ($deposit->id_user->id_user eq $sess->{id_user}) {
+				# -- SUCESS --
+				template 'modifyDeposit', { liste_deposit => $deposit };
+				#/ -- SUCESS --
+			} else {
+				IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
+				template 'avert',{};
+			}
+		}
 	}
+	
+
 };
 
 post '/modifyDeposit/:deposit' => sub {
@@ -104,17 +157,10 @@ sub deleteDeposit {
 	my $liste_deposit =
 	  schema->resultset('Deposit')->find( { download_code => $deposit } );
 	my $id_user = $liste_deposit->id_user->id_user;
-	# Test : Utilisator must be Author
-	if  ($id_user eq $sess->{id_user}){
 		$liste_deposit->id_status('2');
 		$liste_deposit->update;
 		warn_user($deposit);
-		showAllDeposits();
-	} else {
-		IntraBox::push_error("Vous n\'êtes pas propriétaire de ce fichier !");
-		template 'avert',{};
-	}
-		
+		showAllDeposits();		
 }
 
 #Programme d'avertissement de l'utilisateur de son dépôt terminé
@@ -124,7 +170,7 @@ sub warn_user {
 	my $depositJustExpired =
 	  schema->resultset('Deposit')->find( { download_code => $deposit } );
 	my $id_user      = $depositJustExpired->id_user;
-	my $author_login = $id_user->login;
+	my $author_mail = $id_user->email;
 
 	if ( $depositJustExpired->opt_downloads_report == 1 ) {
 		my $id_deposit = $depositJustExpired->id_deposit;
@@ -135,7 +181,7 @@ sub warn_user {
 		  ->search( { id_deposit => $id_deposit, } );
 
 		email {
-			to      => $author_login . "\@mines-albi.fr",
+			to      => $author_mail,
 			from    => config->{mailApp},
 			subject => "IntraBox : Rapport de téléchargement",
 			type => 'html',

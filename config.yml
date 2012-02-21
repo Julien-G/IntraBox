@@ -20,6 +20,12 @@ pathDownload: "/Upload"
 # Path of Application
 pathApp: "http://localhost/cgi-bin/IntraBox/public/dispatch.cgi"
 
+# Limit rule for group creation
+# Maximum of expiration days for deposit
+maxExpirationDays: 365
+# Maximum size for personnal account in bytes (now : 5 Go)
+maxQuota: 5368709120
+
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
 layout: "main"
