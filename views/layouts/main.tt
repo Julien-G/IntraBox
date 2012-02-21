@@ -49,7 +49,6 @@
 	<div id="adminbar">
 		<h1>Vous êtes dans l'interface d'administration!</h1>
 		<menu>
-			<li><a href="[% request.uri_base %]/admin/download">Téléchargements en cours</a></li>
 			<li><a href="[% request.uri_base %]/admin/file">Gestion des fichiers non expirés</a></li>
 			<li><a href="[% request.uri_base %]/admin/group">Gestion des groupes</a></li>
 
