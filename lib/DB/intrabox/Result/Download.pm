@@ -50,17 +50,11 @@ __PACKAGE__->table("download");
   is_nullable: 0
   size: 150
 
-=head2 start_date
+=head2 date
 
   data_type: 'datetime'
   datetime_undef_if_invalid: 1
   is_nullable: 0
-
-=head2 end_date
-
-  data_type: 'datetime'
-  datetime_undef_if_invalid: 1
-  is_nullable: 1
 
 =head2 finished
 
@@ -81,17 +75,11 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 19 },
   "useragent",
   { data_type => "varchar", is_nullable => 0, size => 150 },
-  "start_date",
+  "date",
   {
     data_type => "datetime",
     datetime_undef_if_invalid => 1,
     is_nullable => 0,
-  },
-  "end_date",
-  {
-    data_type => "datetime",
-    datetime_undef_if_invalid => 1,
-    is_nullable => 1,
   },
   "finished",
   { data_type => "tinyint", default_value => 0, is_nullable => 0 },
@@ -116,8 +104,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-16 14:42:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:e3JtaRckBh4ododktwg3Bw
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-21 00:54:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NRWfN24Igu9ZNQ7i7vS51g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

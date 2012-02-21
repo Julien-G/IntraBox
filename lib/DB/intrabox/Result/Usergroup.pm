@@ -56,7 +56,7 @@ __PACKAGE__->table("usergroup");
 
 =head2 expiration_max
 
-  data_type: 'tinyint'
+  data_type: 'smallint'
   is_nullable: 0
 
 =head2 description
@@ -86,7 +86,7 @@ __PACKAGE__->add_columns(
   "size_max",
   { data_type => "bigint", is_nullable => 0 },
   "expiration_max",
-  { data_type => "tinyint", is_nullable => 0 },
+  { data_type => "smallint", is_nullable => 0 },
   "description",
   { data_type => "tinytext", is_nullable => 1 },
   "creation_date",
@@ -99,8 +99,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id_usergroup");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-13 18:01:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TGpXf9PN5XLISgvB2uALpA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-21 00:54:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z23ltXtrZ7Ujfk15fP4Mhg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

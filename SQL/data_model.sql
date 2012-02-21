@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS `intrabox`.`user` ;
 CREATE  TABLE IF NOT EXISTS `intrabox`.`user` (
   `id_user` INT(11) NOT NULL AUTO_INCREMENT ,
   `login` VARCHAR(45) NOT NULL ,
+  `email` VARCHAR(70) NULL DEFAULT NULL,
   `admin` TINYINT(1) NOT NULL DEFAULT false ,
   PRIMARY KEY (`id_user`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
@@ -44,13 +45,13 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`deposit` (
   `download_code` VARCHAR(45) NOT NULL ,
   `area_access_code` VARCHAR(45) NULL DEFAULT NULL ,
   `area_to_email` VARCHAR(45) NULL DEFAULT NULL ,
-  `area_size` TINYINT(4) NULL DEFAULT NULL ,
+  `area_size` BIGINT(45) NULL DEFAULT NULL ,
   `opt_acknowledgement` TINYINT(1) NOT NULL DEFAULT '0' ,
   `opt_downloads_report` TINYINT(1) NOT NULL DEFAULT '0' ,
   `opt_comment` TINYTEXT NULL DEFAULT NULL ,
   `opt_password` VARCHAR(64) NULL DEFAULT NULL ,
   `id_status` INT(11) NOT NULL ,
-  `expiration_days` TINYINT(4) NOT NULL ,
+  `expiration_days` SMALLINT(6) NOT NULL ,
   `expiration_date` DATETIME NOT NULL ,
   `created_date` DATETIME NOT NULL ,
   `created_ip` VARCHAR(19) NOT NULL ,
@@ -81,7 +82,7 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`file` (
   `id_file` INT(11) NOT NULL AUTO_INCREMENT ,
   `id_deposit` INT(11) NOT NULL ,
   `name` VARCHAR(60) NOT NULL ,
-  `size` FLOAT NOT NULL ,
+  `size` BIGINT(45) NOT NULL ,
   `on_server` TINYINT(1) NOT NULL DEFAULT '1' ,
   `name_on_disk` VARCHAR(60) NOT NULL ,
   PRIMARY KEY (`id_file`, `id_deposit`) ,
@@ -106,8 +107,7 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`download` (
   `id_file` INT(11) NOT NULL ,
   `ip` VARCHAR(19) NOT NULL ,
   `useragent` VARCHAR(150) NOT NULL ,
-  `start_date` DATETIME NOT NULL ,
-  `end_date` DATETIME NULL DEFAULT NULL ,
+  `date` DATETIME NOT NULL ,
   `finished` TINYINT(1) NOT NULL DEFAULT '0' ,
   PRIMARY KEY (`id_download`, `id_deposit`, `id_file`) ,
   INDEX `fk_downloads_files1` (`id_file` ASC, `id_deposit` ASC) ,
@@ -132,7 +132,7 @@ CREATE  TABLE IF NOT EXISTS `intrabox`.`usergroup` (
   `name` VARCHAR(45) NOT NULL ,
   `quota` BIGINT(45) NOT NULL ,
   `size_max` BIGINT(45) NOT NULL ,
-  `expiration_max` TINYINT(4) NOT NULL ,
+  `expiration_max` SMALLINT(6) NOT NULL ,
   `description` TEXT(45) ,
   `creation_date` DATETIME ,
   PRIMARY KEY (`id_usergroup`) )
@@ -147,6 +147,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 
-INSERT INTO status VALUES (1, 'disponible');
-INSERT INTO status VALUES (2, 'expire');
+INSERT INTO status VALUES (1, 'Disponible');
+INSERT INTO status VALUES (2, 'Expiré');
 INSERT INTO usergroup VALUES (1, 'LDAP', 'default', 'default', '1073741824', '1073741824', '15', NULL, NULL);

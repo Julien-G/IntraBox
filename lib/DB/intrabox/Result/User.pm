@@ -32,6 +32,12 @@ __PACKAGE__->table("user");
   is_nullable: 0
   size: 45
 
+=head2 email
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 70
+
 =head2 admin
 
   data_type: 'tinyint'
@@ -45,6 +51,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "login",
   { data_type => "varchar", is_nullable => 0, size => 45 },
+  "email",
+  { data_type => "varchar", is_nullable => 1, size => 70 },
   "admin",
   { data_type => "tinyint", default_value => 0, is_nullable => 0 },
 );
@@ -69,8 +77,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-13 18:01:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aRHIgJgsfq2whCWFyyv6fw
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2012-02-21 00:54:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OmWgdQ6jOwNXvgvj9mU2/w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
