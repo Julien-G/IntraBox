@@ -35,7 +35,11 @@ post '/new' => sub {
 	# validation des paramètres
 	my $params = request->params;
 	my $msgs;
-
+	my $control_valid = 1;
+	
+	if (IntraBox::has_specials_char(param('login'),"Login") ) {$control_valid = 0;}
+	
+	if ($control_valid == 1){
 	# recherche de l'admin à ajouter
 	my $admin =
 	  schema->resultset('User')->search( { login => param('login') } )
@@ -49,7 +53,7 @@ post '/new' => sub {
 		IntraBox::push_info "Vous venez d'ajouter l'administrateur <strong>$login</strong>";
 		$admin->update( { admin => true } );
 	}
-
+	}
 	my @admins = schema->resultset('User')->search( { admin => true } )->all;
 	template 'admin/admin',
 	  {

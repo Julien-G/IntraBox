@@ -56,13 +56,13 @@ post '/new' => sub {
 	my $control_valid = 1;
 	
 	# No specials chars in parameters
-	if (IntraBox::avoid_specials_char($rule,"règle")) {$control_valid = 0;}
-	if (IntraBox::avoid_specials_char($duration_max,"Durée d\'expiration")) {$control_valid = 0;}
-	if (IntraBox::avoid_specials_char($file_size_max,"Taille maximum de fichier")) {$control_valid = 0;}
-	if (IntraBox::avoid_specials_char($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
-	if (IntraBox::avoid_specials_char($name_group,"Nom du groupe")) {$control_valid = 0;}
-	if (IntraBox::avoid_specials_char($type_group,"Type de groupe")) {$control_valid = 0;}
-	if (IntraBox::avoid_specials_char($description,"Description")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($rule,"règle")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($duration_max,"Durée d\'expiration")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($file_size_max,"Taille maximum de fichier")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($name_group,"Nom du groupe")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($type_group,"Type de groupe")) {$control_valid = 0;}
+	if (IntraBox::has_specials_char($description,"Description")) {$control_valid = 0;}
 
 	# Parameters must not be empty 
 	if (IntraBox::is_empty($rule,"règle")) {$control_valid = 0;}
@@ -71,9 +71,9 @@ post '/new' => sub {
 	if (IntraBox::is_empty($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
 	
 	# Parameters must number
-	if (IntraBox::is_number($duration_max,"Durée d\'expiration")) {$control_valid = 0;}
-	if (IntraBox::is_number($file_size_max,"Taille maximum de fichier")) {$control_valid = 0;}
-	if (IntraBox::is_number($space_size_max,"Taille maximum de dépôt")) {$control_valid = 0;}
+	if (IntraBox::is_number($duration_max,"Durée d\'expiration")) {} else {$control_valid = 0;}
+	if (IntraBox::is_decimal($file_size_max,"Taille maximum de fichier")) {} else  {$control_valid = 0;}
+	if (IntraBox::is_decimal($space_size_max,"Taille maximum de dépôt")) {} else  {$control_valid = 0;}
 
 	if ($control_valid == 1) {
 	my $current_date = DateTime->now;
