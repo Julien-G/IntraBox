@@ -17,7 +17,7 @@
 [% FOREACH file IN download.file %]
 	<tr>
 		<td>[% file.name %]</td>
-		<td>[% download.start_date %]</td>
+		<td>[% download.date %]</td>
 		<td>[% download.ip %]</td>
 		<td>[% download.useragent %]</td>
 	</tr>

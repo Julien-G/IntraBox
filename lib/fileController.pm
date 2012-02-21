@@ -36,19 +36,64 @@ prefix '/file';
 my $user = $sess->{login};
 
 get '/download/:download_code' => sub {
+		# Security test : no specials char in param(download_code)
+	if (IntraBox::has_specials_char(param("download_code"),"URL") ) {
+		IntraBox::push_error("Vérifiez l\'adresse URL, celle ci est corrompue");
+		template 'download',{};
+	} else {
 	my $param_file = param("download_code");
 	download_file("$param_file");
+	}
 };
 
 post '/download/:download_code' => sub {
-	my $param_file = param("download_code");
+	my $param_file;
+	# Security test : no specials char in param(download_code)
+	if (IntraBox::has_specials_char(param("download_code"),"URL") ) {
+		IntraBox::push_error("Vérifiez l\'adresse URL, celle ci est corrompue");
+		template 'download',{};
+	# Security test : no specials char in param(password)
+	} elsif (IntraBox::has_specials_char(param("password"),"Password") ) {
+		$param_file = param("download_code");
+		redirect "file/download/$param_file";		
+	} else {
+	$param_file = param("download_code");
 	download_file("$param_file");
+	}
 };
 
 post '/downloadFile' => sub {
-	my $name_on_disk = param("name_on_disk");
-	my $name         = param("name");
-	donwload_file_user( $name_on_disk, $name);
+	# Security test : no specials char in param(name_on_disk)
+	if (IntraBox::has_specials_char(param("name_on_disk"),"name_on_disk") ) {
+		IntraBox::push_error("Erreur dans la requête POST");
+		template 'download',{};
+	# Security test : no specials char in param(name)
+	} elsif (IntraBox::has_specials_char(param("name"),"name")) {
+		IntraBox::push_error("Erreur dans la requête POST");
+		template 'download',{};
+	} else {
+		my $file = schema->resultset('File')->find( { 
+			name_on_disk => param("name_on_disk"), 
+			name => param("name"),
+		} );
+		# Security test : name_on_disk must match with name in DB and on server
+		if ($file && $file->on_server == 1) { 
+			#Success
+			donwload_file_user( param("name_on_disk"), param("name"));
+			#/Success			
+		# Security test : if file not on server
+		} elsif ($file && $file->on_server == 0) {
+			IntraBox::push_error("Fichier expiré");
+			template 'download',{};
+		# Security test : if file not match
+		} else {
+			IntraBox::push_error("Erreur dans la requête POST");
+			template 'download',{};
+		}
+		
+	}
+	
+	
 };
 
 sub download_file {
@@ -75,7 +120,7 @@ sub download_file {
 	if ($deposit_liste) {
 		$id_deposit = $deposit_liste->id_deposit;
 		$id_user    = $deposit_liste->id_user;
-		$id_status  = $deposit_liste->id_status;
+		$id_status  = $deposit_liste->id_status->id_status;
 		$password   = $deposit_liste->opt_password;
 	}
 
@@ -174,7 +219,7 @@ my $path = config->{pathDownload};
 	my $id_deposit    = $search->id_deposit;
 	my $acknowledgement = $id_deposit->opt_acknowledgement;
 	my $id_user       = $id_deposit->id_user;
-	my $author_login  = $id_user->login;
+	my $author_mail  = $id_user->email;
 	my $download_code = $id_deposit->download_code;
 
 		my $new_download = schema->resultset('Download')->create(
@@ -189,7 +234,7 @@ my $path = config->{pathDownload};
 
 		if ($acknowledgement == 1) {
 		email {
-			to      => $author_login . "\@mines-albi.fr",
+			to      => $author_mail,
 			from    => config->{mailApp},
 			subject => "IntraBox : Avis de 	téléchargement pour le fichier $file_name",
 			type => 'html',
